@@ -5,22 +5,41 @@
 }
 
 #header, #nav {
-    background: #eef8e0;
+    background: #589404;
+    color: #eeeeee;
     display: flex;
 }
 
 #header {
     flex: 1 1 100vw;
-    height: 50px;
+    height: 40px;
+    box-shadow: 0px 0px 5px #222222;
+    z-index: 99999;
 }
 
 #logo {
     display: flex;
-    flex: 0 1 150px;
-    background: #c9c9c9;
+    flex: 0 0 150px;
+    background: #6fb311;
+    color: #eeeeee;
+    font-weight: bold;
     padding: 8px;
     align-items: center;
     justify-content: center;
+    margin-left: 5px;
+    border: none;
+  }
+
+#nome_empresa {
+    display: flex;
+    flex: 0 0 80px;
+    color: #eeeeee;
+    font-weight: bold;
+    padding: 8px;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+    border: none;
   }
 
 #openMenu, #closeMenu {
@@ -30,6 +49,7 @@
     font-weight: bold;
     cursor: pointer;
     display: none;
+    color: #eeeeee;
 }
 
 #openMenu {
@@ -44,9 +64,8 @@
 }
 
 #nav a {
-    margin: 3%;
-    font-size: 14pt;
-    color: #222222;
+    margin: 3px;
+    font-size: 12pt;
 }
 
 a {
@@ -76,7 +95,11 @@ a {
         height: 100vh;
         justify-content: center;
         align-items: center;
-        background: rgba(255,255,255,0.8);
+        background: rgba(100,100,100,0.9);
         margin: 0;
+    }
+
+    #nav a {
+        font-size: 18pt;
     }
 }

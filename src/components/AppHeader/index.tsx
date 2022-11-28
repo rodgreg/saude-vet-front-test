@@ -24,14 +24,16 @@ export function AppHeader() {
 
     return (
         <Div id="header">
-            <a href="#" id="logo">LOGO</a>
+            <a href="#" id="logo"></a>
+            <span id="nome_empresa">SaúdeVET</span>
             <button id="openMenu" onClick={showMenuButton}>&#9776;</button>
             <Div id="nav" >
                 <button id="closeMenu" onClick={showMenuButton}>X</button>
-                <a href="#">Início</a>
-                <a href="#">Cadastros</a>
-                <a href="#">Prontuários</a>
+                <a href="#">Início |</a>
+                <a href="#">Cadastros |</a>
+                <a href="#">Prontuários |</a>
                 <a href="#">Novo Atendimento</a>
+                <a href="#">&#0000;</a>
             </Div>
         </Div> 
     )
