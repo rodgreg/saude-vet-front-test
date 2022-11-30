@@ -1,12 +1,12 @@
 table {
     width: 100vw;
     margin-top: 10px;
+    border: solid 1px #4e7a01;
+    border-collapse: collapse;
 }
 
 th {
     border: solid 1px #4e7a01;
-    border-radius: 4px;
-    border-collapse: separate;
     padding: 6px;
     background-color: #68a400;
     color:#eeeeee;
@@ -14,7 +14,6 @@ th {
 
 td, tr {
     border-bottom: solid 1px #4e7a01;
-    border-radius: 3px;
     padding: 6px;
     overflow: hidden;
     text-overflow: ellipsis;

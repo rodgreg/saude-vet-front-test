@@ -12,9 +12,10 @@ export const ApiRegistro = () => ({
 
     // Apis CRUD Responsável PET #####
     listResponsaveis: useCallback(async () => {
-        var result = await api.get<Responsavel[]>('/registro/responsavel/all')
+        var result:any = null;
+        await api.get<Responsavel[]>('/registro/responsavel/all')
         .then(function (response) {
-            //result = response;
+            result = response;
         })
         .catch(function (error) {
             result = error;
