@@ -1,15 +1,16 @@
 import { AppHeader } from "../../components/AppHeader";
-import { Tweet } from "../../components/Tweet";
 import { styled } from "@stitches/react";
 import { MdHealthAndSafety, MdAssignment, MdAssignmentInd, MdEvent, MdPets, MdEqualizer } from "react-icons/md";
 import "./home.css";
+import { HomeDash } from "../HomeDash";
+import { FormCadResponsavel } from "../../components/FormCadResponsavel";
+import { ListResponsavel } from "../../components/ListResponsavel";
 
-  const Div = styled('div', {
+const Div = styled('div', {
 
-  });
+});
 
 export function Home () {
-
     return (
             <Div id="body">
                 <AppHeader />
@@ -42,12 +43,9 @@ export function Home () {
                 </Div>
 
                 <Div id="main">
-                    <Div id="eventos_proximos">
-                        Próximos Eventos:
-                    </Div>
-                    <Div id="aniversariantes">
-                        Aniversariantes do mês:
-                    </Div>
+                    {/* <HomeDash />  */}
+                    <ListResponsavel />
+                    {/* <FormCadResponsavel /> */}
                 </Div>
 
                 <Div id="footer">
