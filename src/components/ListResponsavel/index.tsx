@@ -23,7 +23,6 @@ export function ListResponsavel () {
     },[]);
 
     return (
-        <>
             <table style={{height:100, width:900, textAlign:'center'}}>
                 <thead>
                 <tr>
@@ -48,7 +47,6 @@ export function ListResponsavel () {
             )}
                 </tbody>
             </table>
-        </>
     )
 
 }
