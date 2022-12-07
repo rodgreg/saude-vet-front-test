@@ -1,26 +1,212 @@
-table {
-    width: 100vw;
-    margin-top: 10px;
-    border: solid 1px #4e7a01;
-    border-collapse: collapse;
+.tab_list_conteiner {
+    border-bottom: 1px solid #333333;
 }
 
-th {
+.tab_list {
+    display: flex;
+    height: 30px;
+    justify-content: center;
+    align-items: center;
+    width: max-content;
+    border: 1px solid #878b75;
+    color: #878b75;
+    margin-right: 1px;
+    padding: 6px;
+    cursor: pointer;
+}
+
+.content_list {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+
+.tab_list:hover {
+    background-color: #e4e9ce;
+}
+
+.tab_list:active {
+    background-color: #e4e9ce;
+}
+
+.tab_list:first-child {
+    border-top-left-radius: 4px;
+}
+
+.tab_list:last-child {
+    border-top-right-radius: 4px;
+}
+
+#responsavel_table {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    overflow: auto;
+    width: 90vw;
+}
+
+#controller_table {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    height: 30px;
+}
+
+#responsavel_table table {
+    width: max-content;
+    border: solid 1px #4e7a01;
+    border-collapse: collapse;
+    text-align: center;
+    width: 100%;
+}
+
+#responsavel_table th {
     border: solid 1px #4e7a01;
     padding: 6px;
     background-color: #68a400;
     color:#eeeeee;
 }
 
-td, tr {
-    border-bottom: solid 1px #4e7a01;
+#responsavel_table td, tr {
     padding: 6px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 400px;
 }
 
-tr:hover {background-color: #d4d4c0;}
-tr:nth-child(even):hover {background-color: #d4d4c0;}
-tr:nth-child(even) {background-color: #e5ebcc;}
+#responsavel_table tr:hover {background-color: #d4d4c0;}
+#responsavel_table tr:nth-child(even):hover {background-color: #d4d4c0;}
+#responsavel_table tr:nth-child(even) {background-color: #e5ebcc;}
+
+#pet_table {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    overflow: auto;
+    width: 90vw;
+}
+
+#pet_table table {
+    width: max-content;
+    border: solid 1px #4e7a01;
+    border-collapse: collapse;
+    text-align: center;
+    width: 100%;
+}
+
+#pet_table th {
+    border: solid 1px #4e7a01;
+    padding: 6px;
+    background-color: #68a400;
+    color:#eeeeee;
+}
+
+#pet_table td, tr {
+    padding: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#pet_table tr:hover {background-color: #d4d4c0;}
+#pet_table tr:nth-child(even):hover {background-color: #d4d4c0;}
+#pet_table tr:nth-child(even) {background-color: #e5ebcc;}
+
+.pagination {
+    display: flex;
+    justify-content: flex-start;
+    list-style: none;
+    margin: 10px 20px 10px 10px;
+    padding: 0;
+}
+
+.pagination a {
+    cursor: default;
+    padding: 3px;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 3px;
+    border: 1px solid #4e7a01;
+    color: #333333;
+    margin-left: 10px;
+}
+
+.pagination li:not(.disabled) a:hover {
+    background-color: #d4d4c0;
+    opacity: 0.6;
+    cursor: pointer;
+}
+   
+.pagination li a {
+    font-weight: bold;
+    font-size: 14px;
+}
+   
+.pagination li.active a {
+    color: #333333;
+    background: #e5ebcc;
+}
+   
+.pagination li.disabled a {
+    pointer-events: none;
+    color: rgb(198, 197, 202);
+    border: 1px solid rgb(198, 197, 202);
+}
+
+#form_cadastro_responsavel {
+    display: flex;
+    background-color: #efefef;
+    border-bottom-left-radius: 8px;
+    border-top-left-radius: 8px;
+    border: solid 3px #878b75;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 10px;
+    position: fixed;
+    height: 90vh;
+    top: 45px;
+    box-shadow: 5px 0px 20px #222222;
+    z-index: 3;
+    overflow: auto;
+}
+
+.navbar {
+    right: -560px; 
+    /* animation: moveRight 0.3s ease-in-out; */
+}
+
+.navbarSticky {
+    right: -1px;
+    animation: moveLeft 0.3s ease-in-out;
+}
+
+@keyframes moveLeft {
+    from {
+        transform: translatex(500px);
+    }
+    to {
+        transform: translatex(0px);
+    }
+}
+
+#overlay {
+    display: block;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0px;
+    left: 0px;
+    background: rgb(255, 255, 255, 0.6);
+    z-index: 1;
+    animation: aparecer 0.3s ease-in-out;
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 0.6;
+    }
+}

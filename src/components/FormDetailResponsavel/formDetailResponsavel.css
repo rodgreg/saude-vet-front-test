@@ -1,0 +1,120 @@
+#form_responsavel {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+p {
+  font-size: 18pt;
+  margin-top: 10px;
+}
+
+.AccordionContentText label {
+  font-size: 12pt;
+}
+
+/* Accordion css */
+button,
+h3 {
+  all: unset;
+}
+
+.AccordionRoot {
+    border-radius: 4px;
+    width: 500px;
+    background-color: #eeeeee;
+    box-shadow: 0 2px 6px #333333;
+    margin-bottom: 15px;
+  }
+  
+  .AccordionItem {
+    overflow: hidden;
+    margin-top: 1px;
+  }
+  
+  .AccordionItem:first-child {
+    margin-top: 0;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+  }
+  
+  .AccordionItem:last-child {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+  
+  .AccordionItem:focus-within {
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 0 0 2px #999999;
+  }
+  
+  .AccordionHeader {
+    display: flex;
+  }
+  
+  .AccordionTrigger {
+    font-family: inherit;
+    background-color: transparent;
+    padding: 0 10px;
+    height: 50px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 18px;
+    line-height: 1;
+    color: #444444;
+    box-shadow: 0 1px 0 #444444;
+    background-color: white;
+  }
+  
+  .AccordionTrigger:hover {
+    background-color: #eeeee1;
+  }
+  
+  .AccordionContent {
+    overflow: hidden;
+    font-size: 15px;
+    color: #333333;
+    background-color: #eeeee1;
+    max-height: 400px;
+    overflow: auto;
+  }
+  .AccordionContent[data-state='open'] {
+    animation: slideDown 300ms cubic-bezier(0.87, 0, 0.13, 1);
+  }
+  .AccordionContent[data-state='closed'] {
+    animation: slideUp 300ms cubic-bezier(0.87, 0, 0.13, 1);
+  }
+  
+  .AccordionContentText {
+    padding: 10px;
+    overflow-wrap: break-word;
+  }
+  
+  .AccordionChevron {
+    color: #333333;
+    transition: transform 300ms cubic-bezier(0.87, 0, 0.13, 1);
+  }
+  .AccordionTrigger[data-state='open'] > .AccordionChevron {
+    transform: rotate(180deg);
+  }
+  
+  @keyframes slideDown {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  
+  @keyframes slideUp {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }

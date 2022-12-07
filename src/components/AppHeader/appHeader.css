@@ -14,7 +14,7 @@
     flex: 1 1 100vw;
     height: 40px;
     box-shadow: 0px 0px 5px #222222;
-    z-index: 99999;
+    z-index: 1;
 }
 
 #logo {
@@ -101,5 +101,39 @@ a {
 
     #nav a {
         font-size: 18pt;
+    }
+}
+
+.dropdown {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    padding: 4px;
+    border-radius: 5px;
+    width: max-content;
+    background-color: #cde7a7;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    /* top:20px */
+    /* animation: moveLeft 0.3s ease-in-out; */
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+    animation: moveDown 0.3s ease-in-out;
+}
+
+@keyframes moveDown {
+    from {
+        transform: translatey(10px);
+        opacity: 0;
+    }
+    to {
+        transform: translatey(0px);
+        opacity: 1;
     }
 }

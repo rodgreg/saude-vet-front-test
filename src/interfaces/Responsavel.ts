@@ -21,6 +21,7 @@ interface endereco {
     cep: String;
     logradouro?: String;
     numero?: String;
+    complemento?: String;
     endereco?: String;
     bairro?: String;
     cidade?: String;

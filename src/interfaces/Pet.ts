@@ -4,8 +4,7 @@ export interface Pet {
     especie:String;
     raca:String;
     cor:String;
-    tamanho:String;
-    peso:String;
+    genero:String;
     nascimento:Date;
     pedigree:boolean;
     fertil:boolean;

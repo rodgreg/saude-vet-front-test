@@ -2,18 +2,39 @@ import { AppHeader } from "../../components/AppHeader";
 import { styled } from "@stitches/react";
 import { MdHealthAndSafety, MdAssignment, MdAssignmentInd, MdEvent, MdPets, MdEqualizer } from "react-icons/md";
 import "./home.css";
-import { HomeDash } from "../HomeDash";
-import { FormCadResponsavel } from "../../components/FormCadResponsavel";
+import { HomeDash } from "../../components/HomeDash";
 import { ListResponsavel } from "../../components/ListResponsavel";
+import { useState } from "react";
 
 const Div = styled('div', {
 
 });
 
+interface principalProps {
+    page:String,
+}
+
+const Principal = (props:principalProps) => {
+    switch (props.page) {
+        case "home":
+            return <HomeDash />
+            break;
+        case "listResponsavel":
+            return <ListResponsavel />
+            break;  
+    
+        default:
+            return <HomeDash />
+            break;
+    }
+}
+
 export function Home () {
+    const [showPage, setShowPage] = useState<String>("home");
+
     return (
             <Div id="body">
-                <AppHeader />
+                <AppHeader clickMenu={(e,page) => setShowPage(page)} />
 
                 <Div id="aside">
                     <Div id="button" title="Nova consulta">
@@ -43,9 +64,7 @@ export function Home () {
                 </Div>
 
                 <Div id="main">
-                    {/* <HomeDash />  */}
-                    <ListResponsavel />
-                    {/* <FormCadResponsavel /> */}
+                    <Principal page={showPage}/>
                 </Div>
 
                 <Div id="footer">

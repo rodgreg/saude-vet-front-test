@@ -60,9 +60,9 @@
     background: #f3f7f0
 }
 
-@media only screen and (max-width: 923px) {
+@media only screen and (max-width: 996px) {
     #main {
-        height: calc(100vh - 137px);
+        height: calc(100vh - 120px);
         width: 100vw;
     }
 
