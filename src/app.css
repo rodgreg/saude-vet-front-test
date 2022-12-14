@@ -1,0 +1,30 @@
+:root {
+    --bg: #eeeeee;
+    --bg-header: #a8c990;
+    --bg-input: #d9d9d9;
+    --bg-button-default: #b4c6a7;
+    --bg-button-default-hover: #c1c7bc;
+    --bg-checked: #e4e9ce;
+    --txt-color: #434641;
+    --txt-color-secondary: #173800;
+    --border-color:#1e390a;
+}
+
+[data-theme='dark'] {
+    --bg: #222222;
+    --bg-header: #203c0c;
+    --bg-input: #373737;
+    --bg-button-default: #2d5510;
+    --bg-button-default-hover: #3d681a;
+    --bg-checked: #283005;
+    --txt-color: #d9e7cf;
+    --txt-color-secondary: #8bbf6a;
+    --border-color:#d6e8ca;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Quicksand', sans-serif;
+}

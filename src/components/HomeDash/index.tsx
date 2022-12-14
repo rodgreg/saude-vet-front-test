@@ -1,6 +1,7 @@
 import { useLayoutEffect, useState } from "react";
-import moment from "moment";
+import moment from "moment/min/moment-with-locales";
 import { styled } from "@stitches/react";
+import { MdCalendarToday, MdCake, MdAssessment } from "react-icons/md";
 import './homeDash.css';
 
 const Div = styled('div', {
@@ -11,6 +12,7 @@ export function HomeDash() {
     const [saudacao,setSaudacao] = useState('');
 
     useLayoutEffect(() => {
+        moment.locale('pt-br');
         var currentHour = parseInt(moment(new Date()).format('HH'));
         if(currentHour >= 5 && currentHour <= 12) {
             setSaudacao("Bom dia");
@@ -24,86 +26,41 @@ export function HomeDash() {
     return (
         <>
             <Div id="saudacao">
-                <span>{saudacao} {"{nome do usuário}"}!</span>
+                <span>{saudacao} {"Marcelo"}!</span>
             </Div>
             <Div id="eventos_proximos">
-                <div id="eventos_proximos_title">
-                    <span><b>Próximos Eventos:</b></span>
-                    <a href="#">ver todos</a>
+                <div id="eventos_proximos_title" className="module_title">
+                    <MdCalendarToday size={22}/>
+                    <span><b>Próximos Eventos</b></span>
+                    <a href="#">ver agenda</a>
                 </div>
                 <div id="eventos_proximos_content">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style={{width:'20%'}}>Evento</th>
-                                <th style={{width:'20%'}}>Pet</th>
-                                <th style={{width:'40%'}}>Descricação</th>
-                                <th style={{width:'20%'}}>Data e Hora</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Consulta Clínica</td>
-                                <td style={{textAlign:'center'}}>Totó</td>
-                                <td>Totó estão do problema de visão</td>
-                                <td style={{textAlign:'center'}}>13h45 29/11/2022</td>
-                            </tr>
-                            <tr>
-                                <td>Vacinação</td>
-                                <td style={{textAlign:'center'}}>Totó</td>
-                                <td>Antirábica</td>
-                                <td style={{textAlign:'center'}}>13h45 29/11/2022</td>
-                            </tr>
-                            <tr>
-                                <td>Vacinação</td>
-                                <td style={{textAlign:'center'}}>Totó</td>
-                                <td>Antirábica</td>
-                                <td style={{textAlign:'center'}}>13h45 29/11/2022</td>
-                            </tr>
-                            <tr>
-                                <td>Vacinação</td>
-                                <td style={{textAlign:'center'}}>Totó</td>
-                                <td>Antirábica</td>
-                                <td style={{textAlign:'center'}}>13h45 29/11/2022</td>
-                            </tr>
-                            <tr>
-                                <td>Vacinação</td>
-                                <td style={{textAlign:'center'}}>Totó</td>
-                                <td>Antirábica</td>
-                                <td style={{textAlign:'center'}}>13h45 29/11/2022</td>
-                            </tr>
-                            <tr>
-                                <td>Vacinação</td>
-                                <td style={{textAlign:'center'}}>Totó</td>
-                                <td>Antirábica</td>
-                                <td style={{textAlign:'center'}}>13h45 29/11/2022</td>
-                            </tr>
-                            <tr>
-                                <td>Vacinação</td>
-                                <td style={{textAlign:'center'}}>Totó</td>
-                                <td>Antirábica</td>
-                                <td style={{textAlign:'center'}}>13h45 29/11/2022</td>
-                            </tr>
-                            <tr>
-                                <td>Vacinação</td>
-                                <td style={{textAlign:'center'}}>Totó</td>
-                                <td>Antirábica</td>
-                                <td style={{textAlign:'center'}}>13h45 29/11/2022</td>
-                            </tr>
-                            <tr>
-                                <td>Vacinação</td>
-                                <td style={{textAlign:'center'}}>Totó</td>
-                                <td title={"Vacinação prevista para todos os meses do ano, mesmo sem prescrição, por meio de campanha. Testando com mais palavras para verificar a quebra"} >Vacinação prevista para todos os meses do ano, mesmo sem prescrição, por meio de campanha</td>
-                                <td style={{textAlign:'center'}}>13h45 29/11/2022</td>
-                            </tr>
-                            
-                        </tbody>    
-                    </table>
+                    <div className="evento_card">
+                        <div>Assunto do evento</div>
+                        <div>Cliente</div>
+                        <div>Data e hora do evento</div>
+                    </div>
+                    <div className="evento_card">
+                        <span>Consulta Clinica</span>
+                        <span>Totó</span>
+                        <span title={moment('2022-12-13 17:15').format('DD/MM/YYYY HH:mm')}>{moment('2022-12-13 17:15').fromNow()}</span>
+                    </div>
+                    <div className="evento_card">
+                        <span>Consulta Clinica</span>
+                        <span>Totó</span>
+                        <span title={moment('2022-12-13 18:30').format('DD/MM/YYYY HH:mm')}>{moment('2022-12-13 17:30').fromNow()}</span>
+                    </div>
+                    <div className="evento_card">
+                        <span>Consulta Clinica</span>
+                        <span>Totó</span>
+                        <span title={moment('2022-12-14 09:15').format('DD/MM/YYYY HH:mm')}>{moment('2022-12-14 09:15').fromNow()}</span>
+                    </div>
                 </div>
             </Div>
             <Div id="aniver_pets">
-                <div id="aniver_pets_title">
-                    <span><b>Aniversariantes do mês (Pets):</b></span>&nbsp;
+                <div id="aniver_pets_title" className="module_title">
+                    <MdCake size={22} />
+                    <span><b>Aniversariantes do mês (Pets)</b></span>
                     <span>Dezembro</span>
                 </div>
                 <div id="aniver_pets_content">
@@ -202,10 +159,20 @@ export function HomeDash() {
                 </div>
             </Div>
             <Div id="resumo">
-                <span><b>Resumo:</b></span>
+                <div className="module_title">
+                    <MdAssessment size={22}/>
+                    <span><b>Resumo</b></span>
+                    <span>.</span>
+                </div>
+        
             </Div>
             <Div id="aniversariantes">
-                <span><b>Aniversariantes do mês (Responsáveis):</b></span>
+                <div className="module_title">
+                    <MdCake size={22}/>
+                    <span><b>Aniversariantes do mês (Responsáveis)</b></span>
+                    <span>.</span>
+                </div>
+                
             </Div> 
         </>
     )

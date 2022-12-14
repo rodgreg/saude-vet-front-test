@@ -1,22 +1,22 @@
 import { Pet } from "./Pet"
 
 export interface Responsavel {
-    responsavelID?:Number;
-    nome:String;
-    sobrenome:String;
-    genero:String;
-    tipoPessoa:String;
-    tipoRegistro:String;
-    registroNum:String;
-    nascimento:Date;
-    aceitaEmail:Boolean;
-    pets?: Pet[];
-    enderecos?: endereco[];
-    contatos?: contato[];
+    responsavelID?:Number | null;
+    nome?:String;
+    sobrenome?:String;
+    genero?:String;
+    tipoPessoa?:String; // Física ou Jurídica
+    tipoRegistro?:String; // CPF ou CNPJ
+    registroNum?:String;
+    nascimento?:Date | null;
+    aceitaEmail?:Boolean;
+    pets?: Pet[] | null;
+    enderecos?: Endereco[] | null;
+    contatos?: Contato[] | null;
 }
 
-interface endereco {
-    enderecoID?: Number;
+export interface Endereco {
+    enderecoID?: Number | null;
     tipoEndereco?: String;
     cep: String;
     logradouro?: String;
@@ -28,8 +28,8 @@ interface endereco {
     uf?: String;
 }
 
-interface contato {
-        contatoID?: Number;
+export interface Contato {
+        contatoID?: Number | null;
         tipoContato?: String;
         descricao?: String;
         principal?: Boolean;

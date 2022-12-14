@@ -45,7 +45,7 @@ export function FormDetailResponsavel(props: propsFormResponsavel) {
         <div id='form_responsavel'>
             <Button color={'light_cancel'} type="button"
                     onClick={(e) => props.cancelFormClick(e)}> {"Fechar"} </Button>
-            <p><b>{props.responsavelDetail?.responsavelID?props.responsavelDetail.nome.toString()+" "+props.responsavelDetail.sobrenome.toString():""}</b></p>
+            <p><b>{props.responsavelDetail?.nome && props.responsavelDetail.sobrenome?props.responsavelDetail.nome.toString()+" "+props.responsavelDetail.sobrenome.toString():""}</b></p>
             <br/>
             <Accordion.Root className='AccordionRoot' type='single' defaultValue="item-1" collapsible>
                 <Accordion.Item className='AccordionItem' value="item-1">
@@ -57,11 +57,11 @@ export function FormDetailResponsavel(props: propsFormResponsavel) {
                     </Accordion.Header>
                      <Accordion.Content className='AccordionContent'>
                         <div className="AccordionContentText">
-                            <div style={{ backgroundColor: "#fefff8", padding: 8, borderRadius: 4, marginBottom: 2 }}>
-                                <label>Sexo: <b>{props.responsavelDetail?props.responsavelDetail.genero.toString():""}</b></label><br/><br/>
-                                <label>Tipo de Pessoa: <b>{props.responsavelDetail?props.responsavelDetail.tipoPessoa.toString():""}</b></label><br/><br/>
-                                <label>CPF/CNPJ: <b>{props.responsavelDetail?cpf_cnpj_mask(props.responsavelDetail.tipoRegistro, props.responsavelDetail.registroNum):""}</b></label><br/><br/>
-                                <label>Data de nascimento: <b>{props.responsavelDetail?moment(props.responsavelDetail.nascimento).format('DD/MM/YYYY')
+                            <div className='AccordionCard'>
+                                <span>Sexo: <b>{props.responsavelDetail?.genero?props.responsavelDetail.genero.toString():""}</b></span>
+                                <span>Tipo de Pessoa: <b>{props.responsavelDetail?.tipoPessoa?props.responsavelDetail.tipoPessoa.toString():""}</b></span>
+                                <span>CPF/CNPJ: <b>{props.responsavelDetail?.tipoRegistro && props.responsavelDetail.registroNum?cpf_cnpj_mask(props.responsavelDetail.tipoRegistro, props.responsavelDetail.registroNum):""}</b></span>
+                                <span>Data de nascimento: <b>{props.responsavelDetail?.nascimento?moment(props.responsavelDetail.nascimento).format('DD/MM/YYYY')
                                                                                         +" - "+
                                                                                         moment(props.responsavelDetail.nascimento).month(0).from(moment().month(0),true)
                                                                                         +" - "+
@@ -82,11 +82,11 @@ export function FormDetailResponsavel(props: propsFormResponsavel) {
                                                                                        )
                                                                                        :""}
                                                                                        </b>
-                                </label><br/><br/>
-                                <label>Aceita receber e-mail: &nbsp;<b>
+                                </span>
+                                <span>Aceita receber e-mail: &nbsp;<b>
                                     <span>{props.responsavelDetail?Boolean(props.responsavelDetail.aceitaEmail)?"Sim":"Não":""}
                                     </span></b>
-                                </label>
+                                </span>
                             </div>
                         </div>
                     </Accordion.Content>
@@ -101,12 +101,11 @@ export function FormDetailResponsavel(props: propsFormResponsavel) {
                     <Accordion.Content className='AccordionContent'>
                         <div className="AccordionContentText">
                         {props.responsavelDetail?.contatos?.map(contato => (
-                            <div key={contato.contatoID?.valueOf()} style={{ backgroundColor: "#fefff8", padding: 8, borderRadius: 4, marginBottom: 2 }}>
-                                <label>Principal: <b>{contato.principal ? "Sim" : "Não"}</b></label> | &nbsp;
-                                <label>Tipo: <b>{contato.tipoContato}</b></label> | &nbsp;
-                                <label>Descrição: <b>{contato.descricao}</b></label><br /><br />
-                                <label>Observações: <b>{contato.anotacao}</b></label>
-                                <br />-<br />
+                            <div key={contato.contatoID?.valueOf()} className='AccordionCard'>
+                                <span>Principal: <b>{contato.principal ? "Sim" : "Não"}</b> | &nbsp;
+                                      Tipo: <b>{contato.tipoContato}</b></span>
+                                <span>Descrição: <b>{contato.descricao}</b></span>
+                                <span>Observações: <b>{contato.anotacao}</b></span>
                             </div>
                         ))}
                         </div>
@@ -122,23 +121,22 @@ export function FormDetailResponsavel(props: propsFormResponsavel) {
                     <Accordion.Content className='AccordionContent'>
                         <div className="AccordionContentText" >
                         {props.responsavelDetail?.enderecos?.map(endereco => {return(
-                        <div key={endereco.enderecoID?.valueOf()} style={{backgroundColor:"#fefff8", padding:8, borderRadius:4, marginBottom:2}}>
-                            <label>Tipo: <b>{endereco.tipoEndereco}</b></label>&nbsp; | &nbsp;
-                            <label>CEP: <b>{endereco.cep}</b></label><br/><br/>
-                            <label>Logradouro: <b>{endereco.logradouro}</b></label>&nbsp; | &nbsp;
-                            <label>Numero: <b>{endereco.numero}</b></label><br/><br/>
-                            <label>Endereço: <b>{endereco.endereco}</b></label><br/><br/>
-                            <label>Complemento: <b>{endereco.complemento}</b></label>
-                            <label>Bairro: <b>{endereco.bairro}</b></label><br/><br/>
-                            <label>Cidade: <b>{endereco.cidade}</b></label>&nbsp; | &nbsp;
-                            <label>UF: <b>{endereco.uf}</b></label>
-                            <br/>-<br/>
+                        <div key={endereco.enderecoID?.valueOf()} className='AccordionCard'>
+                            <span>Tipo: <b>{endereco.tipoEndereco}</b> &nbsp; | &nbsp;
+                                  CEP: <b>{endereco.cep}</b></span>
+                            <span>Logradouro: <b>{endereco.logradouro}</b>&nbsp; | &nbsp;
+                                  Numero: <b>{endereco.numero}</b></span>
+                            <span>Endereço: <b>{endereco.endereco}</b></span>
+                            <span>Complemento: <b>{endereco.complemento}</b></span>
+                            <span>Bairro: <b>{endereco.bairro}</b></span>
+                            <span>Cidade: <b>{endereco.cidade}</b>&nbsp; | &nbsp;
+                                  UF: <b>{endereco.uf}</b></span>
                         </div>
                             )})}
                         </div>
                     </Accordion.Content>
                 </Accordion.Item>
-                <Accordion.Item value="item-4">
+                <Accordion.Item className='AccordionItem' value="item-4">
                     <Accordion.Header className="AccordionHeader">
                     <Accordion.Trigger className='AccordionTrigger'>
                         Pets
@@ -148,16 +146,15 @@ export function FormDetailResponsavel(props: propsFormResponsavel) {
                     <Accordion.Content className='AccordionContent'>
                         <div className="AccordionContentText">
                         {props.responsavelDetail?.pets?.map(pet => {return(
-                        <div key={pet.petID?.valueOf()} style={{backgroundColor:"#fefff8", padding:8, borderRadius:4, marginBottom:2}}>
-                            <label>Nome: <b>{pet.nome}</b></label>&nbsp; | &nbsp;
-                            <label>Sexo: <b>{pet.genero}</b></label><br/><br/>
-                            <label>Especie: <b>{pet.especie}</b></label>&nbsp; | &nbsp;
-                            <label>Raça: <b>{pet.raca}</b></label>&nbsp; | &nbsp;
-                            <label>Cor: <b>{pet.cor}</b></label><br/><br/>
-                            <label>Data de Nascimento: <b>{moment(pet.nascimento).format("DD/MM/YYYY")}</b></label>&nbsp; | &nbsp;
-                            <label>Fetirlidade: <b>{pet.fertil?"Sim":"Não"}</b></label>&nbsp; | &nbsp;
-                            <label>Pedigree: <b>{pet.pedigree?"Sim":"Não"}</b></label>
-                            <br/>-<br/>
+                        <div key={pet.petID?.valueOf()} className='AccordionCard'>
+                            <span>Nome: <b>{pet.nome}</b>&nbsp; | &nbsp;
+                                  Sexo: <b>{pet.genero}</b></span>
+                            <span>Especie: <b>{pet.especie}</b>&nbsp; | &nbsp;
+                                  Raça: <b>{pet.raca}</b>&nbsp; | &nbsp;
+                                  Cor: <b>{pet.cor}</b></span>
+                            <span>Data de Nascimento: <b>{moment(pet.nascimento).format("DD/MM/YYYY")}</b></span>
+                            <span>Fetirlidade: <b>{pet.fertil?"Sim":"Não"}</b>&nbsp; | &nbsp;
+                                  Pedigree: <b>{pet.pedigree?"Sim":"Não"}</b></span>
                         </div>
                             )})}
                         </div>

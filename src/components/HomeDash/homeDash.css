@@ -8,7 +8,7 @@
 #saudacao span {
     font-size: 16pt;
     font-weight: bold;
-    color: #666666;
+    color: var(--txt-color);
     margin-left: 10px;
 }
 
@@ -17,33 +17,41 @@
     flex: 1 1 calc(50vw - 100px);
     flex-direction: column;
     height: 42vh;
-    background: #eeeee1;
+    background: var(--bg-input);
     margin: 2px;
     padding: 10px;
     border-radius: 10px;
-    border: solid 1px #c8c8ab;
+    border: solid 1px var(--border-color);
     overflow: auto;
 }
 
-#eventos_proximos_title {
+.module_title{
     top:0px;
     width: 100%;
-    border-bottom: solid 1px #4e7a01;
+    border-bottom: solid 1px var(--border-color);
     display: flex;
     justify-content: space-between;
-}
-
-#aniver_pets_title {
-    top:0px;
-    width: 100%;
-    border-bottom: solid 1px #4e7a01;
-    display: flex;
-    justify-content: flex-start;
 }
 
 #eventos_proximos_content {
     overflow: auto;
     height: 100%;
+}
+
+.evento_card {
+    display: grid;
+    grid-template-columns: 40% 30% 30%;
+    background-color: var(--bg);
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    border: solid 1px var(--border-color);
+    justify-content: space-between;
+    font-weight: 600;
+}
+
+.evento_card:hover {
+    background-color: var(--bg-checked);
 }
 
 #aniver_pets_content {
@@ -54,46 +62,22 @@
     justify-content: space-around;
 }
 
-#eventos_proximos table {
-    margin-top: 10px;
-    width: 100%;
-}
-
 #aniver_pets table {
     margin-top: 10px;
     width: 40%;
 }
 
-#eventos_proximos  th {
-    border: solid 1px #4e7a01;
-    border-radius: 4px;
-    border-collapse: separate;
-    padding: 6px;
-    background-color: #68a400;
-    color:#eeeeee;
-}
-
 #aniver_pets th {
-    border: solid 1px #4e7a01;
+    border: solid 1px var(--border-color);
     border-radius: 4px;
     border-collapse: separate;
     padding: 6px;
-    background-color: #68a400;
-    color:#eeeeee;
-}
-
-#eventos_proximos  td, tr {
-    border-bottom: solid 1px #4e7a01;
-    border-radius: 3px;
-    padding: 6px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 300px;
+    background-color: var(--bg-button-default);
+    color:var(--txt-color);
 }
 
 #aniver_pets td, tr {
-    border-bottom: solid 1px #4e7a01;
+    border-bottom: solid 1px var(--border-color);
     border-radius: 3px;
     padding: 6px;
     overflow: hidden;
@@ -102,13 +86,9 @@
     max-width: 300px;
 }
 
-#eventos_proximos tr:hover {background-color: #d4d4c0;}
-#eventos_proximos tr:nth-child(even):hover {background-color: #d4d4c0;}
-#eventos_proximos tr:nth-child(even) {background-color: #e5ebcc;}
-
-#aniver_pets tr:hover {background-color: #d4d4c0;}
-#aniver_pets tr:nth-child(even):hover {background-color: #d4d4c0;}
-#aniver_pets tr:nth-child(even) {background-color: #e5ebcc;}
+#aniver_pets tr:hover {background-color: var(--bg-checked);}
+#aniver_pets tr:nth-child(even):hover {background-color: var(--bg-checked);}
+#aniver_pets tr:nth-child(even) {background-color: var(--bg-input);}
 
 @media only screen and (max-width: 996px) {
     #eventos_proximos, #aniversariantes, #aniver_pets, #resumo {

@@ -9,14 +9,19 @@ export const Button = styled('button', {
     border: 'solid 1px',
     borderRadius: '5px',
     cursor: 'pointer',
+    width: 'fit-content',
+    fontWeight:'bold',
+    '&:focus': {
+        borderWidth:'2px'
+    },
     variants: {
         color:{
             light: {
-                backgroundColor: '#e4eedd',
-                color: '#444444',
-                borderColor: '#b4c6a7',
+                backgroundColor: 'var(--bg-button-default)',
+                color: 'var(--text-color)',
+                borderColor: 'var(--border-color)',
                 '&:hover': {
-                    backgroundColor: '#c0cbb7',
+                    backgroundColor: 'var(--bg-button-default-hover)',
                 }
             },
             dark: {
@@ -29,10 +34,10 @@ export const Button = styled('button', {
             },
             light_outline: {
                 backgroundColor: 'transparent',
-                color: '#444444',
-                borderColor: '#b4c6a7',
+                color: 'var(--text-color)',
+                borderColor: 'var(--border-color)',
                 '&:hover': {
-                    backgroundColor: '#c0cbb7',
+                    backgroundColor: 'var(--bg-button-default-hover)',
                 }
             },
             dark_outline: {
@@ -138,16 +143,25 @@ export const LinkButton = styled('button', {
         },
         color: {
             light: {
-                color:'#eeeeee',
+                color:'var(--text-color)',
             },
             dark: {
-                color:'#111111',
+                color:'var(--text-color-secondary)',
+            }
+        },
+        fontStyle: {
+            normal: {
+                fontWeight:'normal'
+            },
+            bold: {
+                fontWeight:'bold'
             }
         }
     },
     defaultVariants: {
         size: 'medium',
-        color: 'light'
+        color: 'light',
+        fontStyle: 'bold',
     }
 })
 

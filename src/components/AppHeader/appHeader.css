@@ -5,23 +5,23 @@
 }
 
 #header, #nav {
-    background: #589404;
-    color: #eeeeee;
+    background: var(--bg-header);
+    color: var(--txt-color);
     display: flex;
 }
 
 #header {
     flex: 1 1 100vw;
     height: 40px;
-    box-shadow: 0px 0px 5px #222222;
+    box-shadow: 0px 0px 5px var(--border-color);
     z-index: 1;
 }
 
 #logo {
     display: flex;
     flex: 0 0 150px;
-    background: #6fb311;
-    color: #eeeeee;
+    background: var(--bg-input);
+    color: var(--txt-color);
     font-weight: bold;
     padding: 8px;
     align-items: center;
@@ -33,7 +33,7 @@
 #nome_empresa {
     display: flex;
     flex: 0 0 80px;
-    color: #eeeeee;
+    color: var(--txt-color);
     font-weight: bold;
     padding: 8px;
     align-items: center;
@@ -49,7 +49,7 @@
     font-weight: bold;
     cursor: pointer;
     display: none;
-    color: #eeeeee;
+    color: var(--txt-color);
 }
 
 #openMenu {
@@ -101,39 +101,5 @@ a {
 
     #nav a {
         font-size: 18pt;
-    }
-}
-
-.dropdown {
-    cursor: pointer;
-    display: inline-block;
-    position: relative;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    padding: 4px;
-    border-radius: 5px;
-    width: max-content;
-    background-color: #cde7a7;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    /* top:20px */
-    /* animation: moveLeft 0.3s ease-in-out; */
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-    animation: moveDown 0.3s ease-in-out;
-}
-
-@keyframes moveDown {
-    from {
-        transform: translatey(10px);
-        opacity: 0;
-    }
-    to {
-        transform: translatey(0px);
-        opacity: 1;
     }
 }
