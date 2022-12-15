@@ -47,7 +47,7 @@ h3 {
   .AccordionItem:focus-within {
     position: relative;
     z-index: 1;
-    box-shadow: 0 0 0 2px var(--border-color);
+    /* box-shadow: 0 0 0 2px var(--border-color); */
   }
   
   .AccordionHeader {
@@ -70,11 +70,11 @@ h3 {
   }
 
   .AccordionTrigger[data-state='open'] {
-    background-color: var(--bg-input);
+    background-color: var(--bg-checked);
   }
   
   .AccordionTrigger:hover {
-    background-color: var(--bg-input);
+    background-color: var(--bg-checked);
   }
   
   .AccordionContent {
@@ -84,6 +84,7 @@ h3 {
     background-color: var(--bg);
     max-height: 400px;
     overflow-wrap: break-word;
+    border-bottom: 1px solid var(--border-color);
   }
 
   .AccordionContent[data-state='open'] {
@@ -103,7 +104,7 @@ h3 {
   .AccordionCard {
     display: flex;
     flex-direction: column;
-    background-color: var(--bg-input);
+    background-color: var(--bg);
     padding: 8px;
     border-radius: 4px;
     margin-bottom: 2px;

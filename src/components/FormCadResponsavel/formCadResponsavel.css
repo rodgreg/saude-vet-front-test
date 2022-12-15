@@ -112,3 +112,29 @@
         width: 80%;
     }
 }
+
+form .field.shake {
+    animation: shake 0.3s ease-in-out;
+}
+
+input.shake {
+    border: solid 2px #e32;
+    animation: shake 0.1s ease-in-out;
+}
+
+select.shake {
+    border: solid 2px #e32;
+    animation: shake 0.1s ease-in-out;   
+}
+
+@keyframes shake {
+    0%, 60%{
+      border-width: 0px;
+    }
+    15%, 45%, 75%, 100%{
+      border-width: 1px;
+    }
+    30%, 90%{
+        border-width: 2.5px;
+    }
+}

@@ -47,17 +47,17 @@ export function FormDetailResponsavel(props: propsFormResponsavel) {
                     onClick={(e) => props.cancelFormClick(e)}> {"Fechar"} </Button>
             <p><b>{props.responsavelDetail?.nome && props.responsavelDetail.sobrenome?props.responsavelDetail.nome.toString()+" "+props.responsavelDetail.sobrenome.toString():""}</b></p>
             <br/>
-            <Accordion.Root className='AccordionRoot' type='single' defaultValue="item-1" collapsible>
-                <Accordion.Item className='AccordionItem' value="item-1">
-                    <Accordion.Header className="AccordionHeader">
-                    <Accordion.Trigger className='AccordionTrigger'>
+            <Accordion.Root className='AccordionRootR' type='single' defaultValue="item-1" collapsible>
+                <Accordion.Item className='AccordionItemR' value="item-1">
+                    <Accordion.Header className="AccordionHeaderR">
+                    <Accordion.Trigger className='AccordionTriggerR'>
                         Dados Pessoais
-                        <ChevronDownIcon className="AccordionChevron" aria-hidden />
+                        <ChevronDownIcon className="AccordionChevronR" aria-hidden />
                     </Accordion.Trigger>
                     </Accordion.Header>
-                     <Accordion.Content className='AccordionContent'>
-                        <div className="AccordionContentText">
-                            <div className='AccordionCard'>
+                     <Accordion.Content className='AccordionContentR'>
+                        <div className="AccordionContentTextR">
+                            <div className='AccordionCardR'>
                                 <span>Sexo: <b>{props.responsavelDetail?.genero?props.responsavelDetail.genero.toString():""}</b></span>
                                 <span>Tipo de Pessoa: <b>{props.responsavelDetail?.tipoPessoa?props.responsavelDetail.tipoPessoa.toString():""}</b></span>
                                 <span>CPF/CNPJ: <b>{props.responsavelDetail?.tipoRegistro && props.responsavelDetail.registroNum?cpf_cnpj_mask(props.responsavelDetail.tipoRegistro, props.responsavelDetail.registroNum):""}</b></span>
@@ -91,17 +91,17 @@ export function FormDetailResponsavel(props: propsFormResponsavel) {
                         </div>
                     </Accordion.Content>
                 </Accordion.Item>
-                <Accordion.Item className='AccordionItem' value="item-2">
-                    <Accordion.Header className="AccordionHeader">
-                    <Accordion.Trigger className='AccordionTrigger'>
+                <Accordion.Item className='AccordionItemR' value="item-2">
+                    <Accordion.Header className="AccordionHeaderR">
+                    <Accordion.Trigger className='AccordionTriggerR'>
                         Contatos
-                        <ChevronDownIcon className="AccordionChevron" aria-hidden />
+                        <ChevronDownIcon className="AccordionChevronR" aria-hidden />
                     </Accordion.Trigger>
                     </Accordion.Header>
-                    <Accordion.Content className='AccordionContent'>
-                        <div className="AccordionContentText">
+                    <Accordion.Content className='AccordionContentR'>
+                        <div className="AccordionContentTextR">
                         {props.responsavelDetail?.contatos?.map(contato => (
-                            <div key={contato.contatoID?.valueOf()} className='AccordionCard'>
+                            <div key={contato.contatoID?.valueOf()} className='AccordionCardR'>
                                 <span>Principal: <b>{contato.principal ? "Sim" : "Não"}</b> | &nbsp;
                                       Tipo: <b>{contato.tipoContato}</b></span>
                                 <span>Descrição: <b>{contato.descricao}</b></span>
@@ -111,17 +111,17 @@ export function FormDetailResponsavel(props: propsFormResponsavel) {
                         </div>
                     </Accordion.Content>
                 </Accordion.Item>
-                <Accordion.Item className='AccordionItem' value="item-3">
-                    <Accordion.Header className="AccordionHeader">
-                    <Accordion.Trigger className='AccordionTrigger'>
+                <Accordion.Item className='AccordionItemR' value="item-3">
+                    <Accordion.Header className="AccordionHeaderR">
+                    <Accordion.Trigger className='AccordionTriggerR'>
                         Endereços
-                        <ChevronDownIcon className="AccordionChevron" aria-hidden />
+                        <ChevronDownIcon className="AccordionChevronR" aria-hidden />
                     </Accordion.Trigger>
                     </Accordion.Header>
-                    <Accordion.Content className='AccordionContent'>
-                        <div className="AccordionContentText" >
+                    <Accordion.Content className='AccordionContentR'>
+                        <div className="AccordionContentTextR" >
                         {props.responsavelDetail?.enderecos?.map(endereco => {return(
-                        <div key={endereco.enderecoID?.valueOf()} className='AccordionCard'>
+                        <div key={endereco.enderecoID?.valueOf()} className='AccordionCardR'>
                             <span>Tipo: <b>{endereco.tipoEndereco}</b> &nbsp; | &nbsp;
                                   CEP: <b>{endereco.cep}</b></span>
                             <span>Logradouro: <b>{endereco.logradouro}</b>&nbsp; | &nbsp;
@@ -136,17 +136,17 @@ export function FormDetailResponsavel(props: propsFormResponsavel) {
                         </div>
                     </Accordion.Content>
                 </Accordion.Item>
-                <Accordion.Item className='AccordionItem' value="item-4">
-                    <Accordion.Header className="AccordionHeader">
-                    <Accordion.Trigger className='AccordionTrigger'>
+                <Accordion.Item className='AccordionItemR' value="item-4">
+                    <Accordion.Header className="AccordionHeaderR">
+                    <Accordion.Trigger className='AccordionTriggerR'>
                         Pets
-                        <ChevronDownIcon className="AccordionChevron" aria-hidden />
+                        <ChevronDownIcon className="AccordionChevronR" aria-hidden />
                     </Accordion.Trigger>
                     </Accordion.Header>
-                    <Accordion.Content className='AccordionContent'>
-                        <div className="AccordionContentText">
+                    <Accordion.Content className='AccordionContentR'>
+                        <div className="AccordionContentTextR">
                         {props.responsavelDetail?.pets?.map(pet => {return(
-                        <div key={pet.petID?.valueOf()} className='AccordionCard'>
+                        <div key={pet.petID?.valueOf()} className='AccordionCardR'>
                             <span>Nome: <b>{pet.nome}</b>&nbsp; | &nbsp;
                                   Sexo: <b>{pet.genero}</b></span>
                             <span>Especie: <b>{pet.especie}</b>&nbsp; | &nbsp;

@@ -64,11 +64,10 @@
 }
 
 #responsavel_table table {
-    width: max-content;
     border: solid 1px var(--border-color);
     border-collapse: collapse;
     text-align: center;
-    width: 100%;
+    width: 60%;
 }
 
 #responsavel_table th {
@@ -98,11 +97,10 @@
 }
 
 #pet_table table {
-    width: max-content;
     border: solid 1px var(--border-color);
     border-collapse: collapse;
     text-align: center;
-    width: 100%;
+    width: 60%;
 }
 
 #pet_table th {

@@ -9,6 +9,7 @@ import moment from "moment/min/moment-with-locales";
 import 'moment/locale/pt-br';
 import { Veterinario } from '../../interfaces/Veterinario';
 import { FormDetailVeterinario } from '../FormDetailVeterinario';
+import { FormDetailPet } from '../FormDetailPet';
 
 interface listResponsavelProps {
   responsavel?: Responsavel;
@@ -23,10 +24,12 @@ export function ListResponsavel (props:listResponsavelProps) {
   const [listResponsaveis, setListResponsaveis] = useState<Responsavel[]>([]);
   const [listVeterinario, setListVeterinario] = useState<Veterinario[]>([]);
   const [respSelected, setRespSelected] = useState<Responsavel>();
+  const [petIndex, setPetIndex] = useState<number>(-1);
   const [vetSelected, setVetSelected] = useState<Veterinario>();
   const [paginateList, setPaginateList] = useState({list: listResponsaveis, perPage:10, page:0, pages:1});
   const [paginateListVet, setPaginateListVet] = useState({list: listVeterinario, perPage:10, page:0, pages:1});
   const [showCadResp, setShowCadResp] = useState<Boolean>(false);
+  const [showCadPet, setShowCadPet] = useState<Boolean>(false);
   const [showCadVet, setShowCadVet] = useState<Boolean>(false);
   const [showList, SetShowList] = useState<String>('responsavel')
 
@@ -272,12 +275,22 @@ export function ListResponsavel (props:listResponsavelProps) {
     setRespSelected(resp);
     setShowCadResp(true);
     setShowCadVet(false);
+    setShowCadPet(false);
+  };
+
+  const showDetailPet = (resp: Responsavel, index:number) => {
+    setRespSelected(resp);
+    setPetIndex(index);
+    setShowCadResp(false);
+    setShowCadVet(false);
+    setShowCadPet(true);
   };
 
   const showDetailVet = (vet: Veterinario) => {
-  setVetSelected(vet);
-  setShowCadVet(true);
-  setShowCadResp(false);
+    setVetSelected(vet);
+    setShowCadVet(true);
+    setShowCadResp(false);
+    setShowCadPet(false);
   };
 
   const deleteSelected = () => {
@@ -333,22 +346,17 @@ export function ListResponsavel (props:listResponsavelProps) {
                           containerClassName={'pagination'}
                           activeClassName={'active'}
                       />
-                  <Button color={'light'} onClick={() => deleteSelected()}>Delete selected</Button> 
                 </div>
                 <div id="responsavel_table">
                     <table>
                       <thead>
                         <tr>
                             <th style={{width:'10px'}}><input key={-1} value={-1} type={"checkbox"} onChange={selectAll} /></th>
-                            <th style={{width:'20%'}}>Nome Completo</th>
-                            <th style={{width:'10%'}}>Sexo</th>
-                            <th style={{width:'10%'}}>Tipo de Pessoa</th>
-                            <th style={{width:'10%'}}>CPF/CNPJ</th>
-                            <th style={{width:'15%'}}>Data de Nasc.</th>
-                            <th style={{width:'5%'}}>Aceita E-mail</th>
-                            <th style={{width:'10%'}}>Endereços</th>
-                            <th style={{width:'10%'}}>Contatos</th>
-                            <th style={{width:'10%'}}>Pets</th>
+                            <th style={{width:'50%'}}>Nome Completo</th>
+                            <th style={{width:'30%'}}>Bairro</th>
+                            <th style={{width:'20%'}}>Primeiro Contato</th>
+                            <th style={{width:'10%'}}>Idade</th>
+                            <th style={{width:'10%'}}>Qtd de Pets</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -361,14 +369,18 @@ export function ListResponsavel (props:listResponsavelProps) {
                                   {resp?.nome+" "+resp?.sobrenome}
                                 </LinkButton>
                               </td>
-                              <td >{resp?.genero}</td>
-                              <td >{resp?.tipoPessoa}</td>
-                              <td >{resp?.registroNum}</td>
-                              <td >{moment(resp?.nascimento).format("DD/MM/YYYY")+" ("+moment(resp?.nascimento).month(0).from(moment().month(0),true)+")"}</td>
-                              <td >{resp?.aceitaEmail?"Sim":"Não"}</td>
-                              <td >{resp?.enderecos != null && resp?.enderecos?.length>0?resp?.enderecos[0].bairro:""}</td>
-                              <td >{resp?.contatos != null && resp?.contatos?.length>0?resp.contatos[0].descricao:""}</td>
-                              <td >{resp?.pets != null && resp?.pets?.length>0?resp?.pets[0].nome +(resp?.pets?.length>1?" +"+(resp.pets.length-1):""):""}</td>
+                              <td>
+                                <span>{resp.enderecos?resp.enderecos[0].bairro+"-"+resp.enderecos[0].cidade+"/"+resp.enderecos[0].uf:""}</span>
+                              </td>
+                              <td>
+                                <span>{resp.contatos?resp.contatos[0].tipoContato+": "+resp.contatos[0].descricao:""}</span>
+                              </td>
+                              <td>
+                                <span>{moment(resp.nascimento).add(1,'year').fromNow(true)}</span>
+                              </td>
+                              <td>
+                                <span>{resp.pets?.length}</span>
+                              </td>
                             </tr>
                           ):<tr><td colSpan={9} style={{textAlign:'center'}}><b>Sem resultado</b></td></tr>}
                       </tbody>
@@ -397,21 +409,17 @@ export function ListResponsavel (props:listResponsavelProps) {
                           containerClassName={'pagination'}
                           activeClassName={'active'}
                       />
-                  <Button color={'light'} onClick={() => deleteSelected()}>Delete selected</Button> 
                 </div>
                 <div id="pet_table">
                     <table>
                       <thead>
                         <tr>
                             <th style={{width:'10px'}}><input key={-1} value={-1} type={"checkbox"} onChange={selectAll} /></th>
-                            <th style={{width:'20%'}}>Nome</th>
-                            <th style={{width:'8%'}}>Sexo</th>
-                            <th style={{width:'8%'}}>Espécie</th>
-                            <th style={{width:'8%'}}>Raça</th>
-                            <th style={{width:'10%'}}>Cor</th>
-                            <th style={{width:'16%'}}>Data de Nasc.</th>
-                            <th style={{width:'5%'}}>Fértil</th>
-                            <th style={{width:'5%'}}>Pedigree</th>
+                            <th style={{width:'30%'}}>Nome</th>
+                            <th style={{width:'15%'}}>Espécie</th>
+                            <th style={{width:'15%'}}>Raça</th>
+                            <th style={{width:'10%'}}>Fértil</th>
+                            <th style={{width:'10%'}}>Pedigree</th>
                             <th style={{width:'20%'}}>Responsável</th>
                         </tr>
                       </thead>
@@ -421,15 +429,12 @@ export function ListResponsavel (props:listResponsavelProps) {
                               <tr key={idx}>
                               <td><input key={Number(pet.petID)} value={pet.petID?Number(pet.petID):""} type={"checkbox"} /></td>
                               <td >
-                                <LinkButton color={'dark'} size={'small'} onClick={() => showDetailResp(resp)}>
+                                <LinkButton color={'dark'} size={'small'} onClick={() => showDetailPet(resp,idx)}>
                                   {pet?.nome}
                                 </LinkButton>
                               </td>
-                              <td >{pet?.genero}</td>
                               <td >{pet?.especie}</td>
                               <td >{pet?.raca}</td>
-                              <td >{pet?.cor}</td>
-                              <td >{moment(pet?.nascimento).format("DD/MM/YYYY")+" ("+moment(pet?.nascimento).month(0).from(moment().month(0),true)+")"}</td>
                               <td >{pet?.fertil?"Sim":"Não"}</td>
                               <td >{pet?.pedigree?"Sim":"Não"}</td>
                               <td >{resp?.nome + " " + resp.sobrenome}</td>
@@ -463,19 +468,16 @@ export function ListResponsavel (props:listResponsavelProps) {
                           containerClassName={'pagination'}
                           activeClassName={'active'}
                       />
-                  <Button color={'light'} onClick={() => console.log("Delete al vets")}>Delete selected</Button> 
                 </div>
                 <div id="responsavel_table">
                     <table>
                       <thead>
                         <tr>
                             <th style={{width:'10px'}}><input key={-1} value={-1} type={"checkbox"} onChange={selectAll} /></th>
-                            <th style={{width:'30%'}}>Nome Completo</th>
-                            <th style={{width:'15%'}}>Sexo</th>
-                            <th style={{width:'15%'}}>CPF</th>
-                            <th style={{width:'15%'}}>Cidade</th>
-                            <th style={{width:'15%'}}>UF</th>
-                            <th style={{width:'15%'}}>CRMVs</th>
+                            <th style={{width:'40%'}}>Nome Completo</th>
+                            <th style={{width:'20%'}}>Cidade</th>
+                            <th style={{width:'20%'}}>UF</th>
+                            <th style={{width:'20%'}}>CRMVs</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -488,8 +490,6 @@ export function ListResponsavel (props:listResponsavelProps) {
                                   {vet?.nome+" "+vet?.sobrenome}
                                 </LinkButton>
                               </td>
-                              <td >{vet?.genero}</td>
-                              <td >{vet?.cpf}</td>
                               <td >{vet?.cidade}</td>
                               <td >{vet?.uf}</td>
                               <td >{vet?.crmvs != null && vet?.crmvs?.length>0?vet?.crmvs[0].numero:""}</td>
@@ -503,7 +503,9 @@ export function ListResponsavel (props:listResponsavelProps) {
         </div>
           <div id='form_detail_responsavel' className={showCadResp?"navbarSticky":"navbar"}>
             <FormDetailResponsavel responsavelDetail={respSelected} cancelFormClick={() => setShowCadResp(false)} />
-            
+          </div>
+          <div id='form_detail_pet' className={showCadPet?"navbarSticky":"navbar"}>
+            <FormDetailPet responsavelDetail={respSelected} petIndex={petIndex} cancelFormClick={() => setShowCadPet(false)} />
           </div>
           <div id='form_detail_veterinario' className={showCadVet?"navbarSticky":"navbar"}>
             <FormDetailVeterinario veterinarioDetail={vetSelected} cancelFormClick={() => setShowCadVet(false)}/>

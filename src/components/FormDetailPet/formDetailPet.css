@@ -1,4 +1,4 @@
-#form_responsavel {
+#form_pet {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -9,7 +9,7 @@ p {
   margin-top: 10px;
 }
 
-.AccordionContentTextR label {
+.AccordionContentTextP label {
   font-size: 12pt;
 }
 
@@ -19,7 +19,7 @@ h3 {
   all: unset;
 }
 
-.AccordionRootR {
+.AccordionRootP {
     border-radius: 4px;
     width: 500px;
     background-color: var(--bg);
@@ -27,34 +27,34 @@ h3 {
     margin-bottom: 15px;
   }
   
-  .AccordionItemR {
+  .AccordionItemP {
     overflow: hidden;
     margin-top: 1px;
     white-space: nowrap;
   }
   
-  .AccordionItemR:first-child {
+  .AccordionItemP:first-child {
     margin-top: 0;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
   }
   
-  .AccordionItemR:last-child {
+  .AccordionItemP:last-child {
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
   }
   
-  .AccordionItemR:focus-within {
+  .AccordionItemP:focus-within {
     position: relative;
     z-index: 1;
     /* box-shadow: 0 0 0 2px var(--bg-button-default); */
   }
   
-  .AccordionHeaderR {
+  .AccordionHeaderP {
     display: flex;
   }
   
-  .AccordionTriggerR {
+  .AccordionTriggerP {
     font-family: inherit;
     background-color: transparent;
     padding: 0 10px;
@@ -69,15 +69,15 @@ h3 {
     box-shadow: 0 1px 0 var(--border-color);
   }
 
-  .AccordionTriggerR[data-state='open'] {
+  .AccordionTriggerP[data-state='open'] {
     background-color: var(--bg-checked);
   }
   
-  .AccordionTriggerR:hover {
+  .AccordionTriggerP:hover {
     background-color: var(--bg-checked);
   }
   
-  .AccordionContentR {
+  .AccordionContentP {
     overflow: hidden;
     font-size: 15px;
     color: var(--text-color);
@@ -87,21 +87,21 @@ h3 {
     border-bottom: 1px solid var(--border-color);
   }
 
-  .AccordionContentR[data-state='open'] {
+  .AccordionContentP[data-state='open'] {
     animation: slideDown 300ms cubic-bezier(0.87, 0, 0.13, 1);
   }
 
-  .AccordionContentR[data-state='closed'] {
+  .AccordionContentP[data-state='closed'] {
     animation: slideUp 300ms cubic-bezier(0.87, 0, 0.13, 1);
   }
   
-  .AccordionContentTextR {
+  .AccordionContentTextP {
     padding: 10px;
     overflow-wrap: break-word;
     white-space: pre-wrap;
   }
   
-  .AccordionCardR {
+  .AccordionCardP {
     display: flex;
     flex-direction: column;
     background-color: var(--bg);
@@ -118,7 +118,7 @@ h3 {
     color: var(--text-color);
     transition: transform 300ms cubic-bezier(0.87, 0, 0.13, 1);
   }
-  .AccordionTriggerR[data-state='open'] > .AccordionChevronR {
+  .AccordionTriggerP[data-state='open'] > .AccordionChevronR {
     transform: rotate(180deg);
   }
   

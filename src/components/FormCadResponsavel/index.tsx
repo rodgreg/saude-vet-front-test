@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { Button } from '../HtmlComponents';
 import { Pet } from '../../interfaces/Pet';
 import { MdEdit, MdDeleteOutline } from "react-icons/md";
+import { ApiConsultaCep } from '../../services/ApiConsultaCep';
+import { ApiRegistro } from '../../services/ApiRegistro';
 
 
 interface formCadProps {
@@ -13,6 +15,8 @@ interface formCadProps {
 
 export function FormCadResponsavel(props:formCadProps) {
 
+    const apiCep = ApiConsultaCep();
+    const apiRegistro = ApiRegistro();
     const [responsavel, setResponsavel] = useState<Responsavel>({responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, pets: [], enderecos: [], contatos: [],});
     const [pet,setPet] = useState<Pet>({petID:null ,nome:"", genero:"", especie:"", raca:"", cor:"", nascimento:null, fertil:false, pedigree:false});
     const [endereco, setEndereco] = useState<Endereco>({enderecoID:null, tipoEndereco:"", cep:"", logradouro:"", numero:"", endereco:"", complemento:"", bairro:"", cidade:"", uf:""});
@@ -24,10 +28,19 @@ export function FormCadResponsavel(props:formCadProps) {
     const [indexContato, setIndexContato] = useState<number>(-1)
     const [indexEndereco, setIndexEndereco] = useState<number>(-1)
 
-    const formSubmit = (e:any) => {
+    const formSubmit = async (e:any) => {
         e.preventDefault();
-        setResponsavel({...responsavel, responsavelID:0})
-        console.log('submit: '+JSON.stringify(responsavel));
+        let hasBlank = false;
+        for (let i=0; i < e.target.length; i++) {
+            if (e.target[i].value === '' && e.target[i].name !== '') {
+              e.target[i].classList.add("shake")
+              hasBlank = true;
+            };
+        };
+        if (!hasBlank) {
+            let result = await apiRegistro.saveResponsavel(responsavel);
+            console.log(result);
+        }
     };
 
     const removeResponsavel = () => {
@@ -35,50 +48,86 @@ export function FormCadResponsavel(props:formCadProps) {
 
     };
 
-    const addPetToResponsavel = (idx:number) => {
-        if(idx>=0){
-            responsavel?.pets?.splice(idx,1,pet);
-            setIndexPet(-1);
-        } else {
-            if (responsavel?.pets != null && pet != null) {
-                responsavel?.pets.push(pet);
-            } else if (pet != null) {
-                setResponsavel({...responsavel,pets:[pet]});
+    const addPetToResponsavel = (e:any) => {
+        e.preventDefault();
+
+        let hasBlank = false;
+        for (let i=0; i < e.target.length; i++) {
+            if (e.target[i].value === '' && e.target[i].name !== '') {
+              e.target[i].classList.add("shake")
+              hasBlank = true;
+            } else {
+                e.target[i].classList.remove("shake")
+            };
+        };
+        if (!hasBlank) {
+            if(indexPet>=0){
+                responsavel?.pets?.splice(indexPet,1,pet);
+                setIndexPet(-1);
+            } else {
+                if (responsavel?.pets != null && pet != null) {
+                    responsavel?.pets.push(pet);
+                } else if (pet != null) {
+                    setResponsavel({...responsavel,pets:[pet]});
+                }
             }
+            setPet({petID:null ,nome:"", genero:"", especie:"", raca:"", cor:"", nascimento:null, fertil:false, pedigree:false})
+            setAddPet(false);
         }
-        setPet({petID:null ,nome:"", genero:"", especie:"", raca:"", cor:"", nascimento:null, fertil:false, pedigree:false})
-        setAddPet(false);
     };
 
-    const addEnderecoResponsavel = (idx:number) => {
-        if(idx>=0){
-            responsavel?.enderecos?.splice(idx,1,endereco);
-            setIndexPet(-1);
-        } else {
-            if (responsavel?.enderecos != null && endereco != null) {
-                responsavel?.enderecos.push(endereco);
-            } else if (endereco != null) {
-                setResponsavel({...responsavel,enderecos:[endereco]});
+    const addEnderecoToResponsavel = (e:any) => {
+        e.preventDefault();
+        let hasBlank = false;
+        for (let i=0; i < e.target.length; i++) {
+            if (e.target[i].value === '' && e.target[i].name !== ''  && e.target[i].name !== 'complemento') {
+              e.target[i].classList.add("shake")
+              hasBlank = true;
+            } else {
+                e.target[i].classList.remove("shake")
+            };
+        };
+        if (!hasBlank) {
+            if(indexEndereco>=0){
+                responsavel?.enderecos?.splice(indexEndereco,1,endereco);
+                setIndexEndereco(-1);
+            } else {
+                if (responsavel?.enderecos != null && endereco != null) {
+                    responsavel?.enderecos.push(endereco);
+                } else if (endereco != null) {
+                    setResponsavel({...responsavel,enderecos:[endereco]});
+                }
             }
+            setEndereco({enderecoID:null, tipoEndereco:"", cep:"", logradouro:"", numero:"", endereco:"", complemento:"", bairro:"", cidade:"", uf:""})
+            setAddEndereco(false);
         }
-        setEndereco({enderecoID:null, tipoEndereco:"", cep:"", logradouro:"", numero:"", endereco:"", complemento:"", bairro:"", cidade:"", uf:""})
-        setAddEndereco(false);
     };
 
     const addContatoToResponsavel = (e:any) => {
         e.preventDefault()
-        if(indexContato>=0){
-            responsavel?.contatos?.splice(indexContato,1,contato);
-            setIndexPet(-1);
-        } else {
-            if (responsavel?.contatos != null && contato != null) {
-                responsavel?.contatos.push(contato);
-            } else if (contato != null) {
-                setResponsavel({...responsavel,contatos:[contato]});
+        let hasBlank = false;
+        for (let i=0; i < e.target.length; i++) {
+            if (e.target[i].value === '' && e.target[i].name !== '') {
+              e.target[i].classList.add("shake")
+              hasBlank = true;
+            } else {
+                e.target[i].classList.remove("shake")
+            };
+        };
+        if (!hasBlank) {
+            if(indexContato>=0){
+                responsavel?.contatos?.splice(indexContato,1,contato);
+                setIndexContato(-1);
+            } else {
+                if (responsavel?.contatos != null && contato != null) {
+                    responsavel?.contatos.push(contato);
+                } else if (contato != null) {
+                    setResponsavel({...responsavel,contatos:[contato]});
+                }
             }
+            setContato({contatoID:null, tipoContato:"", principal:false, descricao:"", anotacao:""})
+            setAddContato(false);
         }
-        setContato({contatoID:null, tipoContato:"", principal:false, descricao:"", anotacao:""})
-        setAddContato(false);
     };
 
     const removerPet = (idx:number) => {
@@ -103,6 +152,7 @@ export function FormCadResponsavel(props:formCadProps) {
     };
 
     const inputChange = (e:any) => {
+        e.target.classList.remove("shake");
         if(e.target.name === "registroNum") {
             let regex = /\D/g;
             let registroNum = e.target.value.replace(regex,"");
@@ -118,14 +168,25 @@ export function FormCadResponsavel(props:formCadProps) {
     };
 
     const inputChangePet = (e:any) => {
+        e.target.classList.remove("shake");
         setPet({...pet,[e.target.name]:e.target.value});
     };
 
     const inputChangeEndereco = (e:any) => {
-        setEndereco({...endereco,[e.target.name]:e.target.value});
+        e.target.classList.remove("shake");
+        if(e.target.name === 'cep') {
+            let regex = /\D/g;
+            let numero = e.target.value.replace(regex,"");
+            if(numero.length <=8) {
+                setEndereco({...endereco,[e.target.name]:numero});
+            } 
+        } else {
+            setEndereco({...endereco,[e.target.name]:e.target.value});
+        }
     };
 
     const inputChangeContato = (e:any) => {
+        e.target.classList.remove("shake");
         if(e.target.name === "descricao" && contato.tipoContato !== 'E-mail' && contato.tipoContato !== 'Outro') {
             let regex = /\D/g;
             let numero = e.target.value.replace(regex,"");
@@ -138,6 +199,7 @@ export function FormCadResponsavel(props:formCadProps) {
     };
 
     const selectItem = (select:any) => {
+        select.target.classList.remove("shake");
         if(select.target.name === "tipoPessoa") {
             if(select.target[select.target.selectedIndex].value === "Física") {
                 setResponsavel({...responsavel,
@@ -161,14 +223,17 @@ export function FormCadResponsavel(props:formCadProps) {
     };
 
     const selectItemPet = (select:any) => {
+        select.target.classList.remove("shake");
         setPet({...pet,[select.target.name]:select.target[select.target.selectedIndex].value})
     };
 
     const selectItemEndereco = (select:any) => {
+        select.target.classList.remove("shake");
         setEndereco({...endereco,[select.target.name]:select.target[select.target.selectedIndex].value})
     };
 
     const selectItemContato = (select:any) => {
+        select.target.classList.remove("shake");
         setContato({...contato,[select.target.name]:select.target[select.target.selectedIndex].value})
     };
 
@@ -223,6 +288,36 @@ export function FormCadResponsavel(props:formCadProps) {
         return mask;
     };
 
+    const cep_mask = (numero:String) => {
+        let mask = "";
+        if(numero.length==8) {
+            mask = 
+            numero.substring(0,2)
+            +"."+
+            numero.substring(2,5)
+            +"-"+
+            numero.substring(5,9)
+         } else {
+            mask=numero.toString();
+        }
+        return mask;
+    };
+
+    const consultarCep = async () => {
+        let cepMask = cep_mask(endereco.cep).replace(".","");
+        let result = await apiCep.getEndereco(cepMask);
+        if (result?.status == 200) {
+            setEndereco({...endereco,
+                    cidade:result.data.city,
+                    uf: result.data.state,
+                    bairro: result.data.district,
+                    logradouro: result.data.address       
+            })
+        } else {
+            console.log("Cep não encontrado!")
+        }
+    };
+
     useEffect(() => {
         moment.locale('pt-br');
         if (props.responsavelForm) {
@@ -256,7 +351,7 @@ export function FormCadResponsavel(props:formCadProps) {
                 <input type={'text'} name={'nome'} value={responsavel?.nome?responsavel.nome.toString():""} onChange={inputChange}/>
                 {(!addEndereco && !addContato && !addPet) && <>
                     <span>Sobrenome: </span>
-                    <input type={'text'} name={'sobrenome'} value={responsavel?.sobrenome?responsavel.sobrenome.toString():""} onChange={inputChange}/>
+                    <input  type={'text'} name={'sobrenome'} value={responsavel?.sobrenome?responsavel.sobrenome.toString():""} onChange={inputChange}/>
                     <span>Sexo:</span>
                     <select onChange={selectItem} name={'genero'} value={responsavel?.genero?responsavel.genero.toString():""}>
                         <option value={""}>Selecione</option>
@@ -298,18 +393,45 @@ export function FormCadResponsavel(props:formCadProps) {
                 </div>
                 {responsavel?.responsavelID!=null?
                     <div>
-                        <Button type='button' onClick={() => setAddEndereco(!addEndereco)}>+ Endereço</Button>
-                        <Button type='button' onClick={() => setAddContato(!addContato)}>+ Contato</Button>
-                        <Button type='button' onClick={() => setAddPet(!addPet)}>+ Pet</Button>
+                        <Button type='button' onClick={() => {setAddEndereco(!addEndereco);setAddContato(false);setAddPet(false)}}>+ Endereço</Button>
+                        <Button type='button' onClick={() => {setAddContato(!addContato); setAddEndereco(false);setAddPet(false)}}>+ Contato</Button>
+                        <Button type='button' onClick={() => {setAddPet(!addPet);setAddEndereco(false);setAddContato(false)}}>+ Pet</Button>
                     </div>
                 :""}
             </form>
             
             {addEndereco && 
-                <div className='form_cad_responsavel'>
+                <form className='form_cad_responsavel' onSubmit={addEnderecoToResponsavel}>
                     <h2>Cadastrar Endereço</h2>
-                    <Button type='button'>Adicionar</Button>
-                </div>
+                    <span>Tipo:</span>
+                    <select onChange={selectItemEndereco} name={'tipoEndereco'} value={endereco?.tipoEndereco?endereco.tipoEndereco.toString():""}>
+                        <option value={""}>Selecione</option>
+                        <option value={"Residencial"}>Residencial</option>
+                        <option value={"Comercial"}>Comercial</option>
+                        <option value={"Outro"}>outro</option>
+                    </select>
+                    <span>CEP: </span>
+                    <input type={'text'} name={'cep'} value={endereco?.cep?cep_mask(endereco.cep):""} onChange={inputChangeEndereco}/>
+                    <button type='button' onClick={() => consultarCep()}>consultar</button>
+                    <span>Logradouro: </span>
+                    <input type={'text'} name={'logradouro'} value={endereco?.logradouro?endereco.logradouro.toString():""} onChange={inputChangeEndereco}/>
+                    <span>Número: </span>
+                    <input type={'text'} name={'numero'} value={endereco?.numero?endereco.numero.toString():""} onChange={inputChangeEndereco}/>
+                    <span>Endereço: </span>
+                    <input type={'text'} name={'endereco'} value={endereco?.endereco?endereco.endereco.toString():""} onChange={inputChangeEndereco}/>
+                    <span>Complemento: </span>
+                    <input type={'text'} name={'complemento'} value={endereco?.complemento?endereco.complemento.toString():""} onChange={inputChangeEndereco}/>
+                    <span>Bairro: </span>
+                    <input type={'text'} name={'bairro'} value={endereco?.bairro?endereco.bairro.toString():""} onChange={inputChangeEndereco}/>
+                    <span>Cidade: </span>
+                    <input type={'text'} name={'cidade'} value={endereco?.cidade?endereco.cidade.toString():""} onChange={inputChangeEndereco}/>
+                    <span>UF: </span>
+                    <input type={'text'} name={'uf'} value={endereco?.uf?endereco.uf.toString():""} onChange={inputChangeEndereco}/>
+                    <div>
+                        <Button type='submit'>{indexEndereco>=0?"Alterar":"Adicionar"}</Button>
+                        <Button type='button' color={'light_cancel'} onClick={() => setAddEndereco(false)}>Cancelar</Button>
+                    </div>
+                </form>
             }
 
             {addContato && 
@@ -324,25 +446,28 @@ export function FormCadResponsavel(props:formCadProps) {
                         <option value={"Comercial"}>Telefone Comercial</option>
                         <option value={"Outro"}>outro</option>
                     </select>
-                    <span>Descrição: </span>
+                    <span>{contato.tipoContato=='E-mail'?"Endereço:":contato.tipoContato=='Outro'?"Descrição:":"Número:"}</span>
                     <input type={contato.tipoContato=='E-mail'?'email':'text'} name={'descricao'} 
                            value={contato?.descricao?(contato.tipoContato !== 'E-mail' && contato.tipoContato !== 'Outro')?telefone_mask(contato.descricao):contato.descricao.toString():""} 
                            onChange={inputChangeContato}/>
                     <span>Observações: </span>
                     <input type={'text'} name={'anotacao'} value={contato?.anotacao?contato.anotacao.toString():""} onChange={inputChangeContato}/>
-                    <span>Contato principal? 
+                    <span>Contato principal? &nbsp;
                         <select onChange={selectItemContato} name={'principal'} value={contato?.principal? contato.principal.toString():""}>
                             <option value={""}>Selecione</option>
                             <option value={"true"}>Sim</option>
                             <option value={"false"}>Não</option>
                         </select>
                     </span>
-                    <Button type='submit'>{indexContato>=0?"Alterar":"Adicionar"}</Button>
+                    <div>
+                        <Button type='submit'>{indexContato>=0?"Alterar":"Adicionar"}</Button>
+                        <Button type='button' color={'light_cancel'} onClick={() => setAddContato(false)}>Cancelar</Button>
+                    </div>
                 </form>
             }
 
             {addPet &&
-                <div className='form_cad_responsavel'>
+                <form className='form_cad_responsavel' onSubmit={addPetToResponsavel}>
                     <h2>Cadastrar Pet</h2>
                     <span>Nome: </span>
                     <input type={'text'} name={'nome'} value={pet?.nome?pet.nome.toString():""} onChange={inputChangePet}/>
@@ -377,8 +502,11 @@ export function FormCadResponsavel(props:formCadProps) {
                             </select>
                         </span>
                     </div>
-                    <Button type='button' onClick={() => addPetToResponsavel(indexPet)}>{indexPet>=0?"Alterar":"Adicionar"}</Button>
-                </div>
+                    <div>
+                        <Button type='submit'>{indexPet>=0?"Alterar":"Adicionar"}</Button>
+                        <Button type='button' color={'light_cancel'} onClick={() => setAddPet(false)}>Cancelar</Button>
+                    </div>
+                </form>
             }
 
         </div>
@@ -399,15 +527,24 @@ export function FormCadResponsavel(props:formCadProps) {
                 {responsavel?.enderecos?.map((endereco, idx) => {return (
                     <div key={idx} className='dados_responsavel_item'>
                         <span>{endereco.tipoEndereco}</span>
+                        <span>{endereco.cidade}/{endereco.uf}</span>
                         {/* <span>CEP: {endereco.cep}</span>
                         <span>Logradouro: {endereco.logradouro}</span>
                         <span>Numero: {endereco.numero}</span>
                         <span>Endereço: {endereco.endereco}</span>
                         <span>Complemento: {endereco.complemento}</span>
                         <span>Bairro: {endereco.bairro}</span>
-                        <span>Cidade: {endereco.cidade}</span>
-                        <span>UF: {endereco.uf}</span> */}
-                        <span>{endereco.enderecoID?"Salvo":"Não salvo"}</span>
+                         */}
+                        <span>{endereco.enderecoID?"Salvo":"Não salvo"}
+                        {endereco.enderecoID==null && 
+                            <>
+                                <MdEdit size={20} style={{marginLeft:10, marginRight:5, cursor:'pointer'}}
+                                    onClick={()=>{setEndereco(endereco); setIndexEndereco(idx); setAddEndereco(true); setAddContato(false); setAddPet(false)}} />
+                                <MdDeleteOutline size={20} color={'red'} style={{marginLeft:5, marginRight:5, cursor:'pointer'}}
+                                    onClick={()=>removerEndereco(idx)} />
+                            </>
+                                }
+                        </span>
                     </div>
                 )
                 })}
@@ -415,10 +552,19 @@ export function FormCadResponsavel(props:formCadProps) {
                 {responsavel?.contatos?.map((contato,idx) => {return (
                     <div key={idx} className='dados_responsavel_item'>
                         <span>{contato.tipoContato}</span>
-                        <span>{(contato.tipoContato !== 'E-mail' && contato.tipoContato !== 'Outro')?telefone_mask(contato.descricao):contato.descricao}</span>
+                        <span>{(contato.tipoContato !== 'E-mail' && contato.tipoContato !== 'Outro')?(contato.descricao?telefone_mask(contato.descricao):""):contato.descricao}</span>
                         {/* <span>Principal: {contato.principal?"Sim":"Não"}</span>
                         <span>Observações: {contato.anotacao}</span> */}
-                        <span>{contato.contatoID?"Salvo":"Não salvo"}</span>
+                        <span>{contato.contatoID?"Salvo":"Não salvo"}
+                        {contato.contatoID==null && 
+                            <>
+                                <MdEdit size={20} style={{marginLeft:10, marginRight:5, cursor:'pointer'}}
+                                    onClick={()=>{setContato(contato); setIndexPet(idx); setAddContato(true); setAddEndereco(false); setAddPet(false)}} />
+                                <MdDeleteOutline size={20} color={'red'} style={{marginLeft:5, marginRight:5, cursor:'pointer'}}
+                                    onClick={()=>removerContato(idx)} />
+                            </>
+                                }
+                        </span>
                     </div>
                 )
                 })}
@@ -438,7 +584,7 @@ export function FormCadResponsavel(props:formCadProps) {
                         {petItem.petID==null && 
                             <>
                                 <MdEdit size={20} style={{marginLeft:10, marginRight:5, cursor:'pointer'}}
-                                    onClick={()=>{setPet(petItem); setIndexPet(idx); setAddPet(true); }} />
+                                    onClick={()=>{setPet(petItem); setIndexPet(idx); setAddPet(true); setAddEndereco(false); setAddContato(false)}} />
                                 <MdDeleteOutline size={20} color={'red'} style={{marginLeft:5, marginRight:5, cursor:'pointer'}}
                                     onClick={()=>removerPet(idx)} />
                             </>
