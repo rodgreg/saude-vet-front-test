@@ -73,26 +73,7 @@ export function FormDetailPet(props: propsFormResponsavel) {
                                 <span>Espécie: <b>{pet?.especie}</b></span>
                                 <span>Raça: <b>{pet?.raca}</b></span>
                                 <span>Cor: <b>{pet?.cor}</b></span>
-                                <span>Data de nascimento: <b>{pet?.nascimento?moment(pet?.nascimento).format('DD/MM/YYYY')
-                                                                                        +" - "+
-                                                                                        moment(pet?.nascimento).month(0).from(moment().month(0),true)
-                                                                                        +" - "+
-                                                                                        (moment().isBefore([
-                                                                                        (new Date().getFullYear().valueOf()),
-                                                                                        pet?.nascimento.getMonth().valueOf(),
-                                                                                        pet?.nascimento.getDate().valueOf()])?
-                                                                                        moment().to(
-                                                                                                    moment([
-                                                                                                        (new Date().getFullYear().valueOf()),
-                                                                                                        pet?.nascimento.getMonth().valueOf(),
-                                                                                                        pet?.nascimento.getDate().valueOf()]))
-                                                                                        : moment().to(
-                                                                                            moment([
-                                                                                                (new Date().getFullYear().valueOf()+1),
-                                                                                                pet?.nascimento.getMonth().valueOf(),
-                                                                                                pet?.nascimento.getDate().valueOf()]))
-                                                                                       )
-                                                                                       :""}
+                                <span>Data de nascimento: <b>{pet?.nascimento?moment(pet?.nascimento).format('DD/MM/YYYY'):""}
                                                                                        </b>
                                 </span>
                                 <span>Fertil?: &nbsp;<b>
@@ -121,8 +102,8 @@ export function FormDetailPet(props: propsFormResponsavel) {
                             <span>Sexo: <b>{responsavel?.genero}</b></span>
                             <span>Tipo de Pessoa: <b>{responsavel?.tipoPessoa}</b></span>
                             <span>CPF/CNPJ: <b>{responsavel?.tipoRegistro && responsavel.registroNum?cpf_cnpj_mask(responsavel.tipoRegistro, responsavel.registroNum):""}</b></span>
-                            <span>Data de nascimento: <b>{responsavel?.nascimento?moment(responsavel.nascimento).format('DD/MM/YYYY')
-                                                                                    +" - "+
+                            <span>Data de nascimento: <b>{responsavel?.nascimento?moment(responsavel.nascimento).format('DD/MM/YYYY'):""}
+                                                                                   {/* { +" - "+
                                                                                     moment(responsavel.nascimento).month(0).from(moment().month(0),true)
                                                                                     +" - "+
                                                                                     (moment().isBefore([
@@ -140,7 +121,7 @@ export function FormDetailPet(props: propsFormResponsavel) {
                                                                                             responsavel.nascimento.getMonth().valueOf(),
                                                                                             responsavel.nascimento.getDate().valueOf()]))
                                                                                     )
-                                                                                    :""}
+                                                                                    :"" */}
                                                                                     </b>
                             </span>
                             <span>Aceita receber e-mail: &nbsp;<b>
@@ -173,6 +154,26 @@ export function FormDetailPet(props: propsFormResponsavel) {
                                   UF: <b>{endereco.uf}</b></span>
                         </div>
                             )})}
+                        </div>
+                    </Accordion.Content>
+                </Accordion.Item>
+                <Accordion.Item className='AccordionItemP' value="item-4">
+                    <Accordion.Header className="AccordionHeaderP">
+                    <Accordion.Trigger className='AccordionTriggerP'>
+                        Contatos
+                        <ChevronDownIcon className="AccordionChevronP" aria-hidden />
+                    </Accordion.Trigger>
+                    </Accordion.Header>
+                    <Accordion.Content className='AccordionContentP'>
+                        <div className="AccordionContentTextP">
+                        {props.responsavelDetail?.contatos?.map(contato => (
+                            <div key={contato.contatoID?.valueOf()} className='AccordionCardP'>
+                                <span>Principal: <b>{contato.principal ? "Sim" : "Não"}</b> | &nbsp;
+                                      Tipo: <b>{contato.tipoContato}</b></span>
+                                <span>Descrição: <b>{contato.descricao}</b></span>
+                                <span>Observações: <b>{contato.anotacao}</b></span>
+                            </div>
+                        ))}
                         </div>
                     </Accordion.Content>
                 </Accordion.Item>

@@ -10,20 +10,22 @@ import 'moment/locale/pt-br';
 import { Veterinario } from '../../interfaces/Veterinario';
 import { FormDetailVeterinario } from '../FormDetailVeterinario';
 import { FormDetailPet } from '../FormDetailPet';
+import { MdRefresh, MdSystemUpdate, MdUpdate } from 'react-icons/md';
 
 interface listResponsavelProps {
   responsavel?: Responsavel;
+  editFormClick:(event: React.MouseEvent<HTMLButtonElement>, responsavel:Responsavel) => void;
 }
 
 export function ListResponsavel (props:listResponsavelProps) {
 
-  //const api = ApiRegistro();
+  const api = ApiRegistro();
   const paginationRef = useRef<any>();
   const paginationPetRef = useRef<any>();
   const paginationVetRef = useRef<any>();
   const [listResponsaveis, setListResponsaveis] = useState<Responsavel[]>([]);
   const [listVeterinario, setListVeterinario] = useState<Veterinario[]>([]);
-  const [respSelected, setRespSelected] = useState<Responsavel>();
+  const [respSelected, setRespSelected] = useState<Responsavel>({responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, pets: [], enderecos: [], contatos: [],});
   const [petIndex, setPetIndex] = useState<number>(-1);
   const [vetSelected, setVetSelected] = useState<Veterinario>();
   const [paginateList, setPaginateList] = useState({list: listResponsaveis, perPage:10, page:0, pages:1});
@@ -34,11 +36,12 @@ export function ListResponsavel (props:listResponsavelProps) {
   const [showList, SetShowList] = useState<String>('responsavel')
 
   const getListResponsaveis = async () => {
-      // var list:any = await api.listResponsaveis();
-      // if (list?.status >= 200 && list?.status <= 300){
-      //     setListResponsaveis(list.data);
-      // }
-      let listResponsavelTmp = listTeste;
+      var list:any = await api.listResponsaveis();
+      if (list?.status >= 200 && list?.status <= 300){
+          setListResponsaveis(list.data);
+      }
+      let listResponsavelTmp:Responsavel[] = list.data;
+      // let listResponsavelTmp = listTeste;
       listResponsavelTmp = listResponsavelTmp.sort((a,b) => {
                     if(a.nome == null || b.nome == null){return 0;}
                     let fa = a.nome.toLowerCase(),
@@ -76,8 +79,13 @@ export function ListResponsavel (props:listResponsavelProps) {
         
   };
 
-  const getListVeterinarios = () => {
-    let listVeterinarioTmp = listTesteVet;
+  const getListVeterinarios = async () => {
+    var list:any = await api.listVeterinarios();
+      if (list?.status >= 200 && list?.status <= 300){
+          setListVeterinario(list.data);
+      }
+      let listVeterinarioTmp:Veterinario[] = list.data;
+      // let listVeterinarioTmp = listTesteVet;
       listVeterinarioTmp = listVeterinarioTmp.sort((a,b) => {
                     let fa = a?.nome?.toLowerCase(),
                         fb = b?.nome?.toLowerCase();
@@ -195,7 +203,6 @@ export function ListResponsavel (props:listResponsavelProps) {
       let petsPage = listResponsaveis.slice(start,finish);
       
       setPaginateList({...paginateList, perPage: itensPerPage, pages: pages, list: petsPage});
-      console.log(paginationRef.current)
   };
 
   const setItensPerPagePet = (select:any) => {
@@ -228,7 +235,6 @@ export function ListResponsavel (props:listResponsavelProps) {
     let petsPage = listResponsaveis.slice(start,finish);
     
     setPaginateList({...paginateList, perPage: itensPerPage, pages: pages, list: petsPage});
-    console.log(paginationPetRef.current)
   };
 
   const setItensPerPageVet = (select:any) => {
@@ -261,7 +267,6 @@ export function ListResponsavel (props:listResponsavelProps) {
     let vetPage = listVeterinario.slice(start,finish);
     
     setPaginateListVet({...paginateListVet, perPage: itensPerPage, pages: pages, list: vetPage});
-    console.log(paginationVetRef.current)
   };
 
   const selectAll = () => {
@@ -302,7 +307,6 @@ export function ListResponsavel (props:listResponsavelProps) {
         deleteList = deleteList.concat(temp);
       }
     }
-    console.log(deleteList);
   }
 
   useEffect(() => {
@@ -346,6 +350,7 @@ export function ListResponsavel (props:listResponsavelProps) {
                           containerClassName={'pagination'}
                           activeClassName={'active'}
                       />
+                  <MdRefresh size={22} onClick={() => getListResponsaveis()} style={{cursor:'pointer'}} />
                 </div>
                 <div id="responsavel_table">
                     <table>
@@ -370,10 +375,10 @@ export function ListResponsavel (props:listResponsavelProps) {
                                 </LinkButton>
                               </td>
                               <td>
-                                <span>{resp.enderecos?resp.enderecos[0].bairro+"-"+resp.enderecos[0].cidade+"/"+resp.enderecos[0].uf:""}</span>
+                                <span>{(resp.enderecos && resp.enderecos?.length>0)?resp.enderecos[0].bairro+"-"+resp.enderecos[0].cidade+"/"+resp.enderecos[0].uf:"Sem cadastro"}</span>
                               </td>
                               <td>
-                                <span>{resp.contatos?resp.contatos[0].tipoContato+": "+resp.contatos[0].descricao:""}</span>
+                                <span>{(resp.contatos && resp.contatos.length >0)?resp.contatos[0].tipoContato+": "+resp.contatos[0].descricao:"Sem Cadastro"}</span>
                               </td>
                               <td>
                                 <span>{moment(resp.nascimento).add(1,'year').fromNow(true)}</span>
@@ -409,6 +414,7 @@ export function ListResponsavel (props:listResponsavelProps) {
                           containerClassName={'pagination'}
                           activeClassName={'active'}
                       />
+                  <MdRefresh size={22} onClick={() => getListResponsaveis()} style={{cursor:'pointer'}} />
                 </div>
                 <div id="pet_table">
                     <table>
@@ -468,6 +474,7 @@ export function ListResponsavel (props:listResponsavelProps) {
                           containerClassName={'pagination'}
                           activeClassName={'active'}
                       />
+                  <MdRefresh size={22} onClick={() => getListVeterinarios()} style={{cursor:'pointer'}} />
                 </div>
                 <div id="responsavel_table">
                     <table>
@@ -502,7 +509,7 @@ export function ListResponsavel (props:listResponsavelProps) {
           }
         </div>
           <div id='form_detail_responsavel' className={showCadResp?"navbarSticky":"navbar"}>
-            <FormDetailResponsavel responsavelDetail={respSelected} cancelFormClick={() => setShowCadResp(false)} />
+            <FormDetailResponsavel responsavelDetail={respSelected} cancelFormClick={() => setShowCadResp(false)} editFormClick={(e, resp) => props.editFormClick(e, resp)} />
           </div>
           <div id='form_detail_pet' className={showCadPet?"navbarSticky":"navbar"}>
             <FormDetailPet responsavelDetail={respSelected} petIndex={petIndex} cancelFormClick={() => setShowCadPet(false)} />

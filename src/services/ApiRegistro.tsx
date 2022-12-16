@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { Responsavel } from '../interfaces/Responsavel';
+import { Contato, Endereco, Responsavel } from '../interfaces/Responsavel';
 import { Pet } from '../interfaces/Pet';
 import { useCallback } from 'react';
 
@@ -25,7 +25,7 @@ export const ApiRegistro = () => ({
     },[]),
 
     getResponsavelById: useCallback(async (responsavelID:Number) => {
-        var result = null;
+        var result:any = "";
         await api.get<Responsavel>('/registro/responsavel/'+responsavelID)
         .then(function (response) {
             result = response;
@@ -48,7 +48,7 @@ export const ApiRegistro = () => ({
         return result;
     },[]),
 
-    saveResponsavel: useCallback(async (responsavel:Omit<Responsavel,"responsavelID"|"pets"|"enderecos"|"contatos" >) => {
+    saveResponsavel: useCallback(async (responsavel:Omit<Responsavel,"responsavelID"|"pets"|"enderecos"|"contatos">) => {
         // Objeto Responsável
         // {
         //     "nome":"String",
@@ -60,7 +60,7 @@ export const ApiRegistro = () => ({
         //     "nascimento":"Date",
         //     "aceitaEmail":Boolean
         // }
-        var result = null;
+        var result:any = "";
         await api.post('/registro/responsavel/save', responsavel)
         .then(function (response) {
             result = response;
@@ -71,7 +71,7 @@ export const ApiRegistro = () => ({
         return result;
     },[]),
 
-    addEnderecoToResponsavel: useCallback(async (responsavelID:Number, endereco:JSON) => {
+    addEnderecoToResponsavel: useCallback(async (responsavelID:Number, endereco:Endereco) => {
         // Objeto Endereço
         // {
         //     "tipoEndereco":"String",
@@ -83,7 +83,7 @@ export const ApiRegistro = () => ({
         //     "cidade":"String",
         //     "uf":"String"
         // }
-        var result = null;
+        var result:any = "";
         await api.post('/registro/responsavel/'+responsavelID+'/addEndereco', endereco)
         .then(function (response) {
             result = response;
@@ -94,7 +94,7 @@ export const ApiRegistro = () => ({
         return result;
     },[]),
 
-    addContatoToResponsavel: useCallback(async (responsavelID:Number, contato:JSON) => {
+    addContatoToResponsavel: useCallback(async (responsavelID:Number, contato:Contato) => {
         // Objeto Endereço
         // {
         //     "tipoEndereco":"String",
@@ -106,7 +106,7 @@ export const ApiRegistro = () => ({
         //     "cidade":"String",
         //     "uf":"String"
         // }
-        var result = null;
+        var result:any = "";
         await api.post('/registro/responsavel/'+responsavelID+'/addContato', contato)
         .then(function (response) {
             result = response;
@@ -117,7 +117,7 @@ export const ApiRegistro = () => ({
         return result;
     },[]),
 
-    updateResponsavel: useCallback(async (responsavel:JSON) => {
+    updateResponsavel: useCallback(async (responsavel:Omit<Responsavel,"pets"|"enderecos"|"contatos">) => {
         // Objeto Responsável
         // {
         //     "responsavelID":Number,
@@ -130,7 +130,7 @@ export const ApiRegistro = () => ({
         //     "nascimento":"Date",
         //     "aceitaEmail":Boolean
         // }
-        var result = null;
+        var result:any = "";
         await api.put('/registro/responsavel/update', responsavel)
         .then(function (response) {
             result = response;
@@ -141,12 +141,12 @@ export const ApiRegistro = () => ({
         return result;
     },[]),
 
-    deleteResponsavel: useCallback(async (responsavel:JSON) => {
+    deleteResponsavel: useCallback(async (responsavel:Responsavel) => {
         // Objeto mínimo Responsável
         // {
         //     "responsavelID":Number,
         // }
-        var result = null;
+        var result:any = "";
         await api.delete('/registro/responsavel/delete',{data: responsavel})
         .then(function (response) {
             result = response;
@@ -194,7 +194,7 @@ export const ApiRegistro = () => ({
         return result;
     },[]),
 
-    savePet: useCallback(async (pet:JSON, responsavelID:Number) => {
+    savePet: useCallback(async (pet:Pet, responsavelID:Number) => {
         // Objeto Pet
         // {
         //     "nome":"String",
@@ -207,7 +207,7 @@ export const ApiRegistro = () => ({
         //     "pedigree":boolean,
         //     "fertil":boolean
         // }
-        var result = null;
+        var result:any = "";
         await api.post('/registro/pet/save/responsavel/'+responsavelID, pet)
         .then(function (response) {
             result = response;
@@ -218,7 +218,7 @@ export const ApiRegistro = () => ({
         return result;
     },[]),
 
-    updatePet: useCallback(async (pet:JSON) => {
+    updatePet: useCallback(async (pet:Pet) => {
         // Objeto Pet
         // {
         //     "petID":Number,
@@ -232,7 +232,7 @@ export const ApiRegistro = () => ({
         //     "pedigree":boolean,
         //     "fertil":boolean
         // }
-        var result = null;
+        var result:any = "";
         await api.put('/registro/pet/update', pet)
         .then(function (response) {
             result = response;
@@ -243,12 +243,12 @@ export const ApiRegistro = () => ({
         return result;
     },[]),
 
-    deletePet: useCallback(async (pet:JSON) => {
+    deletePet: useCallback(async (pet:Pet) => {
         // Objeto Pet
         // {
         //     "petID":Number,
         // }
-        var result = null;
+        var result:any = "";
         await api.delete('/registro/pet/delete', {data:pet})
         .then(function (response) {
             result = response;

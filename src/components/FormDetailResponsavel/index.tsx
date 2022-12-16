@@ -8,10 +8,13 @@ import { Button } from '../HtmlComponents';
 
 interface propsFormResponsavel {
     cancelFormClick:(event: React.MouseEvent<HTMLButtonElement>) => void;
-    responsavelDetail?: Responsavel;
+    editFormClick:(event: React.MouseEvent<HTMLButtonElement>, responsavel:Responsavel) => void;
+    responsavelDetail: Responsavel;
 }
 
 export function FormDetailResponsavel(props: propsFormResponsavel) {
+
+    const [responsavel, setResponsavel] = useState<Responsavel>(props.responsavelDetail);
 
     const cpf_cnpj_mask = (tipo:String,numero:String) => {
         let mask = "";
@@ -38,13 +41,20 @@ export function FormDetailResponsavel(props: propsFormResponsavel) {
     };
 
     useEffect(() => {
+        if(props.responsavelDetail!=null){
+            setResponsavel(props.responsavelDetail);
+        }
         moment.locale('pt-br');
-    },[])
+    },[props])
 
     return (
         <div id='form_responsavel'>
-            <Button color={'light_cancel'} type="button"
-                    onClick={(e) => props.cancelFormClick(e)}> {"Fechar"} </Button>
+            <div>
+                <Button color={'light_cancel'} type="button"
+                        onClick={(e) => props.cancelFormClick(e)}> {"Fechar"} </Button>
+                <Button color={'light'} type="button"
+                        onClick={(e) => props.editFormClick(e, responsavel)}> {"Editar"} </Button>
+            </div>
             <p><b>{props.responsavelDetail?.nome && props.responsavelDetail.sobrenome?props.responsavelDetail.nome.toString()+" "+props.responsavelDetail.sobrenome.toString():""}</b></p>
             <br/>
             <Accordion.Root className='AccordionRootR' type='single' defaultValue="item-1" collapsible>
@@ -61,26 +71,27 @@ export function FormDetailResponsavel(props: propsFormResponsavel) {
                                 <span>Sexo: <b>{props.responsavelDetail?.genero?props.responsavelDetail.genero.toString():""}</b></span>
                                 <span>Tipo de Pessoa: <b>{props.responsavelDetail?.tipoPessoa?props.responsavelDetail.tipoPessoa.toString():""}</b></span>
                                 <span>CPF/CNPJ: <b>{props.responsavelDetail?.tipoRegistro && props.responsavelDetail.registroNum?cpf_cnpj_mask(props.responsavelDetail.tipoRegistro, props.responsavelDetail.registroNum):""}</b></span>
-                                <span>Data de nascimento: <b>{props.responsavelDetail?.nascimento?moment(props.responsavelDetail.nascimento).format('DD/MM/YYYY')
-                                                                                        +" - "+
-                                                                                        moment(props.responsavelDetail.nascimento).month(0).from(moment().month(0),true)
-                                                                                        +" - "+
-                                                                                        (moment().isBefore([
-                                                                                        (new Date().getFullYear().valueOf()),
-                                                                                        props.responsavelDetail.nascimento.getMonth().valueOf(),
-                                                                                        props.responsavelDetail.nascimento.getDate().valueOf()])?
-                                                                                        moment().to(
-                                                                                                    moment([
-                                                                                                        (new Date().getFullYear().valueOf()),
-                                                                                                        props.responsavelDetail.nascimento.getMonth().valueOf(),
-                                                                                                        props.responsavelDetail.nascimento.getDate().valueOf()]))
-                                                                                        : moment().to(
-                                                                                            moment([
-                                                                                                (new Date().getFullYear().valueOf()+1),
-                                                                                                props.responsavelDetail.nascimento.getMonth().valueOf(),
-                                                                                                props.responsavelDetail.nascimento.getDate().valueOf()]))
-                                                                                       )
-                                                                                       :""}
+                                <span>Data de nascimento: <b>{props.responsavelDetail?.nascimento?moment(props.responsavelDetail.nascimento).format('DD/MM/YYYY'):""}
+                                                                                    {//     +" - "+
+                                                                                    //     moment(props.responsavelDetail.nascimento).month(0).from(moment().month(0),true)
+                                                                                    //     +" - "+
+                                                                                    //     (moment().isBefore([
+                                                                                    //     (new Date().getFullYear().valueOf()),
+                                                                                    //     moment(props.responsavelDetail.nascimento).getMonth(),
+                                                                                    //     moment(props.responsavelDetail.nascimento).getDate()])?
+                                                                                    //     moment().to(
+                                                                                    //                 moment([
+                                                                                    //                     (new Date().getFullYear().valueOf()),
+                                                                                    //                     moment(props.responsavelDetail.nascimento).getMonth(),
+                                                                                    //                     moment(props.responsavelDetail.nascimento).getDate()]))
+                                                                                    //     : moment().to(
+                                                                                    //         moment([
+                                                                                    //             (new Date().getFullYear().valueOf()+1),
+                                                                                    //             moment(props.responsavelDetail.nascimento).getMonth().valueOf(),
+                                                                                    //             moment(props.responsavelDetail.nascimento).getDate().valueOf()]))
+                                                                                    //    )
+                                                                                    //    :""
+                                                                                }
                                                                                        </b>
                                 </span>
                                 <span>Aceita receber e-mail: &nbsp;<b>

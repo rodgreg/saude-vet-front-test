@@ -16,9 +16,10 @@ const Div = styled('div', {
 
 interface principalProps {
     page:String;
-    responsavel?:Responsavel;
+    responsavel:Responsavel;
     pet?:Pet;
     veterinario?:Veterinario;
+    editFormClick:(event: React.MouseEvent<HTMLButtonElement>, responsavel:Responsavel) => void;
 }
 
 const Principal = (props:principalProps) => {
@@ -27,11 +28,11 @@ const Principal = (props:principalProps) => {
             return <HomeDash />
             break;
         case "listResponsavel":
-            return <ListResponsavel />
+            return <ListResponsavel editFormClick={(e, resp) => props.editFormClick(e, resp)} />
             break;  
     
         case "cadResponsavel":
-            return <FormCadResponsavel responsavel={props.responsavel}/>
+            return <FormCadResponsavel responsavelForm={props.responsavel}/>
             break;
 
         default:
@@ -48,6 +49,11 @@ export function Home () {
     const changeTheme = () => {
         setTheme(theme=='ligth'?'dark':'ligth')
     };
+
+    const editResponsavel = (resp:Responsavel) => {
+        setResponsavel(resp);
+        setShowPage('cadResponsavel');
+    }
 
     return (
             <Div id="body" data-theme={theme}>
@@ -87,7 +93,7 @@ export function Home () {
                 </Div>
 
                 <Div id="main">
-                    <Principal page={showPage} responsavel={responsavel}/>
+                    <Principal page={showPage} responsavel={responsavel} editFormClick={(e,resp) => editResponsavel(resp)} />
                 </Div>
 
                 <Div id="footer">

@@ -30,7 +30,6 @@
 }
 
 .form_cad_responsavel input {
-    width: 100%;
     height: 30px;
     border-radius: 3px;
     outline: none;
@@ -39,6 +38,14 @@
     font-size: 14pt;
     background-color: var(--bg-input);
     color: var(--text-color);
+}
+
+.form_cad_responsavel input[type='text'] {
+    width: 95%;
+}
+
+.form_cad_responsavel input[type='date'] {
+    width: 180px;
 }
 
 .form_cad_responsavel input:focus {
@@ -54,10 +61,8 @@
 
 .form_cad_responsavel select {
     padding: 4px;
-    margin-top: 6px;
-    margin-bottom: 6px;
     border: none;
-    font-size: 14pt;
+    font-size: 13pt;
     width: max-content;
     border-radius: 3px;
     background-color: var(--bg-input);
@@ -65,9 +70,11 @@
 }
 
 .form_cad_responsavel button {
-    margin-top: 8px;
+    margin-top: 25px;
     margin-bottom: 4px;
+    cursor: pointer;
 }
+
 
 .dados_container_responsavel {
     display: flex;
@@ -95,8 +102,8 @@
 }
 
 .dados_responsavel_item {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 40% 45% 15%;
     justify-content: space-between;
     column-gap: 6px;
     row-gap: 6px;
