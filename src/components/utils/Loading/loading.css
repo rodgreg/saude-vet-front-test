@@ -1,0 +1,36 @@
+#loading_div {
+    display: flex;
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    top:0;
+    left:0;
+    background-color: rgba(54, 111, 68, 0.4);
+    color: var(--text-color);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+}
+
+#loading_content {
+    font-size: 40pt;
+    font-weight: bold;
+    animation: loadingLoop 2s ease-in-out infinite;
+}
+
+@keyframes loadingLoop {
+    0% {
+        font-size: 30pt;
+        opacity: 0.5;
+    }
+
+    50% {
+        font-size: 40pt;
+        opacity: 1;
+    }
+
+    100% {
+        font-size: 30pt;
+        opacity: 0.5;
+    }
+  }

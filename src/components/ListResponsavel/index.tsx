@@ -11,10 +11,18 @@ import { Veterinario } from '../../interfaces/Veterinario';
 import { FormDetailVeterinario } from '../FormDetailVeterinario';
 import { FormDetailPet } from '../FormDetailPet';
 import { MdRefresh, MdSystemUpdate, MdUpdate } from 'react-icons/md';
+import { Loading } from '../utils/Loading';
+import { Pet } from '../../interfaces/Pet';
 
 interface listResponsavelProps {
   responsavel?: Responsavel;
-  editFormClick:(event: React.MouseEvent<HTMLButtonElement>, responsavel:Responsavel) => void;
+  editResFormClick:(event: React.MouseEvent<HTMLButtonElement>, responsavel:Responsavel) => void;
+  editVetFormClick:(event: React.MouseEvent<HTMLButtonElement>, veterinario:Veterinario) => void;
+}
+
+interface Pets {
+  pet:Pet | null;
+  responsavel: Omit<Responsavel,"pets"> | null;
 }
 
 export function ListResponsavel (props:listResponsavelProps) {
@@ -24,65 +32,125 @@ export function ListResponsavel (props:listResponsavelProps) {
   const paginationPetRef = useRef<any>();
   const paginationVetRef = useRef<any>();
   const [listResponsaveis, setListResponsaveis] = useState<Responsavel[]>([]);
+  const [listPets, setListPets] = useState<Pets[]>([]);
   const [listVeterinario, setListVeterinario] = useState<Veterinario[]>([]);
   const [respSelected, setRespSelected] = useState<Responsavel>({responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, pets: [], enderecos: [], contatos: [],});
-  const [petIndex, setPetIndex] = useState<number>(-1);
-  const [vetSelected, setVetSelected] = useState<Veterinario>();
+  const [petSelected, setPetSelected] = useState<Pets>({pet:null, responsavel:null});
+  const [vetSelected, setVetSelected] = useState<Veterinario>({veterinarioID:null, nome:"", sobrenome:"", genero:"", cpf:"", cidade:"", uf:"",crmvs:[]});
   const [paginateList, setPaginateList] = useState({list: listResponsaveis, perPage:10, page:0, pages:1});
+  const [paginateListPet, setPaginateListPet] = useState({list: listPets, perPage:10, page:0, pages:1});
   const [paginateListVet, setPaginateListVet] = useState({list: listVeterinario, perPage:10, page:0, pages:1});
   const [showCadResp, setShowCadResp] = useState<Boolean>(false);
   const [showCadPet, setShowCadPet] = useState<Boolean>(false);
   const [showCadVet, setShowCadVet] = useState<Boolean>(false);
-  const [showList, SetShowList] = useState<String>('responsavel')
+  const [showList, SetShowList] = useState<String>('responsavel');
+  const [isLoading, setIsLoading] = useState<Boolean>(false);
 
   const getListResponsaveis = async () => {
-      var list:any = await api.listResponsaveis();
-      if (list?.status >= 200 && list?.status <= 300){
-          setListResponsaveis(list.data);
-      }
-      let listResponsavelTmp:Responsavel[] = list.data;
-      // let listResponsavelTmp = listTeste;
-      listResponsavelTmp = listResponsavelTmp.sort((a,b) => {
-                    if(a.nome == null || b.nome == null){return 0;}
-                    let fa = a.nome.toLowerCase(),
-                        fb = b.nome.toLowerCase();
+    setIsLoading(true);
+    var list:any = await api.listResponsaveis();
+    if (list?.status >= 200 && list?.status <= 300){
+        setListResponsaveis(list.data);
+    } else {
+      setIsLoading(false);
+    }
+    let listResponsavelTmp:Responsavel[] = list.data;
+    // let listResponsavelTmp = listTeste;
+    listResponsavelTmp = listResponsavelTmp.sort((a,b) => {
+                  if(a.nome == null || b.nome == null){return 0;}
+                  let fa = a.nome.toLowerCase(),
+                      fb = b.nome.toLowerCase();
 
-                    if (fa < fb) {
-                        return -1;
-                    }
-                    if (fa > fb) {
-                        return 1;
-                    }
-                    if (fa === fb) {
-                    let la = a?.nome?.toLowerCase(),
-                        lb = b?.nome?.toLowerCase();
-                    
-                    if (la < lb) {
-                        return -1;
-                    }
-                    if (la > lb) {
-                        return 1;
-                    }
-                    return 0;
-                    }
-                    return 0;
-                } 
-            );
+                  if (fa < fb) {
+                      return -1;
+                  }
+                  if (fa > fb) {
+                      return 1;
+                  }
+                  if (fa === fb) {
+                  let la = a?.nome?.toLowerCase(),
+                      lb = b?.nome?.toLowerCase();
+                  
+                  if (la < lb) {
+                      return -1;
+                  }
+                  if (la > lb) {
+                      return 1;
+                  }
+                  return 0;
+                  }
+                  return 0;
+              } 
+          );
+
+    // Monta Lista Responsável.
     setListResponsaveis(listResponsavelTmp);
 
     let pages = 1;    
     if(paginateList.perPage < listResponsavelTmp.length) {
-    pages = Math.ceil(listResponsavelTmp.length/paginateList.perPage);
+      pages = Math.ceil(listResponsavelTmp.length/paginateList.perPage);
     };
     let listPage = listResponsavelTmp.slice(0,paginateList.perPage);
     setPaginateList({...paginateList, pages: pages, list: listPage});
-        
+
+    getListPets(listResponsavelTmp);
+
+    setIsLoading(false);
   };
 
+  const getListPets = async (list:Responsavel[]) => {
+    // Monta Lista Pet a partir da lista de Responsáveis.
+    let petListTemp:Pet[] | any[] = list.map(resp => resp.pets?.map(pet => {let pets:Pets = {pet:pet, responsavel:resp}; return(pets)}))
+    
+    let listTmpConcat:any[] = [];
+    for (let i=0; i<petListTemp.length; i++) {
+     listTmpConcat = listTmpConcat.concat(petListTemp[i]);
+    };
+
+    listTmpConcat = listTmpConcat.sort((a,b) => {
+                                              if(a.pet.nome == null || b.pet.nome == null){return 0;}
+                                              let fa = a.pet.nome.toLowerCase(),
+                                                  fb = b.pet.nome.toLowerCase();
+
+                                              if (fa < fb) {
+                                                  return -1;
+                                              }
+                                              if (fa > fb) {
+                                                  return 1;
+                                              }
+                                              if (fa === fb) {
+                                              let la = a.responsavel.nome.toLowerCase(),
+                                                  lb = b.responsavel.nome.toLowerCase();
+                                              
+                                              if (la < lb) {
+                                                  return -1;
+                                              }
+                                              if (la > lb) {
+                                                  return 1;
+                                              }
+                                              return 0;
+                                              }
+                                              return 0;
+                                            })
+
+    setListPets(listTmpConcat);
+
+    let pagesPet = 1;    
+    if(paginateListPet.perPage < listTmpConcat.length) {
+      pagesPet = Math.ceil(listTmpConcat.length/paginateListPet.perPage);
+    };
+    let listPagePet = listTmpConcat.slice(0,paginateListPet.perPage);
+    setPaginateListPet({...paginateListPet, pages: pagesPet, list: listPagePet});
+
+  }
+
   const getListVeterinarios = async () => {
+    setIsLoading(true);
     var list:any = await api.listVeterinarios();
       if (list?.status >= 200 && list?.status <= 300){
           setListVeterinario(list.data);
+      } else {
+        setIsLoading(false);
       }
       let listVeterinarioTmp:Veterinario[] = list.data;
       // let listVeterinarioTmp = listTesteVet;
@@ -119,7 +187,7 @@ export function ListResponsavel (props:listResponsavelProps) {
     };
     let listPage = listVeterinarioTmp.slice(0,paginateListVet.perPage);
     setPaginateListVet({...paginateListVet, pages: pages, list: listPage});
-
+    setIsLoading(false);
   };
 
   const handlePageClick = (event:any) => { 
@@ -142,18 +210,18 @@ export function ListResponsavel (props:listResponsavelProps) {
   const handlePagePetClick = (event:any) => { 
     let page = event.selected;
     
-    let start = Math.floor(paginateList.perPage*page);
-    if(start > listResponsaveis.length) {
+    let start = Math.floor(paginateListPet.perPage*page);
+    if(start > listPets.length) {
       start = 0;
     };
   
-    let finish = Number(start)+Number(paginateList.perPage);
-    if(finish > listResponsaveis.length) {
-      finish = listResponsaveis.length;
+    let finish = Number(start)+Number(paginateListPet.perPage);
+    if(finish > listPets.length) {
+      finish = listPets.length;
     };
   
-    let respPage:Responsavel[] = listResponsaveis.slice(start,finish);
-    setPaginateList({...paginateList, page:page, list:respPage})
+    let petPage:Pets[] = listPets.slice(start,finish);
+    setPaginateListPet({...paginateListPet, page:page, list:petPage})
   };
 
   const handlePageVetClick = (event:any) => { 
@@ -209,21 +277,21 @@ export function ListResponsavel (props:listResponsavelProps) {
     let itensPerPage = select.target[select.target.selectedIndex].value;
     
     let pages = 1
-    if(itensPerPage <= listResponsaveis.length) {
-      pages = Math.ceil(listResponsaveis.length/itensPerPage);
+    if(itensPerPage <= listPets.length) {
+      pages = Math.ceil(listPets.length/itensPerPage);
     };
   
     if(paginationPetRef.current.state.selected > (pages-1)){
       paginationPetRef.current.state.selected = pages-1;
     } 
   
-    let start = Math.floor(itensPerPage*paginateList.page);
-    if(start > listResponsaveis.length) {
+    let start = Math.floor(itensPerPage*paginateListPet.page);
+    if(start > listPets.length) {
       start = 0;
     };
   
     let finish = Number(start)+Number(itensPerPage);
-    if(finish > listResponsaveis.length) {
+    if(finish > listPets.length) {
       finish = listResponsaveis.length;
     };
   
@@ -232,9 +300,9 @@ export function ListResponsavel (props:listResponsavelProps) {
       finish = itensPerPage;
     }
   
-    let petsPage = listResponsaveis.slice(start,finish);
+    let petsPage = listPets.slice(start,finish);
     
-    setPaginateList({...paginateList, perPage: itensPerPage, pages: pages, list: petsPage});
+    setPaginateListPet({...paginateListPet, perPage: itensPerPage, pages: pages, list: petsPage});
   };
 
   const setItensPerPageVet = (select:any) => {
@@ -276,16 +344,15 @@ export function ListResponsavel (props:listResponsavelProps) {
     }
   };
 
-  const showDetailResp = (resp: Responsavel) => {
-    setRespSelected(resp);
+  const showDetailResp = (respDetail: Responsavel) => {
+    setRespSelected(respDetail);
     setShowCadResp(true);
     setShowCadVet(false);
     setShowCadPet(false);
   };
 
-  const showDetailPet = (resp: Responsavel, index:number) => {
-    setRespSelected(resp);
-    setPetIndex(index);
+  const showDetailPet = (petDetail: Pets) => {
+    setPetSelected(petDetail);
     setShowCadResp(false);
     setShowCadVet(false);
     setShowCadPet(true);
@@ -317,6 +384,7 @@ export function ListResponsavel (props:listResponsavelProps) {
 
   return (
       <div>
+        {isLoading && <Loading />}
         <div >
           <div className='tab_list_conteiner' style={{display:'flex', flexDirection:'row', marginBottom:6}}>
             <div className={showList==='responsavel'?'tab_list_selected':'tab_list'}>
@@ -357,9 +425,9 @@ export function ListResponsavel (props:listResponsavelProps) {
                       <thead>
                         <tr>
                             <th style={{width:'10px'}}><input key={-1} value={-1} type={"checkbox"} onChange={selectAll} /></th>
-                            <th style={{width:'50%'}}>Nome Completo</th>
-                            <th style={{width:'30%'}}>Bairro</th>
-                            <th style={{width:'20%'}}>Primeiro Contato</th>
+                            <th style={{width:'30%'}}>Nome Completo</th>
+                            <th style={{width:'25%'}}>Bairro</th>
+                            <th style={{width:'25%'}}>Primeiro Contato</th>
                             <th style={{width:'10%'}}>Idade</th>
                             <th style={{width:'10%'}}>Qtd de Pets</th>
                         </tr>
@@ -396,7 +464,7 @@ export function ListResponsavel (props:listResponsavelProps) {
           { showList==='pet' && 
               <div className='content_list'>
                 <div id="controller_table">
-                  <Select value={paginateList.perPage} onChange={setItensPerPagePet}>
+                  <Select value={paginateListPet.perPage} onChange={setItensPerPagePet}>
                       <Option value={2}>2</Option>
                       <Option value={5}>5</Option>
                       <Option value={10}>10</Option>
@@ -409,7 +477,7 @@ export function ListResponsavel (props:listResponsavelProps) {
                           breakLabel={'...'}
                           previousLabel={'<<'}
                           nextLabel={'>>'}
-                          pageCount={paginateList.pages}
+                          pageCount={paginateListPet.pages}
                           onPageChange={handlePagePetClick}
                           containerClassName={'pagination'}
                           activeClassName={'active'}
@@ -421,33 +489,34 @@ export function ListResponsavel (props:listResponsavelProps) {
                       <thead>
                         <tr>
                             <th style={{width:'10px'}}><input key={-1} value={-1} type={"checkbox"} onChange={selectAll} /></th>
-                            <th style={{width:'30%'}}>Nome</th>
+                            <th style={{width:'20%'}}>Nome</th>
+                            <th style={{width:'15%'}}>Idade</th>
                             <th style={{width:'15%'}}>Espécie</th>
                             <th style={{width:'15%'}}>Raça</th>
                             <th style={{width:'10%'}}>Fértil</th>
                             <th style={{width:'10%'}}>Pedigree</th>
-                            <th style={{width:'20%'}}>Responsável</th>
+                            <th style={{width:'15%'}}>Responsável</th>
                         </tr>
                       </thead>
                       <tbody>
-                          {(paginateList.list.length > 0 && paginateList.list != null)?
-                              paginateList.list.map((resp,idx) => resp.pets?.map((pet,idx) => 
+                          {(paginateListPet.list.length > 0 && paginateListPet.list != null)?
+                              paginateListPet.list.map((pet,idx) => {if(pet.pet!=null && pet.responsavel!=null) {return(
                               <tr key={idx}>
-                              <td><input key={Number(pet.petID)} value={pet.petID?Number(pet.petID):""} type={"checkbox"} /></td>
+                              <td><input key={Number(pet.pet.petID)} value={pet.pet.petID?Number(pet.pet.petID):""} type={"checkbox"} /></td>
                               <td >
-                                <LinkButton color={'dark'} size={'small'} onClick={() => showDetailPet(resp,idx)}>
-                                  {pet?.nome}
+                                <LinkButton color={'dark'} size={'small'} onClick={() => showDetailPet(pet)}>
+                                  {pet?.pet.nome}
                                 </LinkButton>
                               </td>
-                              <td >{pet?.especie}</td>
-                              <td >{pet?.raca}</td>
-                              <td >{pet?.fertil?"Sim":"Não"}</td>
-                              <td >{pet?.pedigree?"Sim":"Não"}</td>
-                              <td >{resp?.nome + " " + resp.sobrenome}</td>
+                              <td><span>{moment(pet.pet.nascimento).add(1,'year').fromNow(true)}</span></td>
+                              <td >{pet?.pet.especie}</td>
+                              <td >{pet?.pet.raca}</td>
+                              <td >{pet?.pet.fertil?"Sim":"Não"}</td>
+                              <td >{pet?.pet.pedigree?"Sim":"Não"}</td>
+                              <td >{pet.responsavel?.nome + " " + pet.responsavel.sobrenome}</td>
                             </tr>
 
-                              )
-                          ):<tr><td colSpan={9} style={{textAlign:'center'}}><b>Sem resultado</b></td></tr>}
+                              )}}):<tr><td colSpan={9} style={{textAlign:'center'}}><b>Sem resultado</b></td></tr>}
                       </tbody>
                   </table>
                 </div>
@@ -509,13 +578,13 @@ export function ListResponsavel (props:listResponsavelProps) {
           }
         </div>
           <div id='form_detail_responsavel' className={showCadResp?"navbarSticky":"navbar"}>
-            <FormDetailResponsavel responsavelDetail={respSelected} cancelFormClick={() => setShowCadResp(false)} editFormClick={(e, resp) => props.editFormClick(e, resp)} />
+            <FormDetailResponsavel responsavelDetail={respSelected} cancelFormClick={() => setShowCadResp(false)} editFormClick={(e, resp) => props.editResFormClick(e, resp)} />
           </div>
           <div id='form_detail_pet' className={showCadPet?"navbarSticky":"navbar"}>
-            <FormDetailPet responsavelDetail={respSelected} petIndex={petIndex} cancelFormClick={() => setShowCadPet(false)} />
+            <FormDetailPet petDetail={petSelected} cancelFormClick={() => setShowCadPet(false)} />
           </div>
           <div id='form_detail_veterinario' className={showCadVet?"navbarSticky":"navbar"}>
-            <FormDetailVeterinario veterinarioDetail={vetSelected} cancelFormClick={() => setShowCadVet(false)}/>
+            <FormDetailVeterinario veterinarioDetail={vetSelected} cancelFormClick={() => setShowCadVet(false)} editFormClick={(e,vet) => props.editVetFormClick(e, vet)}/>
           </div>
       </div>
   )

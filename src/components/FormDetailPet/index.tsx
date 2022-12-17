@@ -9,14 +9,16 @@ import { Pet } from '../../interfaces/Pet';
 
 interface propsFormResponsavel {
     cancelFormClick:(event: React.MouseEvent<HTMLButtonElement>) => void;
-    responsavelDetail?: Responsavel;
-    petIndex?: number;
+    petDetail: Pets;
 }
 
-export function FormDetailPet(props: propsFormResponsavel) {
+interface Pets {
+    pet:Pet | null;
+    responsavel: Omit<Responsavel,"pets"> | null;
+  }
 
-    const [responsavel, setResponsavel] = useState<Responsavel>();
-    const [pet, setPet] = useState<Pet>();
+export function FormDetailPet(props: propsFormResponsavel) {
+    const [pet, setPet] = useState<Pets>(props.petDetail);
 
     const cpf_cnpj_mask = (tipo:String,numero:String) => {
         let mask = "";
@@ -43,11 +45,8 @@ export function FormDetailPet(props: propsFormResponsavel) {
     };
 
     useEffect(() => {
-        if(props.responsavelDetail!=null && props.petIndex!=null){
-            setResponsavel(props.responsavelDetail);
-            if(props.responsavelDetail?.pets != null) {
-                setPet(props.responsavelDetail.pets[props.petIndex])
-            }
+        if(props.petDetail!=null){
+            setPet(props.petDetail);
         }
         moment.locale('pt-br');
     },[props])
@@ -56,7 +55,7 @@ export function FormDetailPet(props: propsFormResponsavel) {
         <div id='form_pet'>
             <Button color={'light_cancel'} type="button"
                     onClick={(e) => props.cancelFormClick(e)}> {"Fechar"} </Button>
-            <p><b>{pet?.nome}</b></p>
+            <p><b>{pet.pet?pet.pet.nome:""}</b></p>
             <br/>
             <Accordion.Root className='AccordionRootP' type='single' defaultValue="item-1" collapsible>
                 <Accordion.Item className='AccordionItemP' value="item-1">
@@ -69,19 +68,19 @@ export function FormDetailPet(props: propsFormResponsavel) {
                      <Accordion.Content className='AccordionContentP'>
                         <div className="AccordionContentTextP">
                             <div className='AccordionCardP'>
-                                <span>Sexo: <b>{pet?.genero}</b></span>
-                                <span>Espécie: <b>{pet?.especie}</b></span>
-                                <span>Raça: <b>{pet?.raca}</b></span>
-                                <span>Cor: <b>{pet?.cor}</b></span>
-                                <span>Data de nascimento: <b>{pet?.nascimento?moment(pet?.nascimento).format('DD/MM/YYYY'):""}
+                                <span>Sexo: <b>{pet.pet?pet.pet.genero:""}</b></span>
+                                <span>Espécie: <b>{pet.pet?pet.pet.especie:""}</b></span>
+                                <span>Raça: <b>{pet.pet?pet.pet.raca:""}</b></span>
+                                <span>Cor: <b>{pet.pet?pet.pet.cor:""}</b></span>
+                                <span>Data de nascimento: <b>{pet.pet?moment(pet.pet.nascimento).format('DD/MM/YYYY'):""}
                                                                                        </b>
                                 </span>
                                 <span>Fertil?: &nbsp;<b>
-                                    <span>{Boolean(pet?.fertil)?"Sim":"Não"}
+                                    <span>{pet.pet?pet.pet.fertil?"Sim":"Não":""}
                                     </span></b>
                                 </span>
                                 <span>Pedigree?: &nbsp;<b>
-                                    <span>{Boolean(pet?.pedigree)?"Sim":"Não"}
+                                    <span>{pet.pet?pet.pet.pedigree?"Sim":"Não":""}
                                     </span></b>
                                 </span>
                             </div>
@@ -98,34 +97,14 @@ export function FormDetailPet(props: propsFormResponsavel) {
                     <Accordion.Content className='AccordionContentP'>
                         <div className="AccordionContentTextP">
                         <div className='AccordionCardP'>
-                            <span>Nome: <b>{responsavel?.nome+" "+responsavel?.sobrenome}</b></span>
-                            <span>Sexo: <b>{responsavel?.genero}</b></span>
-                            <span>Tipo de Pessoa: <b>{responsavel?.tipoPessoa}</b></span>
-                            <span>CPF/CNPJ: <b>{responsavel?.tipoRegistro && responsavel.registroNum?cpf_cnpj_mask(responsavel.tipoRegistro, responsavel.registroNum):""}</b></span>
-                            <span>Data de nascimento: <b>{responsavel?.nascimento?moment(responsavel.nascimento).format('DD/MM/YYYY'):""}
-                                                                                   {/* { +" - "+
-                                                                                    moment(responsavel.nascimento).month(0).from(moment().month(0),true)
-                                                                                    +" - "+
-                                                                                    (moment().isBefore([
-                                                                                    (new Date().getFullYear().valueOf()),
-                                                                                    responsavel.nascimento.getMonth().valueOf(),
-                                                                                    responsavel.nascimento.getDate().valueOf()])?
-                                                                                    moment().to(
-                                                                                                moment([
-                                                                                                    (new Date().getFullYear().valueOf()),
-                                                                                                    responsavel.nascimento.getMonth().valueOf(),
-                                                                                                    responsavel.nascimento.getDate().valueOf()]))
-                                                                                    : moment().to(
-                                                                                        moment([
-                                                                                            (new Date().getFullYear().valueOf()+1),
-                                                                                            responsavel.nascimento.getMonth().valueOf(),
-                                                                                            responsavel.nascimento.getDate().valueOf()]))
-                                                                                    )
-                                                                                    :"" */}
-                                                                                    </b>
+                            <span>Nome: <b>{pet.responsavel?.nome+" "+pet.responsavel?.sobrenome}</b></span>
+                            <span>Sexo: <b>{pet.responsavel?.genero}</b></span>
+                            <span>Tipo de Pessoa: <b>{pet.responsavel?.tipoPessoa}</b></span>
+                            <span>CPF/CNPJ: <b>{pet.responsavel?.tipoRegistro && pet.responsavel.registroNum?cpf_cnpj_mask(pet.responsavel.tipoRegistro, pet.responsavel.registroNum):""}</b></span>
+                            <span>Data de nascimento: <b>{pet.responsavel?.nascimento?moment(pet.responsavel.nascimento).format('DD/MM/YYYY'):""}</b>
                             </span>
                             <span>Aceita receber e-mail: &nbsp;<b>
-                                <span>{Boolean(responsavel?.aceitaEmail)?"Sim":"Não"}
+                                <span>{pet.responsavel?.aceitaEmail?"Sim":"Não"}
                                 </span></b>
                             </span>
                         </div>
@@ -141,7 +120,7 @@ export function FormDetailPet(props: propsFormResponsavel) {
                     </Accordion.Header>
                     <Accordion.Content className='AccordionContentP'>
                         <div className="AccordionContentTextP" >
-                        {responsavel?.enderecos?.map(endereco => {return(
+                        {pet.responsavel?.enderecos?.map(endereco => {return(
                         <div key={endereco.enderecoID?.valueOf()} className='AccordionCardP'>
                             <span>Tipo: <b>{endereco.tipoEndereco}</b> &nbsp; | &nbsp;
                                   CEP: <b>{endereco.cep}</b></span>
@@ -166,7 +145,7 @@ export function FormDetailPet(props: propsFormResponsavel) {
                     </Accordion.Header>
                     <Accordion.Content className='AccordionContentP'>
                         <div className="AccordionContentTextP">
-                        {props.responsavelDetail?.contatos?.map(contato => (
+                        {pet.responsavel?.contatos?.map(contato => (
                             <div key={contato.contatoID?.valueOf()} className='AccordionCardP'>
                                 <span>Principal: <b>{contato.principal ? "Sim" : "Não"}</b> | &nbsp;
                                       Tipo: <b>{contato.tipoContato}</b></span>
@@ -182,12 +161,3 @@ export function FormDetailPet(props: propsFormResponsavel) {
     )
     
 }
-
-        //     "nome":"String",
-        //     "sobrenome":"String",
-        //     "genero":"String",
-        //     "tipoPessoa":"String",
-        //     "tipoRegistro":"String",
-        //     "registroNum":"String",
-        //     "nascimento":"Date",
-        //     "aceitaEmail":Boolean

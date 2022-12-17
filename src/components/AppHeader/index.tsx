@@ -41,8 +41,8 @@ export function AppHeader(props:menuProps) {
                 <button id="closeMenu" onClick={showMenuButton}>X</button>
                 <LinkButton onClick={(e) => selectMenu(e,"home")}>Início</LinkButton>
                 <LinkButton onClick={(e) => selectMenu(e,"listResponsavel")}>Cadastros</LinkButton>
-                <LinkButton onClick={(e) => selectMenu(e,"prontuario")}>Prontuários</LinkButton>
-                <LinkButton onClick={(e) => selectMenu(e,"atendimento")}>Atendimento</LinkButton>
+                <LinkButton onClick={(e) => selectMenu(e,"agenda")}>Agendamentos</LinkButton>
+                <LinkButton onClick={(e) => selectMenu(e,"loading")}>Atendimento</LinkButton>
                 <div style={{height:30, width:30, borderRadius:30 ,backgroundColor:'#eeeeee', marginRight:15, marginLeft:15}} />
             </Div>
         </Div> 

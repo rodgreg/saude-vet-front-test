@@ -84,16 +84,6 @@ export function FormCadResponsavel(props:formCadProps) {
             };
         };
         if (!hasBlank) {
-            // if(indexPet>=0){
-            //     responsavel?.pets?.splice(indexPet,1,pet);
-            //     setIndexPet(-1);
-            // } else {
-            //     if (responsavel?.pets != null && pet != null) {
-            //         responsavel?.pets.push(pet);
-            //     } else if (pet != null) {
-            //         setResponsavel({...responsavel,pets:[pet]});
-            //     }
-            // }
             if(responsavel.responsavelID != null) {
                 if(pet.petID == null) {
                     let result:AxiosResponse<any,any> = await apiRegistro.savePet(pet, responsavel.responsavelID);
@@ -110,6 +100,7 @@ export function FormCadResponsavel(props:formCadProps) {
             };
             setPet({petID:null ,nome:"", genero:"", especie:"", raca:"", cor:"", nascimento:null, fertil:false, pedigree:false})
             setAddPet(false);
+            setIndexPet(-1);
         }
     };
 
@@ -125,16 +116,6 @@ export function FormCadResponsavel(props:formCadProps) {
             };
         };
         if (!hasBlank) {
-            // if(indexEndereco>=0){
-            //     responsavel?.enderecos?.splice(indexEndereco,1,endereco);
-            //     setIndexEndereco(-1);
-            // } else {
-            //     if (responsavel?.enderecos != null && endereco != null) {
-            //         responsavel?.enderecos.push(endereco);
-            //     } else if (endereco != null) {
-            //         setResponsavel({...responsavel,enderecos:[endereco]});
-            //     }
-            // }
             if(responsavel.responsavelID != null) {
                 if(endereco.enderecoID==null) {
                     let result:AxiosResponse<any,any> = await apiRegistro.addEnderecoToResponsavel(responsavel.responsavelID, endereco);
@@ -150,6 +131,7 @@ export function FormCadResponsavel(props:formCadProps) {
             };
             setEndereco({enderecoID:null, tipoEndereco:"", cep:"", logradouro:"", numero:"", endereco:"", complemento:"", bairro:"", cidade:"", uf:""})
             setAddEndereco(false);
+            setIndexEndereco(-1);
         }
     };
 
@@ -165,16 +147,6 @@ export function FormCadResponsavel(props:formCadProps) {
             };
         };
         if (!hasBlank) {
-            // if(indexContato>=0){
-            //     responsavel?.contatos?.splice(indexContato,1,contato);
-            //     setIndexContato(-1);
-            // } else {
-            //     if (responsavel?.contatos != null && contato != null) {
-            //         responsavel?.contatos.push(contato);
-            //     } else if (contato != null) {
-            //         setResponsavel({...responsavel,contatos:[contato]});
-            //     }
-            // }
             if(responsavel.responsavelID != null) {
                 if(contato.contatoID==null) {
                     let result:AxiosResponse<any,any> = await apiRegistro.addContatoToResponsavel(responsavel.responsavelID, contato);
@@ -190,6 +162,7 @@ export function FormCadResponsavel(props:formCadProps) {
             };
             setContato({contatoID:null, tipoContato:"", principal:false, descricao:"", anotacao:""})
             setAddContato(false);
+            setIndexContato(-1);
         }
     };
 
@@ -395,6 +368,22 @@ export function FormCadResponsavel(props:formCadProps) {
         }
     };
 
+    const limparForm = () => {
+        setResponsavel({responsavelID:null,
+                        nome: "", 
+                        sobrenome: "", 
+                        genero:"", 
+                        tipoPessoa:"", 
+                        tipoRegistro:"", 
+                        registroNum:"", 
+                        nascimento:null, 
+                        aceitaEmail:false, 
+                        pets: [], 
+                        enderecos: [], 
+                        contatos: [],
+                    });
+    };
+
     useEffect(() => {
         moment.locale('pt-br');
         if (props.responsavelForm) {
@@ -428,7 +417,7 @@ export function FormCadResponsavel(props:formCadProps) {
                 {(!addEndereco && !addContato && !addPet) && <>
                     <span>Sobrenome: </span>
                     <input  type={'text'} name={'sobrenome'} value={responsavel?.sobrenome?responsavel.sobrenome.toString():""} onChange={inputChange}/>
-                    <div style={{display:'grid', gridTemplateColumns:'35% 25%'}}>
+                    <div style={{display:'grid', gridTemplateColumns:'35% 40%'}}>
                         <div style={{display:'flex', flexDirection:'column'}}>
                             <span>Sexo:</span>
                             <select onChange={selectItem} name={'genero'} value={responsavel?.genero?responsavel.genero.toString():""}>
@@ -476,6 +465,7 @@ export function FormCadResponsavel(props:formCadProps) {
                                     <Button type='button' color={'light_danger'} 
                                             onClick={() => removeResponsavel()}>Remover</Button>:""}
                     <Button type='button' color={'light_cancel'} >Voltar</Button>
+                    <Button type='button' color={'light_cancel'} onClick={() => limparForm()} >Limpar</Button>
                 </div>
                 {responsavel?.responsavelID!=null?
                     <div>
@@ -517,7 +507,7 @@ export function FormCadResponsavel(props:formCadProps) {
                     <input type={'text'} name={'uf'} value={endereco?.uf?endereco.uf.toString():""} onChange={inputChangeEndereco}/>
                     <div>
                         <Button type='submit'>{indexEndereco>=0?"Alterar":"Adicionar"}</Button>
-                        <Button type='button' color={'light_cancel'} onClick={() => {setAddEndereco(false);
+                        <Button type='button' color={'light_cancel'} onClick={() => {setAddEndereco(false); setIndexEndereco(-1);
                                                                                     setEndereco({enderecoID:null, tipoEndereco:"", cep:"", logradouro:"", numero:"", endereco:"", complemento:"", bairro:"", cidade:"", uf:""})
                                                                                     }}>Cancelar</Button>
                     </div>
@@ -551,8 +541,8 @@ export function FormCadResponsavel(props:formCadProps) {
                     </span>
                     <div>
                         <Button type='submit'>{indexContato>=0?"Alterar":"Adicionar"}</Button>
-                        <Button type='button' color={'light_cancel'} onClick={() => {setAddContato(false);
-                                                                                        setContato({contatoID:null, tipoContato:"", principal:false, descricao:"", anotacao:""})
+                        <Button type='button' color={'light_cancel'} onClick={() => {setAddContato(false); setIndexContato(-1);
+                                                                                    setContato({contatoID:null, tipoContato:"", principal:false, descricao:"", anotacao:""})
                                                                                     }}>Cancelar</Button>
                     </div>
                 </form>
@@ -623,7 +613,7 @@ export function FormCadResponsavel(props:formCadProps) {
                     </div>
                     <div>
                         <Button type='submit'>{indexPet>=0?"Alterar":"Adicionar"}</Button>
-                        <Button type='button' color={'light_cancel'} onClick={() => {setAddPet(false);
+                        <Button type='button' color={'light_cancel'} onClick={() => {setAddPet(false); setIndexPet(-1);
                                                                                 setPet({petID:null ,nome:"", genero:"", especie:"", raca:"", cor:"", nascimento:null, fertil:false, pedigree:false})
                                                                             }}>Cancelar</Button>
                     </div>
@@ -674,7 +664,7 @@ export function FormCadResponsavel(props:formCadProps) {
                         <span>Observações: {contato.anotacao}</span> */}
                         <span>
                             <MdEdit size={20} style={{marginLeft:10, marginRight:5, cursor:'pointer'}}
-                                onClick={()=>{setContato(contato); setIndexPet(idx); setAddContato(true); setAddEndereco(false); setAddPet(false)}} />
+                                onClick={()=>{setContato(contato); setIndexContato(idx); setAddContato(true); setAddEndereco(false); setAddPet(false)}} />
                             <MdDeleteOutline size={20} color={'red'} style={{marginLeft:5, marginRight:5, cursor:'pointer'}}
                                 onClick={()=>removerContato(idx)} />
                         </span>

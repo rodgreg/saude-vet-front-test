@@ -1,18 +1,18 @@
 export interface Veterinario {
-    veterinarioID:Number;
+    veterinarioID:Number|null;
     nome:String;
     sobrenome:String;
     genero:String;
     cpf:String;
     cidade:String;
     uf:String;
-    crmvs: crmv[];
+    crmvs: Crmv[];
 }
 
-interface crmv {
-    crmvID: Number;
+export interface Crmv {
+    crmvID: Number | null;
     numero: String;
     uf: String;
     area: String;
-    dataRegistro: Date;
+    dataRegistro: Date | null;
 }

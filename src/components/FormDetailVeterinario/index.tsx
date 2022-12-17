@@ -8,10 +8,13 @@ import { Veterinario } from '../../interfaces/Veterinario';
 
 interface propsFormVeterinario {
     cancelFormClick:(event: React.MouseEvent<HTMLButtonElement>) => void;
-    veterinarioDetail?: Veterinario;
+    editFormClick:(event: React.MouseEvent<HTMLButtonElement>, veterinario:Veterinario) => void;
+    veterinarioDetail: Veterinario;
 }
 
 export function FormDetailVeterinario(props: propsFormVeterinario) {
+
+    const [veterinario, setVeterinario] = useState<Veterinario>(props.veterinarioDetail);
 
     const cpf_cnpj_mask = (tipo:String,numero:String) => {
         let mask = "";
@@ -39,12 +42,19 @@ export function FormDetailVeterinario(props: propsFormVeterinario) {
 
     useEffect(() => {
         moment.locale('pt-br');
-    },[])
+        if(props.veterinarioDetail!=null){
+            setVeterinario(props.veterinarioDetail);
+        }
+    },[props])
 
     return (
         <div id='form_veterinario'>
-            <Button color={'light_cancel'} type="button"
-                    onClick={(e) => props.cancelFormClick(e)}> {"Fechar"} </Button>
+           <div>
+                <Button color={'light_cancel'} type="button"
+                        onClick={(e) => props.cancelFormClick(e)}> {"Fechar"} </Button>
+                <Button color={'light'} type="button"
+                        onClick={(e) => props.editFormClick(e, veterinario)}> {"Editar"} </Button>
+            </div>
             <p><b>{props.veterinarioDetail?.veterinarioID?props.veterinarioDetail.nome.toString()+" "+props.veterinarioDetail.sobrenome.toString():""}</b></p>
             <br/>
             <Accordion.Root className='AccordionRoot' type='single' defaultValue="item-1" collapsible>

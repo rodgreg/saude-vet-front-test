@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { Contato, Endereco, Responsavel } from '../interfaces/Responsavel';
 import { Pet } from '../interfaces/Pet';
 import { useCallback } from 'react';
+import { Crmv, Veterinario } from '../interfaces/Veterinario';
 
 const api = axios.create({
     baseURL: 'http://localhost:8765',
@@ -273,7 +274,7 @@ export const ApiRegistro = () => ({
     },[]),
 
     getVeterinarioById: useCallback(async (veterinarioID:Number) => {
-        var result = null;
+        var result:any = "";
         await api.get('/registro/veterinario/'+veterinarioID)
         .then(function (response) {
             result = response;
@@ -284,7 +285,7 @@ export const ApiRegistro = () => ({
         return result;
     },[]),
 
-    saveVeterinario: useCallback(async (veterinario:JSON) => {
+    saveVeterinario: useCallback(async (veterinario:Veterinario) => {
         // Objeto Veterinario
         // {
         //     "nome":"String",
@@ -294,7 +295,7 @@ export const ApiRegistro = () => ({
         //     "cidade":"String",
         //     "uf":"String",
         // }
-        var result = null;
+        var result:any = "";
         await api.post('/registro/veterinario/save/', veterinario)
         .then(function (response) {
             result = response;
@@ -305,16 +306,8 @@ export const ApiRegistro = () => ({
         return result;
     },[]),
 
-    addCrmvToVeterinario: useCallback(async (crmv:JSON[], veterinarioID:Number) => {
-        // Objeto Pet
-        // [ //Array
-        //     {
-        //         "numero":"String",
-        //         "uf":"String",
-        //         "area":"String"
-        //     }
-        // ]
-        var result = null;
+    addCrmvToVeterinario: useCallback(async (crmv:Crmv[], veterinarioID:Number) => {
+        var result:any = "";
         await api.post('/registro/veterinario/'+veterinarioID+'/addCrmv', crmv)
         .then(function (response) {
             result = response;
@@ -325,7 +318,7 @@ export const ApiRegistro = () => ({
         return result;
     },[]),
 
-    updateVeterinario: useCallback(async (veterinario:JSON) => {
+    updateVeterinario: useCallback(async (veterinario:Veterinario) => {
         // Objeto Veterinario
         // {
         //     "veterinarioID":Number,
@@ -336,7 +329,7 @@ export const ApiRegistro = () => ({
         //     "cidade":"String",
         //     "uf":"String",
         // }
-        var result = null;
+        var result:any = "";
         await api.put('/registro/veterinario/update', veterinario)
         .then(function (response) {
             result = response;
@@ -347,7 +340,7 @@ export const ApiRegistro = () => ({
         return result;
     },[]),
 
-    updateCrmv: useCallback(async (crmv:JSON) => {
+    updateCrmv: useCallback(async (crmv:Crmv) => {
         // Objeto crmv
         // {
         //     "crmvID": 9,
@@ -356,7 +349,7 @@ export const ApiRegistro = () => ({
         //     "area": "Medicina Veterinária",
         //     "dataRegistro": "2022-11-22T16:52:34.509923"
         // }
-        var result = null;
+        var result:any = "";
         await api.put('/registro/veterinario/updateCrmv', crmv)
         .then(function (response) {
             result = response;
@@ -367,12 +360,12 @@ export const ApiRegistro = () => ({
         return result;
     },[]),
 
-    deleteVeterinario: useCallback(async (veterinario:JSON) => {
+    deleteVeterinario: useCallback(async (veterinario:Veterinario) => {
         // Objeto Veterinario
         // {
         //     "veterinarioID":Number,
         // }
-        var result = null;
+        var result:any = "";
         await api.delete('/registro/pet/delete', {data:veterinario})
         .then(function (response) {
             result = response;
@@ -383,12 +376,12 @@ export const ApiRegistro = () => ({
         return result;
     },[]),
 
-    deleteCrmv: useCallback(async (crmv:JSON) => {
+    deleteCrmv: useCallback(async (crmv:Crmv) => {
         // Objeto crmv
         // {
         //     "crmvID":Number,
         // }
-        var result = null;
+        var result:any = "";
         await api.delete('/registro/pet/removeCrmv', {data:crmv})
         .then(function (response) {
             result = response;
