@@ -1,0 +1,147 @@
+.container {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+}
+
+.form_container_cad_pet {
+    display: flex;
+    flex-direction: column;
+    margin: 15px;
+    padding: 10px;
+    align-items: center;
+    overflow: auto;
+    width: 40%;
+    min-width: 300px;
+    transition: 0.2s ease-in;
+}
+
+.form_cad_pet {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    border-radius: 15px;
+    background-color: var(--bg);
+    border: solid 1px var(--border-color);
+    box-shadow: 0px 4px 10px var(--border-color);
+}
+
+.form_cad_pet input {
+    height: 30px;
+    border-radius: 3px;
+    outline: none;
+    border: none;
+    padding: 4px;
+    font-size: 14pt;
+    background-color: var(--bg-input);
+    color: var(--text-color);
+}
+
+.form_cad_pet input[type='text'] {
+    width: 95%;
+}
+
+.form_cad_pet input[type='date'] {
+    width: 180px;
+}
+
+.form_cad_pet input:focus {
+    border: solid 1px var(--border-color);
+}
+
+.form_cad_pet span {
+    margin-top: 8px;
+    margin-bottom: 4px;
+    font-size: 14pt;
+    font-weight: 600;
+}
+
+.form_cad_pet select {
+    padding: 4px;
+    border: none;
+    font-size: 13pt;
+    width: max-content;
+    border-radius: 3px;
+    background-color: var(--bg-input);
+    color: var(--text-color);
+}
+
+.form_cad_pet button {
+    margin-top: 25px;
+    margin-bottom: 4px;
+    cursor: pointer;
+}
+
+
+.dados_container_pet {
+    display: flex;
+    flex-direction: column;
+    margin: 15px;
+    padding: 10px;
+    align-items: center;
+    width: 40%;
+    min-width: 300px;
+    transition: 0.2s ease-in;
+}
+
+.dados_pet {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    border-radius: 15px;
+    background-color: var(--bg);
+    border: solid 1px var(--border-color);
+    box-shadow: 0px 4px 10px var(--border-color);
+    overflow-wrap: break-word;
+}
+
+.dados_pet_item {
+    display: grid;
+    grid-template-columns: 40% 45% 15%;
+    justify-content: space-between;
+    column-gap: 6px;
+    row-gap: 6px;
+}
+
+@media only screen and (max-width: 996px) {
+    .container {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .form_container_cad_pet, .dados_container_pet {
+        width: 80%;
+    }
+}
+
+form .field.shake {
+    animation: shake 0.3s ease-in-out;
+}
+
+input.shake {
+    border: solid 2px #e32;
+    animation: shake 0.1s ease-in-out;
+}
+
+select.shake {
+    border: solid 2px #e32;
+    animation: shake 0.1s ease-in-out;   
+}
+
+@keyframes shake {
+    0%, 60%{
+      border-width: 0px;
+    }
+    15%, 45%, 75%, 100%{
+      border-width: 1px;
+    }
+    30%, 90%{
+        border-width: 2.5px;
+    }
+}

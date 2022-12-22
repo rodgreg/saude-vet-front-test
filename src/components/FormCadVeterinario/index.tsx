@@ -1,7 +1,7 @@
 import './formCadVeterinario.css';
 import moment from "moment/min/moment-with-locales";
 import { useEffect, useState } from 'react';
-import { Button } from '../HtmlComponents';
+import { Button } from '../utils/HtmlComponents';
 import { MdEdit, MdDeleteOutline, MdFindInPage, MdSearch } from "react-icons/md";
 import { ApiRegistro } from '../../services/ApiRegistro';
 import { AxiosResponse } from 'axios';
@@ -174,13 +174,13 @@ export function FormCadVeterinario(props:formCadProps) {
     <div className='container'>
         <div className='form_container_cad_veterinario'>
             <form className='form_cad_veterinario' onSubmit={formSubmit}>
-                <h2>Cadastrar Responsável de Pet</h2>
+                <h2>Cadastrar Veterinário</h2>
                 <span>Nome: </span>
                 <input type={'text'} name={'nome'} value={veterinario?.nome?veterinario.nome.toString():""} onChange={inputChange}/>
                 {(!addCrmv) && <>
                     <span>Sobrenome: </span>
                     <input  type={'text'} name={'sobrenome'} value={veterinario?.sobrenome?veterinario.sobrenome.toString():""} onChange={inputChange}/>
-                    <div style={{display:'grid', gridTemplateColumns:'35% 40%'}}>
+                    <div style={{display:'grid', gridTemplateColumns:'50% 40%'}}>
                         <div style={{display:'flex', flexDirection:'column'}}>
                             <span>Sexo:</span>
                             <select onChange={selectItem} name={'genero'} value={veterinario?.genero?veterinario.genero.toString():""}>
@@ -189,12 +189,14 @@ export function FormCadVeterinario(props:formCadProps) {
                                 <option value={"Masculino"}>Masculino</option>
                             </select>
                         </div>
-                    </div>
-                    <span>CPF: </span>
-                    <input type={'text'} name={'cpf'} 
+                        <div style={{display:'flex', flexDirection:'column'}}>
+                            <span>CPF: </span>
+                            <input type={'text'} name={'cpf'} 
                                         value={veterinario?.cpf?cpf_cnpj_mask('CPF',veterinario?.cpf):""} 
                                         onChange={inputChange}/>
-                    <div style={{display:'grid', gridTemplateColumns:'35% 50%'}}>
+                        </div>
+                    </div>
+                    <div style={{display:'grid', gridTemplateColumns:'50% 30%'}}>
                         <div style={{display:'flex', flexDirection:'column'}}>
                             <span>Cidade: </span>
                             <input type={'text'} name={'cidade'} value={veterinario?.cidade?veterinario?.cidade.toString():""} onChange={inputChange}/>
@@ -211,7 +213,7 @@ export function FormCadVeterinario(props:formCadProps) {
                                     <Button type='button' color={'light_danger'} 
                                             onClick={() => removeVeterinario()}>Remover</Button>:""}
                     <Button type='button' color={'light_cancel'} >Voltar</Button>
-                    <Button type='button' color={'light_cancel'} onClick={() => limparForm()} >Limpar</Button>
+                    <Button type='button' color={'light_cancel'} onClick={() => limparForm()} >Novo</Button>
                 </div>
                 {veterinario?.veterinarioID!=null?
                     <div>

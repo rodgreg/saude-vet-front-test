@@ -3,13 +3,14 @@ import { styled } from "@stitches/react";
 import { MdHealthAndSafety, MdAssignment, MdAssignmentInd, MdEvent, MdPets, MdEqualizer, MdSwipe, MdClear, MdBrightness1, MdBrightnessAuto, MdWbSunny, MdModeNight, MdDarkMode, MdBurstMode, MdLightMode } from "react-icons/md";
 import "./home.css";
 import { HomeDash } from "../../components/HomeDash";
-import { ListResponsavel } from "../../components/ListResponsavel";
+import { ListCadastros } from "../../components/ListCadastros";
 import { useState } from "react";
 import { FormCadResponsavel } from "../../components/FormCadResponsavel";
 import { Responsavel } from "../../interfaces/Responsavel";
-import { Pet } from "../../interfaces/Pet";
+import { Pet, Pet_Resp } from "../../interfaces/Pet";
 import { Veterinario } from "../../interfaces/Veterinario";
 import { FormCadVeterinario } from "../../components/FormCadVeterinario";
+import { FormCadPet } from "../../components/FormCadPet";
 
 const Div = styled('div', {
 
@@ -19,9 +20,11 @@ interface principalProps {
     page:String;
     responsavel:Responsavel;
     pet?:Pet;
+    pet_resp?:Pet_Resp;
     veterinario:Veterinario;
     editResFormClick:(event: React.MouseEvent<HTMLButtonElement>, responsavel:Responsavel) => void;
     editVetFormClick:(event: React.MouseEvent<HTMLButtonElement>, veterinario:Veterinario) => void;
+    editPetFormClick:(event: React.MouseEvent<HTMLButtonElement>, petR:Pet_Resp) => void;
 }
 
 const Principal = (props:principalProps) => {
@@ -29,9 +32,10 @@ const Principal = (props:principalProps) => {
         case "home":
             return <HomeDash />
             break;
-        case "listResponsavel":
-            return <ListResponsavel editResFormClick={(e, resp) => props.editResFormClick(e, resp)} 
-                                    editVetFormClick={(e, vet) => props.editVetFormClick(e, vet)}                   
+        case "listCadastros":
+            return <ListCadastros editResFormClick={(e, resp) => props.editResFormClick(e, resp)} 
+                                    editVetFormClick={(e, vet) => props.editVetFormClick(e, vet)} 
+                                    editPetFormClick={(e,petR) => props.editPetFormClick(e, petR)}                  
                     />
             break;  
     
@@ -41,6 +45,10 @@ const Principal = (props:principalProps) => {
         
         case "cadVeterinario":
             return <FormCadVeterinario veterinarioForm={props.veterinario}/>
+            break;
+        
+        case "cadPet":
+            return <FormCadPet petForm={props.pet_resp}/>
             break;
 
         case "loading":
@@ -56,6 +64,7 @@ const Principal = (props:principalProps) => {
 export function Home () {
     const [showPage, setShowPage] = useState<String>("home");
     const [responsavel, setResponsavel] = useState<Responsavel>({responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, pets: [], enderecos: [], contatos: [],});
+    const [pet_resp, setPet_Resp] = useState<Pet_Resp>({pet:null, responsavel:null});
     const [veterinario, setVeterinario] = useState<Veterinario>({veterinarioID:null, nome:"", sobrenome:"", genero:"", cpf:"", cidade:"", uf:"",crmvs:[]});
     const [theme, setTheme] = useState<String>('ligth')
 
@@ -73,40 +82,31 @@ export function Home () {
         setShowPage('cadVeterinario');
     };
 
+    const editPet = (petR:Pet_Resp) => {
+        setPet_Resp(petR);
+        setShowPage('cadPet');
+    };
+
     return (
             <Div id="body" data-theme={theme}>
                 <AppHeader clickMenu={(e,page) => setShowPage(page)} />
 
                 <Div id="aside">
-                    <Div className="button_aside" title="Nova consulta">
-                        <span>+ </span>
-                        <MdHealthAndSafety size={25} />
-                    </Div>
-                    <Div className="button_aside" title="Nova receita">
-                        <span>+ </span>
-                        <MdAssignment size={25} />
-                    </Div>
-                    <Div className="button_aside" title="Novo cliente"
-                            onClick={() => setShowPage("cadResponsavel")}>
-                        <span>+ </span>
+                    <Div className="button_aside" title="Ver Cadastros de Pets/Pessoas"
+                            onClick={() => setShowPage("listCadastros")}>
                         <MdAssignmentInd size={25} />
                     </Div>
-                    <Div className="button_aside" title="Novo pet">
-                        <span>+ </span>
-                        <MdPets size={25}/>
+                    <Div className="button_aside" title="Ver Cadastros de Dados"
+                            onClick={() => console.log("Ver Cadastros de Dados")}>
+                        <MdAssignment size={25} />
                     </Div>
-                    <Div className="button_aside" title="Nova agenda">
-                        <span></span>
-                        <MdEvent size={25} />
-                    </Div>
-                    <Div className="button_aside" title="Relatórios">
-                        <span></span>
+                    <Div className="button_aside" title="Relatórios"
+                            onClick={() => console.log("Relatórios")}>
                         <MdEqualizer size={25} />
                     </Div>
                     <Div className="button_aside" title="Tema"
                         onClick={changeTheme}>
-                        <span></span>
-                        {theme=='ligth'?<MdLightMode size={25} />:<MdDarkMode size={25}/>}
+                        {theme=='dark'?<MdLightMode size={25} />:<MdDarkMode size={25}/>}
                     </Div>
                 </Div>
 
@@ -115,6 +115,8 @@ export function Home () {
                                             editResFormClick={(e,resp) => editResponsavel(resp)}
                                             veterinario={veterinario}
                                             editVetFormClick={(e,vet) => editVeterinario(vet)}
+                                            pet_resp={pet_resp}
+                                            editPetFormClick={(e,petR) => editPet(petR)}
                               />
                 </Div>
 

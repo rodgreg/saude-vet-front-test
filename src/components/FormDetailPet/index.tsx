@@ -4,11 +4,12 @@ import './formDetailPet.css';
 import { Responsavel } from '../../interfaces/Responsavel';
 import * as Accordion from '@radix-ui/react-accordion';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
-import { Button } from '../HtmlComponents';
-import { Pet } from '../../interfaces/Pet';
+import { Button } from '../utils/HtmlComponents';
+import { Pet, Pet_Resp } from '../../interfaces/Pet';
 
 interface propsFormResponsavel {
     cancelFormClick:(event: React.MouseEvent<HTMLButtonElement>) => void;
+    editFormClick:(event: React.MouseEvent<HTMLButtonElement>, petR:Pet_Resp) => void;
     petDetail: Pets;
 }
 

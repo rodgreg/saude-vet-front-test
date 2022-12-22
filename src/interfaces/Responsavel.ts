@@ -10,6 +10,7 @@ export interface Responsavel {
     registroNum?:String;
     nascimento?:Date | null;
     aceitaEmail?:Boolean;
+    dataRegistro?:Date | null;
     pets?: Pet[] | null;
     enderecos?: Endereco[] | null;
     contatos?: Contato[] | null;

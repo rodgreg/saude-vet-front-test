@@ -2,7 +2,7 @@ import './formCadResponsavel.css';
 import { Responsavel, Endereco, Contato } from '../../interfaces/Responsavel';
 import moment from "moment/min/moment-with-locales";
 import { useEffect, useState } from 'react';
-import { Button } from '../HtmlComponents';
+import { Button } from '../utils/HtmlComponents';
 import { Pet } from '../../interfaces/Pet';
 import { MdEdit, MdDeleteOutline, MdFindInPage, MdSearch } from "react-icons/md";
 import { ApiConsultaCep } from '../../services/ApiConsultaCep';
@@ -417,7 +417,7 @@ export function FormCadResponsavel(props:formCadProps) {
                 {(!addEndereco && !addContato && !addPet) && <>
                     <span>Sobrenome: </span>
                     <input  type={'text'} name={'sobrenome'} value={responsavel?.sobrenome?responsavel.sobrenome.toString():""} onChange={inputChange}/>
-                    <div style={{display:'grid', gridTemplateColumns:'35% 40%'}}>
+                    <div style={{display:'grid', gridTemplateColumns:'45% 40%'}}>
                         <div style={{display:'flex', flexDirection:'column'}}>
                             <span>Sexo:</span>
                             <select onChange={selectItem} name={'genero'} value={responsavel?.genero?responsavel.genero.toString():""}>
@@ -443,7 +443,7 @@ export function FormCadResponsavel(props:formCadProps) {
                                                 onChange={inputChange}/>
                         </>
                     }
-                    <div style={{display:'grid', gridTemplateColumns:'35% 50%'}}>
+                    <div style={{display:'grid', gridTemplateColumns:'45% 50%'}}>
                         <div style={{display:'flex', flexDirection:'column'}}>
                             <span>Data de nascimento: </span>
                             <input type={'date'} name={'nascimento'} value={responsavel?.nascimento?moment(responsavel?.nascimento).format('yyyy-MM-DD'):""}
@@ -553,13 +553,13 @@ export function FormCadResponsavel(props:formCadProps) {
                     <h2>Cadastrar Pet</h2>
                     <span>Nome: </span>
                     <input type={'text'} name={'nome'} value={pet?.nome?pet.nome.toString():""} onChange={inputChangePet}/>
-                    <div style={{display:'grid', gridTemplateColumns:'20% 20% 30%'}}>
+                    <div style={{display:'grid', gridTemplateColumns:'40% 25% 25%'}}>
                         <div style={{display:'flex', flexDirection:'column'}}>
                             <span>Sexo: </span>
                             <select onChange={selectItemPet} name={'genero'} value={pet?.genero?pet.genero.toString():""}>
                                 <option value={""}>Selecione</option>
-                                <option value={"Feminino"}>Feminino</option>
-                                <option value={"Masculino"}>Masculino</option>
+                                <option value={"Fêmea"}>Fêmea</option>
+                                <option value={"Macho"}>Macho</option>
                             </select>
                         </div>
                         <div style={{display:'flex', flexDirection:'column'}}>

@@ -6,6 +6,7 @@ export interface Veterinario {
     cpf:String;
     cidade:String;
     uf:String;
+    dataRegistro?:Date | null;
     crmvs: Crmv[];
 }
 

@@ -4,7 +4,7 @@ import { ApiRegistro } from '../../services/ApiRegistro';
 import { Responsavel } from '../../interfaces/Responsavel';
 import './listResponsavel.css';
 import { FormDetailResponsavel } from '../FormDetailResponsavel';
-import { Button, LinkButton, Option, Select } from '../HtmlComponents';
+import { Button, LinkButton, Option, Select } from '../utils/HtmlComponents';
 import moment from "moment/min/moment-with-locales";
 import 'moment/locale/pt-br';
 import { Veterinario } from '../../interfaces/Veterinario';
@@ -12,30 +12,25 @@ import { FormDetailVeterinario } from '../FormDetailVeterinario';
 import { FormDetailPet } from '../FormDetailPet';
 import { MdRefresh, MdSystemUpdate, MdUpdate } from 'react-icons/md';
 import { Loading } from '../utils/Loading';
-import { Pet } from '../../interfaces/Pet';
+import { Pet, Pet_Resp } from '../../interfaces/Pet';
 
-interface listResponsavelProps {
-  responsavel?: Responsavel;
+interface listCadastrosProps {
   editResFormClick:(event: React.MouseEvent<HTMLButtonElement>, responsavel:Responsavel) => void;
   editVetFormClick:(event: React.MouseEvent<HTMLButtonElement>, veterinario:Veterinario) => void;
+  editPetFormClick:(event: React.MouseEvent<HTMLButtonElement>, petR:Pet_Resp) => void;
 }
 
-interface Pets {
-  pet:Pet | null;
-  responsavel: Omit<Responsavel,"pets"> | null;
-}
-
-export function ListResponsavel (props:listResponsavelProps) {
+export function ListCadastros (props:listCadastrosProps) {
 
   const api = ApiRegistro();
   const paginationRef = useRef<any>();
   const paginationPetRef = useRef<any>();
   const paginationVetRef = useRef<any>();
   const [listResponsaveis, setListResponsaveis] = useState<Responsavel[]>([]);
-  const [listPets, setListPets] = useState<Pets[]>([]);
+  const [listPets, setListPets] = useState<Pet_Resp[]>([]);
   const [listVeterinario, setListVeterinario] = useState<Veterinario[]>([]);
   const [respSelected, setRespSelected] = useState<Responsavel>({responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, pets: [], enderecos: [], contatos: [],});
-  const [petSelected, setPetSelected] = useState<Pets>({pet:null, responsavel:null});
+  const [petSelected, setPetSelected] = useState<Pet_Resp>({pet:null, responsavel:null});
   const [vetSelected, setVetSelected] = useState<Veterinario>({veterinarioID:null, nome:"", sobrenome:"", genero:"", cpf:"", cidade:"", uf:"",crmvs:[]});
   const [paginateList, setPaginateList] = useState({list: listResponsaveis, perPage:10, page:0, pages:1});
   const [paginateListPet, setPaginateListPet] = useState({list: listPets, perPage:10, page:0, pages:1});
@@ -51,56 +46,56 @@ export function ListResponsavel (props:listResponsavelProps) {
     var list:any = await api.listResponsaveis();
     if (list?.status >= 200 && list?.status <= 300){
         setListResponsaveis(list.data);
+        let listResponsavelTmp:Responsavel[] = list.data;
+        // let listResponsavelTmp = listTeste;
+        listResponsavelTmp = listResponsavelTmp.sort((a,b) => {
+                      if(a.nome == null || b.nome == null){return 0;}
+                      let fa = a.nome.toLowerCase(),
+                          fb = b.nome.toLowerCase();
+
+                      if (fa < fb) {
+                          return -1;
+                      }
+                      if (fa > fb) {
+                          return 1;
+                      }
+                      if (fa === fb) {
+                      let la = a?.nome?.toLowerCase(),
+                          lb = b?.nome?.toLowerCase();
+                      
+                      if (la < lb) {
+                          return -1;
+                      }
+                      if (la > lb) {
+                          return 1;
+                      }
+                      return 0;
+                      }
+                      return 0;
+                  } 
+              );
+
+        // Monta Lista Responsável.
+        setListResponsaveis(listResponsavelTmp);
+
+        let pages = 1;    
+        if(paginateList.perPage < listResponsavelTmp.length) {
+          pages = Math.ceil(listResponsavelTmp.length/paginateList.perPage);
+        };
+        let listPage = listResponsavelTmp.slice(0,paginateList.perPage);
+        setPaginateList({...paginateList, pages: pages, list: listPage});
+
+        getListPets(listResponsavelTmp);
     } else {
       setIsLoading(false);
     }
-    let listResponsavelTmp:Responsavel[] = list.data;
-    // let listResponsavelTmp = listTeste;
-    listResponsavelTmp = listResponsavelTmp.sort((a,b) => {
-                  if(a.nome == null || b.nome == null){return 0;}
-                  let fa = a.nome.toLowerCase(),
-                      fb = b.nome.toLowerCase();
-
-                  if (fa < fb) {
-                      return -1;
-                  }
-                  if (fa > fb) {
-                      return 1;
-                  }
-                  if (fa === fb) {
-                  let la = a?.nome?.toLowerCase(),
-                      lb = b?.nome?.toLowerCase();
-                  
-                  if (la < lb) {
-                      return -1;
-                  }
-                  if (la > lb) {
-                      return 1;
-                  }
-                  return 0;
-                  }
-                  return 0;
-              } 
-          );
-
-    // Monta Lista Responsável.
-    setListResponsaveis(listResponsavelTmp);
-
-    let pages = 1;    
-    if(paginateList.perPage < listResponsavelTmp.length) {
-      pages = Math.ceil(listResponsavelTmp.length/paginateList.perPage);
-    };
-    let listPage = listResponsavelTmp.slice(0,paginateList.perPage);
-    setPaginateList({...paginateList, pages: pages, list: listPage});
-
-    getListPets(listResponsavelTmp);
-
+    
     setIsLoading(false);
   };
 
   const getListPets = async (list:Responsavel[]) => {
     // Monta Lista Pet a partir da lista de Responsáveis.
-    let petListTemp:Pet[] | any[] = list.map(resp => resp.pets?.map(pet => {let pets:Pets = {pet:pet, responsavel:resp}; return(pets)}))
+    let petListTemp:Pet[] | any[] = list.map(resp => resp.pets?.map(pet => {let pets:Pet_Resp = {pet:pet, responsavel:resp}; return(pets)}))
     
     let listTmpConcat:any[] = [];
     for (let i=0; i<petListTemp.length; i++) {
@@ -149,44 +144,44 @@ export function ListResponsavel (props:listResponsavelProps) {
     var list:any = await api.listVeterinarios();
       if (list?.status >= 200 && list?.status <= 300){
           setListVeterinario(list.data);
+          let listVeterinarioTmp:Veterinario[] = list.data;
+          // let listVeterinarioTmp = listTesteVet;
+          listVeterinarioTmp = listVeterinarioTmp.sort((a,b) => {
+                        let fa = a?.nome?.toLowerCase(),
+                            fb = b?.nome?.toLowerCase();
+    
+                        if (fa < fb) {
+                            return -1;
+                        }
+                        if (fa > fb) {
+                            return 1;
+                        }
+                        if (fa === fb) {
+                        let la = a?.nome?.toLowerCase(),
+                            lb = b?.nome?.toLowerCase();
+                        
+                        if (la < lb) {
+                            return -1;
+                        }
+                        if (la > lb) {
+                            return 1;
+                        }
+                        return 0;
+                        }
+                        return 0;
+                    } 
+                );
+          setListVeterinario(listVeterinarioTmp);
+          let pages = 1;
+          
+          if(paginateListVet.perPage < listVeterinarioTmp.length) {
+          pages = Math.ceil(listVeterinarioTmp.length/paginateListVet.perPage);
+          };
+          let listPage = listVeterinarioTmp.slice(0,paginateListVet.perPage);
+          setPaginateListVet({...paginateListVet, pages: pages, list: listPage});
       } else {
         setIsLoading(false);
       }
-      let listVeterinarioTmp:Veterinario[] = list.data;
-      // let listVeterinarioTmp = listTesteVet;
-      listVeterinarioTmp = listVeterinarioTmp.sort((a,b) => {
-                    let fa = a?.nome?.toLowerCase(),
-                        fb = b?.nome?.toLowerCase();
-
-                    if (fa < fb) {
-                        return -1;
-                    }
-                    if (fa > fb) {
-                        return 1;
-                    }
-                    if (fa === fb) {
-                    let la = a?.nome?.toLowerCase(),
-                        lb = b?.nome?.toLowerCase();
-                    
-                    if (la < lb) {
-                        return -1;
-                    }
-                    if (la > lb) {
-                        return 1;
-                    }
-                    return 0;
-                    }
-                    return 0;
-                } 
-            );
-    setListVeterinario(listVeterinarioTmp);
-    let pages = 1;
-    
-    if(paginateListVet.perPage < listVeterinarioTmp.length) {
-    pages = Math.ceil(listVeterinarioTmp.length/paginateListVet.perPage);
-    };
-    let listPage = listVeterinarioTmp.slice(0,paginateListVet.perPage);
-    setPaginateListVet({...paginateListVet, pages: pages, list: listPage});
     setIsLoading(false);
   };
 
@@ -220,7 +215,7 @@ export function ListResponsavel (props:listResponsavelProps) {
       finish = listPets.length;
     };
   
-    let petPage:Pets[] = listPets.slice(start,finish);
+    let petPage:Pet_Resp[] = listPets.slice(start,finish);
     setPaginateListPet({...paginateListPet, page:page, list:petPage})
   };
 
@@ -351,7 +346,7 @@ export function ListResponsavel (props:listResponsavelProps) {
     setShowCadPet(false);
   };
 
-  const showDetailPet = (petDetail: Pets) => {
+  const showDetailPet = (petDetail: Pet_Resp) => {
     setPetSelected(petDetail);
     setShowCadResp(false);
     setShowCadVet(false);
@@ -394,7 +389,7 @@ export function ListResponsavel (props:listResponsavelProps) {
                 <LinkButton color={'dark'} size={'small'} onClick={() => SetShowList('pet')}>Pets</LinkButton>
             </div>
             <div className={showList==='veterinario'?'tab_list_selected':'tab_list'} >
-                <LinkButton color={'dark'} size={'small'} onClick={() => {SetShowList('veterinario')}}>Veterinários</LinkButton>
+                <LinkButton color={'dark'} size={'small'} onClick={() => {SetShowList('veterinario'); if(listVeterinario.length<=0){getListVeterinarios}}}>Veterinários</LinkButton>
             </div>
           </div>
           { showList==='responsavel' && 
@@ -429,7 +424,8 @@ export function ListResponsavel (props:listResponsavelProps) {
                             <th style={{width:'25%'}}>Bairro</th>
                             <th style={{width:'25%'}}>Primeiro Contato</th>
                             <th style={{width:'10%'}}>Idade</th>
-                            <th style={{width:'10%'}}>Qtd de Pets</th>
+                            <th style={{width:'10%'}}>Pets</th>
+                            <th style={{width:'10%'}}>Registrado em</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -453,6 +449,9 @@ export function ListResponsavel (props:listResponsavelProps) {
                               </td>
                               <td>
                                 <span>{resp.pets?.length}</span>
+                              </td>
+                              <td>
+                                <span>{moment(resp.dataRegistro).format('DD/MM/yyyy HH:mm')}</span>
                               </td>
                             </tr>
                           ):<tr><td colSpan={9} style={{textAlign:'center'}}><b>Sem resultado</b></td></tr>}
@@ -491,11 +490,12 @@ export function ListResponsavel (props:listResponsavelProps) {
                             <th style={{width:'10px'}}><input key={-1} value={-1} type={"checkbox"} onChange={selectAll} /></th>
                             <th style={{width:'20%'}}>Nome</th>
                             <th style={{width:'15%'}}>Idade</th>
-                            <th style={{width:'15%'}}>Espécie</th>
-                            <th style={{width:'15%'}}>Raça</th>
+                            <th style={{width:'10%'}}>Espécie</th>
+                            <th style={{width:'10%'}}>Raça</th>
                             <th style={{width:'10%'}}>Fértil</th>
                             <th style={{width:'10%'}}>Pedigree</th>
                             <th style={{width:'15%'}}>Responsável</th>
+                            <th style={{width:'10%'}}>Registrado em</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -514,6 +514,9 @@ export function ListResponsavel (props:listResponsavelProps) {
                               <td >{pet?.pet.fertil?"Sim":"Não"}</td>
                               <td >{pet?.pet.pedigree?"Sim":"Não"}</td>
                               <td >{pet.responsavel?.nome + " " + pet.responsavel.sobrenome}</td>
+                              <td>
+                                <span>{moment(pet.pet.dataRegistro).format('DD/MM/yyyy HH:mm')}</span>
+                              </td>
                             </tr>
 
                               )}}):<tr><td colSpan={9} style={{textAlign:'center'}}><b>Sem resultado</b></td></tr>}
@@ -550,10 +553,11 @@ export function ListResponsavel (props:listResponsavelProps) {
                       <thead>
                         <tr>
                             <th style={{width:'10px'}}><input key={-1} value={-1} type={"checkbox"} onChange={selectAll} /></th>
-                            <th style={{width:'40%'}}>Nome Completo</th>
+                            <th style={{width:'35%'}}>Nome Completo</th>
                             <th style={{width:'20%'}}>Cidade</th>
-                            <th style={{width:'20%'}}>UF</th>
-                            <th style={{width:'20%'}}>CRMVs</th>
+                            <th style={{width:'10%'}}>UF</th>
+                            <th style={{width:'15%'}}>CRMVs</th>
+                            <th style={{width:'20%'}}>Registrado em</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -569,6 +573,9 @@ export function ListResponsavel (props:listResponsavelProps) {
                               <td >{vet?.cidade}</td>
                               <td >{vet?.uf}</td>
                               <td >{vet?.crmvs != null && vet?.crmvs?.length>0?vet?.crmvs[0].numero:""}</td>
+                              <td>
+                                <span>{moment(vet.dataRegistro).format('DD/MM/yyyy HH:mm')}</span>
+                              </td>
                             </tr>
                           ):<tr><td colSpan={9} style={{textAlign:'center'}}><b>Sem resultado</b></td></tr>}
                       </tbody>
@@ -581,7 +588,7 @@ export function ListResponsavel (props:listResponsavelProps) {
             <FormDetailResponsavel responsavelDetail={respSelected} cancelFormClick={() => setShowCadResp(false)} editFormClick={(e, resp) => props.editResFormClick(e, resp)} />
           </div>
           <div id='form_detail_pet' className={showCadPet?"navbarSticky":"navbar"}>
-            <FormDetailPet petDetail={petSelected} cancelFormClick={() => setShowCadPet(false)} />
+            <FormDetailPet petDetail={petSelected} cancelFormClick={() => setShowCadPet(false)} editFormClick={(e, petR) => props.editPetFormClick(e, petR)}/>
           </div>
           <div id='form_detail_veterinario' className={showCadVet?"navbarSticky":"navbar"}>
             <FormDetailVeterinario veterinarioDetail={vetSelected} cancelFormClick={() => setShowCadVet(false)} editFormClick={(e,vet) => props.editVetFormClick(e, vet)}/>

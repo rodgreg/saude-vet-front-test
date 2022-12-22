@@ -377,10 +377,6 @@ export const ApiRegistro = () => ({
     },[]),
 
     deleteCrmv: useCallback(async (crmv:Crmv) => {
-        // Objeto crmv
-        // {
-        //     "crmvID":Number,
-        // }
         var result:any = "";
         await api.delete('/registro/pet/removeCrmv', {data:crmv})
         .then(function (response) {

@@ -4,7 +4,7 @@ import './formDetailResponsavel.css';
 import { Responsavel } from '../../interfaces/Responsavel';
 import * as Accordion from '@radix-ui/react-accordion';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
-import { Button } from '../HtmlComponents';
+import { Button } from '../utils/HtmlComponents';
 
 interface propsFormResponsavel {
     cancelFormClick:(event: React.MouseEvent<HTMLButtonElement>) => void;

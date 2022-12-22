@@ -2,6 +2,8 @@ import { useLayoutEffect, useState } from "react";
 import moment from "moment/min/moment-with-locales";
 import { styled } from "@stitches/react";
 import { MdCalendarToday, MdCake, MdAssessment } from "react-icons/md";
+import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import {Chart} from 'react-google-charts';
 import './homeDash.css';
 
 const Div = styled('div', {
@@ -9,7 +11,7 @@ const Div = styled('div', {
 })
 
 export function HomeDash() {
-    const [saudacao,setSaudacao] = useState('');
+    const [saudacao,setSaudacao] = useState<string>('');
 
     useLayoutEffect(() => {
         moment.locale('pt-br');
@@ -32,7 +34,7 @@ export function HomeDash() {
                 <div id="eventos_proximos_title" className="module_title">
                     <MdCalendarToday size={22}/>
                     <span><b>Próximos Eventos</b></span>
-                    <a href="#">ver agenda</a>
+                    <a href="">ver agenda</a>
                 </div>
                 <div id="eventos_proximos_content">
                     <div className="evento_card">
@@ -161,19 +163,12 @@ export function HomeDash() {
             <Div id="resumo">
                 <div className="module_title">
                     <MdAssessment size={22}/>
-                    <span><b>Resumo</b></span>
+                    <span><b>Analitics</b></span>
                     <span>.</span>
                 </div>
-        
+                <div id="module_content">
+                </div>
             </Div>
-            <Div id="aniversariantes">
-                <div className="module_title">
-                    <MdCake size={22}/>
-                    <span><b>Aniversariantes do mês (Responsáveis)</b></span>
-                    <span>.</span>
-                </div>
-                
-            </Div> 
         </>
     )
 }

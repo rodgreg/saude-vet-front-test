@@ -29,11 +29,11 @@
     width: max-content;
     border: 1px solid var(--border-color);
     border-bottom: none;
-    color: var(--border-color);
+    color: var(--text-color-secondary);
     margin-right: 1px;
     padding: 6px;
     cursor: pointer;
-    z-index: 2;
+    z-index: 0;
     transform: translate(0px,1px)
 }
 
@@ -184,9 +184,8 @@
     height: 90vh;
     top: 45px;
     box-shadow: 5px 0px 20px var(--border-color);
-    z-index: 3;
+    z-index: 0;
     overflow: auto;
-
     right: -1px;
     animation: moveLeft 0.3s ease-in-out;
 }

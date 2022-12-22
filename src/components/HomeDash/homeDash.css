@@ -25,12 +25,22 @@
     overflow: auto;
 }
 
-.module_title{
+.module_title {
     top:0px;
     width: 100%;
     border-bottom: solid 1px var(--border-color);
     display: flex;
     justify-content: space-between;
+}
+
+.module_title a {
+    text-decoration: none;
+    color: var(--txt-color-default);
+}
+
+.module_title a:hover {
+    text-decoration: underline;
+    color: var(--txt-color-secondary);
 }
 
 #eventos_proximos_content {
