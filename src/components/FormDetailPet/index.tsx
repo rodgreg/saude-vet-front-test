@@ -10,16 +10,11 @@ import { Pet, Pet_Resp } from '../../interfaces/Pet';
 interface propsFormResponsavel {
     cancelFormClick:(event: React.MouseEvent<HTMLButtonElement>) => void;
     editFormClick:(event: React.MouseEvent<HTMLButtonElement>, petR:Pet_Resp) => void;
-    petDetail: Pets;
+    petDetail: Pet_Resp;
 }
 
-interface Pets {
-    pet:Pet | null;
-    responsavel: Omit<Responsavel,"pets"> | null;
-  }
-
 export function FormDetailPet(props: propsFormResponsavel) {
-    const [pet, setPet] = useState<Pets>(props.petDetail);
+    const [pet, setPet] = useState<Pet_Resp>(props.petDetail);
 
     const cpf_cnpj_mask = (tipo:String,numero:String) => {
         let mask = "";
@@ -54,8 +49,13 @@ export function FormDetailPet(props: propsFormResponsavel) {
 
     return (
         <div id='form_pet'>
-            <Button color={'light_cancel'} type="button"
-                    onClick={(e) => props.cancelFormClick(e)}> {"Fechar"} </Button>
+            <div>
+                <Button color={'light_cancel'} type="button"
+                        onClick={(e) => props.cancelFormClick(e)}> {"Fechar"} </Button>
+                <Button color={'light'} type="button"
+                        onClick={(e) => props.editFormClick(e, pet)}> {"Editar"} </Button>
+            </div>
+            
             <p><b>{pet.pet?pet.pet.nome:""}</b></p>
             <br/>
             <Accordion.Root className='AccordionRootP' type='single' defaultValue="item-1" collapsible>

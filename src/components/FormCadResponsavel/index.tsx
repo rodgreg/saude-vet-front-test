@@ -582,7 +582,7 @@ export function FormCadResponsavel(props:formCadProps) {
                             </select>
                         </div>
                     </div>
-                    <div style={{display:'grid', gridTemplateColumns:'40% 35%'}}>
+                    <div style={{display:'grid', gridTemplateColumns:'40% 50%'}}>
                         <div style={{display:'flex', flexDirection:'column'}}>
                             <span>Cor: </span>
                             <input type={'text'} name={'cor'} value={pet?.cor?pet.cor.toString():""} onChange={inputChangePet}/>
@@ -593,7 +593,7 @@ export function FormCadResponsavel(props:formCadProps) {
                                                                     max={moment().format('yyyy-MM-DD')} onChange={inputChangePet}/>
                         </div>
                     </div>
-                    <div style={{display:'grid', gridTemplateColumns:'22% 20%'}}>
+                    <div style={{display:'grid', gridTemplateColumns:'30% 30%'}}>
                         <div style={{display:'flex', flexDirection:'column'}}>
                             <span>Fertilidade: </span>
                             <select onChange={selectItemPet} name={'fertil'} value={pet?.fertil!=null? pet.fertil.toString():""}>

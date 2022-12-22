@@ -19,6 +19,46 @@ export function FormCadPet(props:formCadProps) {
                                                 responsavel:{responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, enderecos: [], contatos: [],}});
     const [pet, setPet] = useState<Pet>({petID:null ,nome:"", genero:"", especie:"", raca:"", cor:"", nascimento:null, fertil:false, pedigree:false});
     const [responsavel, setResponsavel] = useState<Omit<Responsavel,"pets">>({responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, enderecos: [], contatos: [],});
+    const [responsavelList, setResponsavelList] = useState<Omit<Responsavel,"pets">[]>([]);
+
+    const listResponsaveis = async () => {
+        var list:any = await apiRegistro.listResponsaveis();
+    if (list?.status >= 200 && list?.status <= 300){
+        let listResponsavelTmp:Omit<Responsavel,"pets">[]= list.data;
+        // let listResponsavelTmp = listTeste;
+        listResponsavelTmp = listResponsavelTmp.sort((a,b) => {
+                      if(a.nome == null || b.nome == null){return 0;}
+                      let fa = a.nome.toLowerCase(),
+                          fb = b.nome.toLowerCase();
+
+                      if (fa < fb) {
+                          return -1;
+                      }
+                      if (fa > fb) {
+                          return 1;
+                      }
+                      if (fa === fb) {
+                      let la = a?.nome?.toLowerCase(),
+                          lb = b?.nome?.toLowerCase();
+                      
+                      if (la < lb) {
+                          return -1;
+                      }
+                      if (la > lb) {
+                          return 1;
+                      }
+                      return 0;
+                      }
+                      return 0;
+                  } 
+              );
+
+        // Monta Lista Responsável.
+        setResponsavelList(listResponsavelTmp);
+    } else {
+   
+    }
+    };
 
     const formSubmit = async (e:any) => {
         e.preventDefault();
@@ -30,13 +70,18 @@ export function FormCadPet(props:formCadProps) {
             };
         };
         if (!hasBlank) {
-            if(pet != null) {
+            if(pet.petID != null) {
                 let result:AxiosResponse<any,any> = await apiRegistro.updatePet(pet);
                 if(result != null && result?.status >= 200 && result?.status <= 300) {
                     setPet(result?.data);
                 };
             } else {
-                console.log('Id não encontrato.')
+                if(responsavel.responsavelID != null) {
+                    let result:AxiosResponse<any,any> = await apiRegistro.savePet(pet, responsavel.responsavelID);
+                    if(result != null && result?.status >= 200 && result?.status <= 300) {
+                        setPet(result?.data);
+                    };
+                }
             };
         };
     };
@@ -59,12 +104,23 @@ export function FormCadPet(props:formCadProps) {
         };
     };
 
+    const selectItemResp = (select:any) => {
+        select.target.classList.remove("shake");
+        if(select.target[select.target.selectedIndex].value != "") {
+            setResponsavel(JSON.parse(select.target[select.target.selectedIndex].value))
+        } else {
+            setResponsavel({responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, enderecos: [], contatos: [],});
+        };
+    };
+
     const selectItemPet = (select:any) => {
         select.target.classList.remove("shake");
         setPet({...pet,[select.target.name]:select.target[select.target.selectedIndex].value})
     };
 
     const limparForm = () => {
+        setPet({petID:null ,nome:"", genero:"", especie:"", raca:"", cor:"", nascimento:null, fertil:false, pedigree:false});
+        setResponsavel({responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, enderecos: [], contatos: [],})
         setPetR({pet:{petID:null ,nome:"", genero:"", especie:"", raca:"", cor:"", nascimento:null, fertil:false, pedigree:false},
                 responsavel:{responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, enderecos: [], contatos: [],}
             });
@@ -107,6 +163,7 @@ export function FormCadPet(props:formCadProps) {
                 responsavel: {responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, enderecos: [], contatos: [],},
             });
         }
+        listResponsaveis();
     },[])
 
     return (
@@ -115,13 +172,18 @@ export function FormCadPet(props:formCadProps) {
             <form className='form_cad_pet' onSubmit={formSubmit}>
                 <h2>Cadastrar Pet</h2>
                     <span>Responsável: </span>
-                            <select onChange={selectItemPet} name={'responsavel'} value={""}>
-                                <option value={""}>Selecione</option>
-                               {responsavel?.responsavelID!=null?<option value={responsavel?.responsavelID?.toString()}>{responsavel?.nome+' '+responsavel?.sobrenome}</option>:null}
+                    <select onChange={selectItemResp} name={'responsavel'} value={responsavel?JSON.stringify(responsavel):""}>
+                        <option key={-1} value={""}>Selecione</option>
+                        {responsavelList.length>0? 
+                            responsavelList.map((resp,idx) => 
+                                <option key={idx} value={JSON.stringify(resp)}>{resp?.nome+' '+resp?.sobrenome}</option>
+                            )
+                            :null
+                        } 
                             </select>
                     <span>Nome: </span>
                     <input type={'text'} name={'nome'} value={pet?.nome?pet.nome.toString():""} onChange={inputChangePet}/>
-                    <div style={{display:'grid', gridTemplateColumns:'40% 25% 25%'}}>
+                    <div style={{display:'grid', gridTemplateColumns:'40% 30% 20%'}}>
                         <div style={{display:'flex', flexDirection:'column'}}>
                             <span>Sexo: </span>
                             <select onChange={selectItemPet} name={'genero'} value={pet?.genero?pet.genero.toString():""}>
@@ -197,11 +259,10 @@ export function FormCadPet(props:formCadProps) {
                     <span>{pet?.nome}</span>
                     <span>{pet?.nome==null?null:pet?.petID!=null?"Salvo":"Não salvo"}</span>
                 </div>
-                <h2>Dados do Responsável do Pet</h2>
+                <h2>Responsável</h2>
                 {responsavel?.responsavelID != null &&
                     <div className='dados_pet_item'>
                         <span>{responsavel?.nome+" "+responsavel?.sobrenome}</span>
-                        <span>{responsavel?.responsavelID!=null?"Salvo":"Não salvo"}</span>
                     </div>
                 }
                 <h2>Endereços</h2>
