@@ -1,11 +1,11 @@
 import './formCadVeterinario.css';
 import moment from "moment/min/moment-with-locales";
 import { useEffect, useState } from 'react';
-import { Button } from '../utils/HtmlComponents';
-import { MdEdit, MdDeleteOutline, MdFindInPage, MdSearch } from "react-icons/md";
-import { ApiRegistro } from '../../services/ApiRegistro';
+import { Button } from '../../utils/HtmlComponents';
+import { MdEdit, MdDeleteOutline } from "react-icons/md";
+import { ApiRegistro } from '../../../services/ApiRegistro';
 import { AxiosResponse } from 'axios';
-import { Veterinario, Crmv } from '../../interfaces/Veterinario';
+import { Veterinario, Crmv } from '../../../interfaces/Veterinario';
 
 
 interface formCadProps {

@@ -4,19 +4,19 @@
     justify-content: space-around;
 }
 
-.form_container_cad_veterinario {
+.form_container_cad_pet {
     display: flex;
     flex-direction: column;
     margin: 15px;
     padding: 10px;
     align-items: center;
     overflow: auto;
-    width: 40%;
+    width: 50%;
     min-width: 300px;
     transition: 0.2s ease-in;
 }
 
-.form_cad_veterinario {
+.form_cad_pet {
     display: flex;
     flex-direction: column;
     align-items: left;
@@ -29,7 +29,7 @@
     box-shadow: 0px 4px 10px var(--border-color);
 }
 
-.form_cad_veterinario input {
+.form_cad_pet input {
     height: 30px;
     border-radius: 3px;
     outline: none;
@@ -40,26 +40,26 @@
     color: var(--text-color);
 }
 
-.form_cad_veterinario input[type='text'] {
+.form_cad_pet input[type='text'] {
     width: 95%;
 }
 
-.form_cad_veterinario input[type='date'] {
+.form_cad_pet input[type='date'] {
     width: 180px;
 }
 
-.form_cad_veterinario input:focus {
+.form_cad_pet input:focus {
     border: solid 1px var(--border-color);
 }
 
-.form_cad_veterinario span {
+.form_cad_pet span {
     margin-top: 8px;
     margin-bottom: 4px;
     font-size: 14pt;
     font-weight: 600;
 }
 
-.form_cad_veterinario select {
+.form_cad_pet select {
     padding: 4px;
     border: none;
     font-size: 13pt;
@@ -69,25 +69,25 @@
     color: var(--text-color);
 }
 
-.form_cad_veterinario button {
+.form_cad_pet button {
     margin-top: 25px;
     margin-bottom: 4px;
     cursor: pointer;
 }
 
 
-.dados_container_veterinario {
+.dados_container_pet {
     display: flex;
     flex-direction: column;
     margin: 15px;
     padding: 10px;
     align-items: center;
-    width: 40%;
+    width: 50%;
     min-width: 300px;
     transition: 0.2s ease-in;
 }
 
-.dados_veterinario {
+.dados_pet {
     display: flex;
     flex-direction: column;
     align-items: left;
@@ -101,9 +101,9 @@
     overflow-wrap: break-word;
 }
 
-.dados_veterinario_item {
+.dados_pet_item {
     display: grid;
-    grid-template-columns: 35% 25% 25% 15%;
+    grid-template-columns: 40% 45% 15%;
     justify-content: space-between;
     column-gap: 6px;
     row-gap: 6px;
@@ -115,7 +115,7 @@
         justify-content: center;
         align-items: center;
     }
-    .form_container_cad_veterinario, .dados_container_veterinario {
+    .form_container_cad_pet, .dados_container_pet {
         width: 80%;
     }
 }

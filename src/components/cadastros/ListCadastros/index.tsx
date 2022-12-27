@@ -1,23 +1,23 @@
 import { useEffect, useRef, useState } from 'react';
 import ReactPaginate from 'react-paginate';
-import { ApiRegistro } from '../../services/ApiRegistro';
-import { Responsavel } from '../../interfaces/Responsavel';
+import { ApiRegistro } from '../../../services/ApiRegistro';
+import { Responsavel } from '../../../interfaces/Responsavel';
 import './listCadastros.css';
 import { FormDetailResponsavel } from '../FormDetailResponsavel';
-import { LinkButton, Option, Select } from '../utils/HtmlComponents';
+import { Button, LinkButton, Option, Select } from '../../utils/HtmlComponents';
 import moment from "moment/min/moment-with-locales";
 import 'moment/locale/pt-br';
-import { Veterinario } from '../../interfaces/Veterinario';
+import { Veterinario } from '../../../interfaces/Veterinario';
 import { FormDetailVeterinario } from '../FormDetailVeterinario';
 import { FormDetailPet } from '../FormDetailPet';
-import { MdRefresh, MdSystemUpdate, MdUpdate } from 'react-icons/md';
-import { Loading } from '../utils/Loading';
-import { Pet, Pet_Resp } from '../../interfaces/Pet';
+import { MdRefresh } from 'react-icons/md';
+import { Loading } from '../../utils/Loading';
+import { Pet, Pet_Resp } from '../../../interfaces/Pet';
 
 interface listCadastrosProps {
-  editResFormClick:(event: React.MouseEvent<HTMLButtonElement>, responsavel:Responsavel) => void;
-  editVetFormClick:(event: React.MouseEvent<HTMLButtonElement>, veterinario:Veterinario) => void;
-  editPetFormClick:(event: React.MouseEvent<HTMLButtonElement>, petR:Pet_Resp) => void;
+  editResFormClick:(event: React.MouseEvent<HTMLButtonElement>, responsavel:Responsavel|null) => void;
+  editVetFormClick:(event: React.MouseEvent<HTMLButtonElement>, veterinario:Veterinario|null) => void;
+  editPetFormClick:(event: React.MouseEvent<HTMLButtonElement>, petR:Pet_Resp|null) => void;
 }
 
 export function ListCadastros (props:listCadastrosProps) {
@@ -30,7 +30,8 @@ export function ListCadastros (props:listCadastrosProps) {
   const [listPets, setListPets] = useState<Pet_Resp[]>([]);
   const [listVeterinario, setListVeterinario] = useState<Veterinario[]>([]);
   const [respSelected, setRespSelected] = useState<Responsavel>({responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, pets: [], enderecos: [], contatos: [],});
-  const [petSelected, setPetSelected] = useState<Pet_Resp>({pet:null, responsavel:null});
+  const [petSelected, setPetSelected] = useState<Pet_Resp>({pet:{petID:null, nome:"", cor:"", especie:"", fertil:false, genero:"", nascimento:null, pedigree:false, raca:"", dataRegistro:null} ,
+                                                            responsavel:{responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, enderecos: [], contatos: [],}});
   const [vetSelected, setVetSelected] = useState<Veterinario>({veterinarioID:null, nome:"", sobrenome:"", genero:"", cpf:"", cidade:"", uf:"",crmvs:[]});
   const [paginateList, setPaginateList] = useState({list: listResponsaveis, perPage:10, page:0, pages:1});
   const [paginateListPet, setPaginateListPet] = useState({list: listPets, perPage:10, page:0, pages:1});
@@ -381,7 +382,7 @@ export function ListCadastros (props:listCadastrosProps) {
       <div>
         {isLoading && <Loading />}
         <div >
-          <div className='tab_list_conteiner' style={{display:'flex', flexDirection:'row', marginBottom:6}}>
+          <div className='tab_list_conteiner' >
             <div className={showList==='responsavel'?'tab_list_selected':'tab_list'}>
                 <LinkButton color={'dark'} size={'small'} onClick={() => SetShowList('responsavel')}>Responsáveis</LinkButton>
             </div>
@@ -414,18 +415,19 @@ export function ListCadastros (props:listCadastrosProps) {
                           activeClassName={'active'}
                       />
                   <MdRefresh size={22} onClick={() => getListResponsaveis()} style={{cursor:'pointer'}} />
+                  <Button color={'light'} onClick={(e) => props.editResFormClick(e,null)} >Novo</Button>
                 </div>
                 <div id="responsavel_table">
                     <table>
                       <thead>
                         <tr>
                             <th style={{width:'10px'}}><input key={-1} value={-1} type={"checkbox"} onChange={selectAll} /></th>
-                            <th style={{width:'30%'}}>Nome Completo</th>
+                            <th style={{width:'25%'}}>Nome Completo</th>
                             <th style={{width:'25%'}}>Bairro</th>
                             <th style={{width:'25%'}}>Primeiro Contato</th>
                             <th style={{width:'10%'}}>Idade</th>
-                            <th style={{width:'10%'}}>Pets</th>
-                            <th style={{width:'10%'}}>Registrado em</th>
+                            <th style={{width:'5%'}}>Pets</th>
+                            <th style={{width:'20%'}}>Registrado em</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -482,6 +484,7 @@ export function ListCadastros (props:listCadastrosProps) {
                           activeClassName={'active'}
                       />
                   <MdRefresh size={22} onClick={() => getListResponsaveis()} style={{cursor:'pointer'}} />
+                  <Button color={'light'} onClick={(e) => props.editPetFormClick(e,null)} >Novo</Button>
                 </div>
                 <div id="pet_table">
                     <table>
@@ -489,13 +492,13 @@ export function ListCadastros (props:listCadastrosProps) {
                         <tr>
                             <th style={{width:'10px'}}><input key={-1} value={-1} type={"checkbox"} onChange={selectAll} /></th>
                             <th style={{width:'20%'}}>Nome</th>
-                            <th style={{width:'15%'}}>Idade</th>
+                            <th style={{width:'10%'}}>Idade</th>
                             <th style={{width:'10%'}}>Espécie</th>
                             <th style={{width:'10%'}}>Raça</th>
-                            <th style={{width:'10%'}}>Fértil</th>
-                            <th style={{width:'10%'}}>Pedigree</th>
-                            <th style={{width:'15%'}}>Responsável</th>
-                            <th style={{width:'10%'}}>Registrado em</th>
+                            <th style={{width:'5%'}}>Fértil</th>
+                            <th style={{width:'5%'}}>Pedigree</th>
+                            <th style={{width:'20%'}}>Responsável</th>
+                            <th style={{width:'20%'}}>Registrado em</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -547,6 +550,7 @@ export function ListCadastros (props:listCadastrosProps) {
                           activeClassName={'active'}
                       />
                   <MdRefresh size={22} onClick={() => getListVeterinarios()} style={{cursor:'pointer'}} />
+                  <Button color={'light'} onClick={(e) => props.editVetFormClick(e,null)} >Novo</Button>
                 </div>
                 <div id="responsavel_table">
                     <table>

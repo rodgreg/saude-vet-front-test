@@ -1,0 +1,31 @@
+.anamnese-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    overflow: auto;
+    padding: 5px 10px;
+    margin: 10px 0px 0px 0px;
+    box-shadow: inset 0px 0px 3px 0px var(--border-color);
+}
+
+.questao-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.questao-item select {
+    width: fit-content;
+    margin-bottom: 10px;
+}
+
+.questao-item-label {
+    font-weight: bold;
+    font-size: 12pt;
+    margin-bottom: 0px;
+}
+
+.questao-item-descricao {
+    font-size: 11pt;
+    margin-top: 0px;
+
+}

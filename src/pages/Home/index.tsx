@@ -1,16 +1,17 @@
-import { AppHeader } from "../../components/AppHeader";
+import { AppHeader } from "../../components/cadastros/AppHeader";
 import { styled } from "@stitches/react";
-import { MdHealthAndSafety, MdAssignment, MdAssignmentInd, MdEvent, MdPets, MdEqualizer, MdSwipe, MdClear, MdBrightness1, MdBrightnessAuto, MdWbSunny, MdModeNight, MdDarkMode, MdBurstMode, MdLightMode } from "react-icons/md";
+import { MdAssignment, MdAssignmentInd, MdEvent, MdPets, MdEqualizer, MdDarkMode, MdLightMode, MdHome } from "react-icons/md";
 import "./home.css";
 import { HomeDash } from "../../components/HomeDash";
-import { ListCadastros } from "../../components/ListCadastros";
+import { ListCadastros } from "../../components/cadastros/ListCadastros";
 import { useState } from "react";
-import { FormCadResponsavel } from "../../components/FormCadResponsavel";
+import { FormCadResponsavel } from "../../components/cadastros/FormCadResponsavel";
 import { Responsavel } from "../../interfaces/Responsavel";
 import { Pet, Pet_Resp } from "../../interfaces/Pet";
 import { Veterinario } from "../../interfaces/Veterinario";
-import { FormCadVeterinario } from "../../components/FormCadVeterinario";
-import { FormCadPet } from "../../components/FormCadPet";
+import { FormCadVeterinario } from "../../components/cadastros/FormCadVeterinario";
+import { FormCadPet } from "../../components/cadastros/FormCadPet";
+import { Consulta } from "../../components/prontuario/Consulta";
 
 const Div = styled('div', {
 
@@ -51,6 +52,10 @@ const Principal = (props:principalProps) => {
             return <FormCadPet petForm={props.pet_resp}/>
             break;
 
+        case "consulta":
+            return <Consulta />
+            break;
+
         case "loading":
             return <HomeDash />
             break;
@@ -64,7 +69,8 @@ const Principal = (props:principalProps) => {
 export function Home () {
     const [showPage, setShowPage] = useState<String>("home");
     const [responsavel, setResponsavel] = useState<Responsavel>({responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, pets: [], enderecos: [], contatos: [],});
-    const [pet_resp, setPet_Resp] = useState<Pet_Resp>({pet:null, responsavel:null});
+    const [pet_resp, setPet_Resp] = useState<Pet_Resp>({pet:{petID:null, nome:"", genero:"", cor:"", especie:"", fertil:false, nascimento:null, pedigree:false, raca:"", dataRegistro:null},
+                                                        responsavel:{responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, enderecos: [], contatos: [],}});
     const [veterinario, setVeterinario] = useState<Veterinario>({veterinarioID:null, nome:"", sobrenome:"", genero:"", cpf:"", cidade:"", uf:"",crmvs:[]});
     const [theme, setTheme] = useState<String>('ligth')
 
@@ -92,12 +98,16 @@ export function Home () {
                 <AppHeader clickMenu={(e,page) => setShowPage(page)} />
 
                 <Div id="aside">
+                    <Div className="button_aside" title="Início"
+                            onClick={() => setShowPage("home")}>
+                        <MdHome size={25} />
+                    </Div>
                     <Div className="button_aside" title="Ver Cadastros de Pets/Pessoas"
                             onClick={() => setShowPage("listCadastros")}>
                         <MdAssignmentInd size={25} />
                     </Div>
-                    <Div className="button_aside" title="Ver Cadastros de Dados"
-                            onClick={() => console.log("Ver Cadastros de Dados")}>
+                    <Div className="button_aside" title="Ver Prontuários"
+                            onClick={() => setShowPage("consulta")}>
                         <MdAssignment size={25} />
                     </Div>
                     <Div className="button_aside" title="Relatórios"

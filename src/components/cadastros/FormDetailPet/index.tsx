@@ -1,11 +1,10 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import moment from 'moment/min/moment-with-locales';
 import './formDetailPet.css';
-import { Responsavel } from '../../interfaces/Responsavel';
 import * as Accordion from '@radix-ui/react-accordion';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
-import { Button } from '../utils/HtmlComponents';
-import { Pet, Pet_Resp } from '../../interfaces/Pet';
+import { Button } from '../../utils/HtmlComponents';
+import { Pet_Resp } from '../../../interfaces/Pet';
 
 interface propsFormResponsavel {
     cancelFormClick:(event: React.MouseEvent<HTMLButtonElement>) => void;

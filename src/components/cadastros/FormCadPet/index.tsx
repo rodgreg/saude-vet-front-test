@@ -1,11 +1,11 @@
 import './formCadPet.css';
 import moment from "moment/min/moment-with-locales";
 import { useEffect, useState } from 'react';
-import { Button } from '../utils/HtmlComponents';
-import { Pet, Pet_Resp } from '../../interfaces/Pet';
-import { ApiRegistro } from '../../services/ApiRegistro';
+import { Button } from '../../utils/HtmlComponents';
+import { Pet, Pet_Resp } from '../../../interfaces/Pet';
+import { ApiRegistro } from '../../../services/ApiRegistro';
 import { AxiosResponse } from 'axios';
-import { Responsavel } from '../../interfaces/Responsavel';
+import { Responsavel } from '../../../interfaces/Responsavel';
 
 
 interface formCadProps {
@@ -89,9 +89,7 @@ export function FormCadPet(props:formCadProps) {
     const removerPet = async () => {
         if(pet!=null){
             await apiRegistro.deletePet(pet);
-            setPetR({pet:{petID:null ,nome:"", genero:"", especie:"", raca:"", cor:"", nascimento:null, fertil:false, pedigree:false},
-                    responsavel:{responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, enderecos: [], contatos: [],}
-                });
+           limparForm();
         };
     };
 
@@ -257,7 +255,7 @@ export function FormCadPet(props:formCadProps) {
                 <h2>Dados do Pet</h2>
                 <div className='dados_pet_item'>
                     <span>{pet?.nome}</span>
-                    <span>{pet?.nome==null?null:pet?.petID!=null?"Salvo":"Não salvo"}</span>
+                    <span>{pet?.nome==""?null:pet?.petID!=null?"Salvo":"Não salvo"}</span>
                 </div>
                 <h2>Responsável</h2>
                 {responsavel?.responsavelID != null &&

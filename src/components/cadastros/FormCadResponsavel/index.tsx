@@ -1,13 +1,13 @@
 import './formCadResponsavel.css';
-import { Responsavel, Endereco, Contato } from '../../interfaces/Responsavel';
+import { Responsavel, Endereco, Contato } from '../../../interfaces/Responsavel';
 import moment from "moment/min/moment-with-locales";
 import { useEffect, useState } from 'react';
-import { Button } from '../utils/HtmlComponents';
-import { Pet } from '../../interfaces/Pet';
-import { MdEdit, MdDeleteOutline, MdFindInPage, MdSearch } from "react-icons/md";
-import { ApiConsultaCep } from '../../services/ApiConsultaCep';
-import { ApiRegistro } from '../../services/ApiRegistro';
-import { AxiosDefaults, AxiosPromise, AxiosResponse } from 'axios';
+import { Button } from '../../utils/HtmlComponents';
+import { Pet } from '../../../interfaces/Pet';
+import { MdEdit, MdDeleteOutline, MdSearch } from "react-icons/md";
+import { ApiConsultaCep } from '../../../services/ApiConsultaCep';
+import { ApiRegistro } from '../../../services/ApiRegistro';
+import { AxiosResponse } from 'axios';
 
 
 interface formCadProps {
@@ -411,7 +411,7 @@ export function FormCadResponsavel(props:formCadProps) {
     <div className='container'>
         <div className='form_container_cad_responsavel'>
             <form className='form_cad_responsavel' onSubmit={formSubmit}>
-                <h2>Cadastrar Responsável de Pet</h2>
+                <h2>Cadastrar Responsável</h2>
                 <span>Nome: </span>
                 <input type={'text'} name={'nome'} value={responsavel?.nome?responsavel.nome.toString():""} onChange={inputChange}/>
                 {(!addEndereco && !addContato && !addPet) && <>
@@ -623,7 +623,7 @@ export function FormCadResponsavel(props:formCadProps) {
         </div>
         <div className='dados_container_responsavel'>
             <div className='dados_responsavel'>
-                <h2>Dados do Responsável do Pet</h2>
+                <h2>Dados do Responsável</h2>
                 {responsavel?.responsavelID != null &&
                     <div className='dados_responsavel_item'>
                         <span>{responsavel?.nome+" "+responsavel?.sobrenome}</span>

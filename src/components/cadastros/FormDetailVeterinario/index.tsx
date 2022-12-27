@@ -3,8 +3,8 @@ import moment from 'moment/min/moment-with-locales';
 import './formDetailVeterinario.css';
 import * as Accordion from '@radix-ui/react-accordion';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
-import { Button } from '../utils/HtmlComponents';
-import { Veterinario } from '../../interfaces/Veterinario';
+import { Button } from '../../utils/HtmlComponents';
+import { Veterinario } from '../../../interfaces/Veterinario';
 
 interface propsFormVeterinario {
     cancelFormClick:(event: React.MouseEvent<HTMLButtonElement>) => void;

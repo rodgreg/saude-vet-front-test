@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { Contato, Endereco, Responsavel } from '../interfaces/Responsavel';
 import { Pet } from '../interfaces/Pet';
 import { useCallback } from 'react';

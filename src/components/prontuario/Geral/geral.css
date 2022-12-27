@@ -1,0 +1,43 @@
+.container-geral {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow: auto;
+}
+
+.lista-consulta-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.tabela-lista-consulta th,td {
+    padding: 5px 10px;
+    text-align: center;
+}
+
+.tabela-lista-consulta tr:hover {
+    background-color: var(--bg-input);
+}
+
+.tabela-lista-consulta td button{
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+.tabela-lista-consulta td button:hover{
+    background-color: var(--bg-checked);
+}
+
+.consulta-detail-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    overflow: auto;
+    max-height: 770px;
+}
+
+.questao-item {
+    display: flex;
+    flex-direction: column;
+}

@@ -1,9 +1,9 @@
 :root {
     --bg: #eeeeee;
     --bg-header: #a8c990;
-    --bg-input: #d9d9d9;
+    --bg-input: #ffffff;
     --bg-button-default: #b4c6a7;
-    --bg-button-default-hover: #c1c7bc;
+    --bg-button-default-hover: #e1eab8;
     --bg-checked: #e4e9ce;
     --txt-color: #434641;
     --txt-color-secondary: #173800;
@@ -14,12 +14,12 @@
     --bg: #1e1e1e;
     --bg-header: #0d1805;
     --bg-input: #312535;
-    --bg-button-default: #300c40;
-    --bg-button-default-hover: #481a68;
+    --bg-button-default: #461959;
+    --bg-button-default-hover: #69388b;
     --bg-checked: #5b340a;
-    --txt-color: #d4f5bd;
-    --txt-color-secondary: #efdebb;
-    --border-color:#b3c5a7;
+    --txt-color: #f6fff0;
+    --txt-color-secondary: #ecdbb9;
+    --border-color:#cbd6c4;
 }
 
 * {

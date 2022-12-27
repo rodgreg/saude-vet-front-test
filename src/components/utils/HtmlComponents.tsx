@@ -4,8 +4,8 @@ import React from 'react';
 
 export const Button = styled('button', {
     marginRight: '3px',
-    marginLeft: '3px',
-    padding: '5px',
+    marginLeft: '5px',
+    padding: '2px 4px 2px 4px',
     border: 'solid 1px',
     borderRadius: '5px',
     cursor: 'pointer',
@@ -172,12 +172,34 @@ export const Select = styled('select', {
     marginLeft: '5px',
     marginRight: '5px',
     borderRadius: '3px',
-    textAlign: 'center',
     cursor: 'pointer',
-    paddingLeft: '6px',
+    paddingLeft: '3px',
     paddingRight: '6px',
 })
 
 export const Option = styled('option', {
+    backgroundColor: 'var(--bg-input)',
+    color: 'var(--txt-color)',
     padding: '2px',
+    marginLeft: '0px'
+})
+
+export const InputDate = styled('input', {
+    backgroundColor: 'var(--bg-input)',
+    color: 'var(--txt-color)',
+    padding: '4px',
+    border: 'none',
+    width: '200px',
+    marginBottom: '10px',
+    borderRadius: '3px'
+})
+
+export const TextArea = styled('textarea', {
+    backgroundColor: 'var(--bg-input)',
+    color: 'var(--txt-color)',
+    padding: '4px',
+    border: 'none',
+    width: '80%',
+    marginBottom: '10px',
+    borderRadius: '3px'
 })
