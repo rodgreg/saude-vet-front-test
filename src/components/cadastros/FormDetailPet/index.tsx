@@ -1,4 +1,5 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
+//  @ts-ignore
 import moment from 'moment/min/moment-with-locales';
 import './formDetailPet.css';
 import * as Accordion from '@radix-ui/react-accordion';
@@ -49,9 +50,9 @@ export function FormDetailPet(props: propsFormResponsavel) {
     return (
         <div id='form_pet'>
             <div>
-                <Button color={'light_cancel'} type="button"
+                <Button color={'gray'} type="button"
                         onClick={(e) => props.cancelFormClick(e)}> {"Fechar"} </Button>
-                <Button color={'light'} type="button"
+                <Button type="button"
                         onClick={(e) => props.editFormClick(e, pet)}> {"Editar"} </Button>
             </div>
             

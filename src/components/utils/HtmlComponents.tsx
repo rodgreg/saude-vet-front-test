@@ -1,22 +1,23 @@
-import { CaretDownIcon } from '@radix-ui/react-icons';
 import { styled } from '@stitches/react';
-import React from 'react';
 
 export const Button = styled('button', {
-    marginRight: '3px',
-    marginLeft: '5px',
-    padding: '2px 4px 2px 4px',
+    display:'flex',
+    justifyContent:'center',
+    alignItems:'center',
+    margin: '5px',
+    padding: '2px 6px',
     border: 'solid 1px',
-    borderRadius: '5px',
+    borderRadius: '3px',
     cursor: 'pointer',
     width: 'fit-content',
+    height: 'fit-content',
     fontWeight:'bold',
     '&:focus': {
         borderWidth:'2px'
     },
     variants: {
         color:{
-            light: {
+            default: {
                 backgroundColor: 'var(--bg-button-default)',
                 color: 'var(--text-color)',
                 borderColor: 'var(--border-color)',
@@ -24,100 +25,38 @@ export const Button = styled('button', {
                     backgroundColor: 'var(--bg-button-default-hover)',
                 }
             },
-            dark: {
-                backgroundColor: '#244a0b',
-                color: '#e0e0e0',
-                borderColor: '#d9e9ce',
-                '&:hover': {
-                    backgroundColor: '#38700a',
-                }
-            },
-            light_outline: {
-                backgroundColor: 'transparent',
+            gray: {
+                backgroundColor: 'var(--bg-button-gray)',
                 color: 'var(--text-color)',
                 borderColor: 'var(--border-color)',
                 '&:hover': {
-                    backgroundColor: 'var(--bg-button-default-hover)',
+                    backgroundColor: 'var(--bg-button-gray-hover)',
                 }
             },
-            dark_outline: {
-                backgroundColor: 'transparent',
-                color: '#e0e0e0',
-                borderColor: '#d9e9ce',
+            red: {
+                backgroundColor: 'var(--bg-button-red)',
+                color: 'var(--text-color)',
+                borderColor: 'var(--border-color)',
                 '&:hover': {
-                    backgroundColor: '#38700a',
-                }
-            },
-            light_cancel: {
-                backgroundColor: '#d0d0d0',
-                color: '#444444',
-                borderColor: '#898989',
-                '&:hover': {
-                    backgroundColor: '#898989',
-                }
-            },
-            light_danger: {
-                backgroundColor: '#d52c2c',
-                color: '#eeeeee',
-                borderColor: '#ff4b4b',
-                '&:hover': {
-                    backgroundColor: '#ff4b4b',
-                }
-            },
-            dark_cancel: {
-                backgroundColor: '#444444',
-                color: '#d0d0d0',
-                borderColor: '#898989',
-                '&:hover': {
-                    backgroundColor: '#898989',
-                }
-            },
-            dark_danger: {
-                backgroundColor: '#6a0f0f',
-                color: '#eeeeee',
-                borderColor: '#9d2a2a',
-                '&:hover': {
-                    backgroundColor: '#9d2a2a',
-                }
-            },
-            light_cancel_outline: {
-                backgroundColor: 'transparent',
-                color: '#898989',
-                borderColor: '#898989',
-                '&:hover': {
-                    backgroundColor: '#504e4e',
-                    color: '#d7d7d7',
-                }
-            },
-            light_danger_outline: {
-                backgroundColor: 'transparent',
-                color: '#ff4b4b',
-                borderColor: '#ff4b4b',
-                '&:hover': {
-                    backgroundColor: '#ff4b4b',
-                    color: '#ffebeb',
-                }
-            },
-            dark_cancel_outline: {
-                backgroundColor: 'transparent',
-                color: '#444444',
-                borderColor: '#444444',
-                '&:hover': {
-                    backgroundColor: '#bfbfbf',
-                }
-            },
-            dark_danger_outline: {
-                backgroundColor: 'transparent',
-                color: '#6a0f0f',
-                borderColor: '#6a0f0f',
-                '&:hover': {
-                    backgroundColor: '#f77e7e',
+                    backgroundColor: 'var(--bg-button-red-hover)',
                 }
             },
         },
+        size: {
+            small: {
+                fontSize:'10pt',
+            },
+            medium: {
+                fontSize:'12pt',
+            },
+            big: {
+                fontSize:'14pt',
+            }
+        }
     },
     defaultVariants: {
-        color: 'light'
+        color: 'default',
+        size: 'medium'
       }
 })
 
@@ -166,40 +105,140 @@ export const LinkButton = styled('button', {
 })
 
 export const Select = styled('select', {
-    backgroundColor: 'inherit',
-    color: 'inherit',
-    fontSize: '16px',
-    marginLeft: '5px',
-    marginRight: '5px',
+    backgroundColor: 'var(--bg-input)',
+    color: 'var(--txt-color)',
     borderRadius: '3px',
     cursor: 'pointer',
-    paddingLeft: '3px',
-    paddingRight: '6px',
+    width: 'max-content',
+    padding: '6px',
+    '&:focus': {
+        borderColor:'var(--border-color-secondary)',
+    },
+    variants: {
+        size: {
+            small: {
+                fontSize: '12px',
+            },
+            medium: {
+                fontSize: '14px',
+            },
+            big: {
+                fontSize: '16px',
+            }
+        }
+    },
+    defaultVariants: {
+        size:'big'
+    }
 })
 
 export const Option = styled('option', {
     backgroundColor: 'var(--bg-input)',
     color: 'var(--txt-color)',
-    padding: '2px',
-    marginLeft: '0px'
+    variants: {
+        size: {
+            small: {
+                fontSize: '12px',
+            },
+            medium: {
+                fontSize: '14px',
+            },
+            big: {
+                fontSize: '16px',
+            }
+        }
+    },
+    defaultVariants: {
+        size:'big'
+    }
+})
+
+export const Label = styled('label', {
+    fontFamily:'Quicksand',
+    fontWeight:'bold',
+    margin:'5px 0px 0px 0px',
+    variants: {
+        size: {
+            small: {
+                fontSize:'12pt',
+            },
+            medium: {
+                fontSize:'14pt',
+            },
+            big: {
+                fontSize:'17pt',
+            }
+        },
+    },
+    defaultVariants: {
+        size:'medium'
+    }
+})
+
+export const Descricao = styled('label', {
+    fontFamily:'Quicksand',
+    fontWeight:'normal',
+    fontSize:'12pt',
+    margin:'4px 0px 0px 0px',
 })
 
 export const InputDate = styled('input', {
     backgroundColor: 'var(--bg-input)',
     color: 'var(--txt-color)',
     padding: '4px',
-    border: 'none',
+    border: 'solid 1px var(--border-color)',
     width: '200px',
     marginBottom: '10px',
-    borderRadius: '3px'
+    borderRadius: '3px',
+    fontSize:'13pt',
+    transition: 'border-color 0.2s',
+    '&:focus': {
+        borderColor:'var(--border-color-secondary)',
+    },
+})
+
+export const InputText = styled('input', {
+    backgroundColor: 'var(--bg-input)',
+    color: 'var(--txt-color)',
+    padding: '4px',
+    border: 'solid 1px var(--border-color)',
+    marginBottom: '10px',
+    borderRadius: '3px',
+    fontSize:'13pt',
+    transition: 'border-color 0.2s',
+    '&:focus': {
+        borderColor:'var(--border-color-secondary)',
+    },
+    variants: {
+        size: {
+            small: {
+                width:'200px',
+            },
+            medium: {
+                width:'400px',
+                minWidth:'250px'
+            },
+            big: {
+                width:'600px',
+                minWidth:'250px',
+            },
+            max: {
+                width:'95%',
+            }
+        }
+    },
+    defaultVariants: {
+        size: 'medium'
+      }
 })
 
 export const TextArea = styled('textarea', {
     backgroundColor: 'var(--bg-input)',
     color: 'var(--txt-color)',
     padding: '4px',
-    border: 'none',
-    width: '80%',
+    border: 'solid 1px var(--border-color)',
     marginBottom: '10px',
-    borderRadius: '3px'
+    borderRadius: '3px',
+    fontSize:'12pt',
+    width: '80%',
 })

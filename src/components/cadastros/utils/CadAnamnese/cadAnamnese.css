@@ -1,0 +1,21 @@
+.container-cadAnamnese {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    max-height: 600px;
+    overflow: auto;
+}
+
+.cadAnamnese-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.cadAnamnese-view {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+}

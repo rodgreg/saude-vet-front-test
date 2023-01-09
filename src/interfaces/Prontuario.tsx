@@ -15,13 +15,13 @@ export interface Consulta {
 }
 
 export interface Anamnese {
-    anamneseID?: number;
+    templateID?: number;
     dtRegistro?: Date;
+    titulo?:string;
     questoes: Questao[];
 }
 
-interface Questao {
-    questaoID?:number;
+export interface Questao {
     tipo?:string;
     label?:string;
     descricao?:string;

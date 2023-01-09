@@ -1,7 +1,8 @@
 import './formCadPet.css';
+// @ts-ignore
 import moment from "moment/min/moment-with-locales";
 import { useEffect, useState } from 'react';
-import { Button } from '../../utils/HtmlComponents';
+import { Button, Label, Select, Option, InputText, InputDate } from '../../utils/HtmlComponents';
 import { Pet, Pet_Resp } from '../../../interfaces/Pet';
 import { ApiRegistro } from '../../../services/ApiRegistro';
 import { AxiosResponse } from 'axios';
@@ -169,83 +170,84 @@ export function FormCadPet(props:formCadProps) {
         <div className='form_container_cad_pet'>
             <form className='form_cad_pet' onSubmit={formSubmit}>
                 <h2>Cadastrar Pet</h2>
-                    <span>Responsável: </span>
-                    <select onChange={selectItemResp} name={'responsavel'} value={responsavel?JSON.stringify(responsavel):""}>
-                        <option key={-1} value={""}>Selecione</option>
+                    <Label htmlFor='responsavel' size={'medium'} >Responsável: </Label>
+                    <Select size={'big'} onChange={selectItemResp} id='responsavel' name={'responsavel'} value={responsavel?JSON.stringify(responsavel):""}>
+                        <Option size={'medium'} key={-1} value={""}>Selecione</Option>
                         {responsavelList.length>0? 
                             responsavelList.map((resp,idx) => 
                                 <option key={idx} value={JSON.stringify(resp)}>{resp?.nome+' '+resp?.sobrenome}</option>
                             )
                             :null
                         } 
-                            </select>
-                    <span>Nome: </span>
-                    <input type={'text'} name={'nome'} value={pet?.nome?pet.nome.toString():""} onChange={inputChangePet}/>
+                            </Select>
+                    <Label htmlFor='nome' size={'medium'} >Nome: </Label>
+                    <InputText size={'max'} type={'text'} id='nome' name={'nome'} value={pet?.nome?pet.nome.toString():""} onChange={inputChangePet}/>
                     <div style={{display:'grid', gridTemplateColumns:'40% 30% 20%'}}>
                         <div style={{display:'flex', flexDirection:'column'}}>
-                            <span>Sexo: </span>
-                            <select onChange={selectItemPet} name={'genero'} value={pet?.genero?pet.genero.toString():""}>
-                                <option value={""}>Selecione</option>
-                                <option value={"Fêmea"}>Fêmea</option>
-                                <option value={"Macho"}>Macho</option>
-                            </select>
+                            <Label htmlFor='genero' size={'medium'} >Sexo: </Label>
+                            <Select size={'big'} onChange={selectItemPet} id='genero' name={'genero'} value={pet?.genero?pet.genero.toString():""}>
+                                <Option size={'medium'} value={""}>Selecione</Option>
+                                <Option size={'medium'} value={"Fêmea"}>Fêmea</Option>
+                                <Option size={'medium'} value={"Macho"}>Macho</Option>
+                            </Select>
                         </div>
                         <div style={{display:'flex', flexDirection:'column'}}>
-                            <span>Espécie: </span>
-                            <select onChange={selectItemPet} name={'especie'} value={pet?.especie?pet.especie.toString():""}>
-                                <option value={""}>Selecione</option>
-                                <option value={"Cachorro"}>Cachorro</option>
-                                <option value={"Gato"}>Gato</option>
-                            </select>
+                            <Label htmlFor='especie'>Espécie: </Label>
+                            <Select size={'big'} id='especie' onChange={selectItemPet} name={'especie'} value={pet?.especie?pet.especie.toString():""}>
+                                <Option value={""}>Selecione</Option>
+                                <Option value={"Cachorro"}>Cachorro</Option>
+                                <Option value={"Gato"}>Gato</Option>
+                            </Select>
                         </div>
                         <div style={{display:'flex', flexDirection:'column'}}>
-                            <span>Raça: </span>
-                            <select onChange={selectItemPet} name={'raca'} value={pet?.raca?pet.raca.toString():""}>
-                                <option value={""}>Selecione</option>
-                                <option value={"Vira-Lata"}>Vira-Lata</option>
-                                <option value={"Labrador"}>Labrador</option>
-                                <option value={"BullTerrie"}>Bullterrie</option>
-                                <option value={"Teste"}>Teste</option>
-                                <option value={"Sei não"}>Sei não</option>
-                            </select>
+                            <Label htmlFor='raca' size={'medium'}>Raça: </Label>
+                            <Select size={'big'} id='raca' onChange={selectItemPet} name={'raca'} value={pet?.raca?pet.raca.toString():""}>
+                                <Option value={""}>Selecione</Option>
+                                <Option value={"Vira-Lata"}>Vira-Lata</Option>
+                                <Option value={"Labrador"}>Labrador</Option>
+                                <Option value={"BullTerrie"}>Bullterrie</Option>
+                                <Option value={"Teste"}>Teste</Option>
+                                <Option value={"Sei não"}>Sei não</Option>
+                            </Select>
                         </div>
                     </div>
                     <div style={{display:'grid', gridTemplateColumns:'40% 50%'}}>
                         <div style={{display:'flex', flexDirection:'column'}}>
-                            <span>Cor: </span>
-                            <input type={'text'} name={'cor'} value={pet?.cor?pet.cor.toString():""} onChange={inputChangePet}/>
+                            <Label htmlFor='cor'>Cor: </Label>
+                            <InputText size={'max'} id='cor' type={'text'} name={'cor'} value={pet?.cor?pet.cor.toString():""} onChange={inputChangePet}/>
                         </div>
                         <div style={{display:'flex', flexDirection:'column'}}>
-                            <span>Data de Nascimento: </span>
-                            <input type={'date'} name={'nascimento'} value={pet?.nascimento?moment(pet?.nascimento).format('yyyy-MM-DD'):""}
+                            <Label htmlFor='nascimento'>Data de Nascimento: </Label>
+                            <InputDate type={'date'} id='nascimento' name={'nascimento'} value={pet?.nascimento?moment(pet?.nascimento).format('yyyy-MM-DD'):""}
                                                                     max={moment().format('yyyy-MM-DD')} onChange={inputChangePet}/>
                         </div>
                     </div>
                     <div style={{display:'grid', gridTemplateColumns:'40% 40%'}}>
                         <div style={{display:'flex', flexDirection:'column'}}>
-                            <span>Fertilidade: </span>
-                            <select onChange={selectItemPet} name={'fertil'} value={pet?.fertil!=null?pet.fertil.toString():""}>
-                                <option value={""}>Selecione</option>
-                                <option value={"true"}>Sim</option>
-                                <option value={"false"}>Não</option>
-                            </select>
+                            <Label htmlFor='fertil'>Fertilidade: </Label>
+                            <Select onChange={selectItemPet} id='fertil' name={'fertil'} value={pet?.fertil!=null?pet.fertil.toString():""}>
+                                <Option value={""}>Selecione</Option>
+                                <Option value={"true"}>Sim</Option>
+                                <Option value={"false"}>Não</Option>
+                            </Select>
                         </div>
                         <div style={{display:'flex', flexDirection:'column'}}>
-                            <span>Pedigree: </span>
-                            <select onChange={selectItemPet} name={'pedigree'} value={pet?.pedigree!=null?pet.pedigree.toString():""}>
-                                <option value={""}>Selecione</option>
-                                <option value={"true"}>Sim</option>
-                                <option value={"false"}>Não</option>
-                            </select>
+                            <Label htmlFor='pedigree'>Pedigree: </Label>
+                            <Select onChange={selectItemPet} id='pedigree' name={'pedigree'} value={pet?.pedigree!=null?pet.pedigree.toString():""}>
+                                <Option value={""}>Selecione</Option>
+                                <Option value={"true"}>Sim</Option>
+                                <Option value={"false"}>Não</Option>
+                            </Select>
                         </div>
                     </div>
-                <div>
+                <div style={{display:'flex', flexDirection:'row', marginTop:'30px'}}>
+                    
                     <Button type='submit'>{pet?.petID!=null?"Alterar":"Salvar"}</Button>
                     {pet?.petID!=null?
-                                    <Button type='button' color={'light_danger'} 
+                                    <Button type='button' color={'red'} 
                                             onClick={() => removerPet()}>Remover</Button>:""}
-                    <Button type='button' color={'light_cancel'} >Voltar</Button>
-                    <Button type='button' color={'light_cancel'} onClick={() => limparForm()} >Limpar</Button>
+                    <Button type='button' color={'gray'} >Voltar</Button>
+                    <Button type='button' color={'gray'} onClick={() => limparForm()} >Limpar</Button>
                 </div>
             </form>
 

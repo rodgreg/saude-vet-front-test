@@ -4,10 +4,15 @@
     --bg-input: #ffffff;
     --bg-button-default: #b4c6a7;
     --bg-button-default-hover: #e1eab8;
+    --bg-button-gray:#bdbdbd;
+    --bg-button-gray-hover:#dfdfdf;
+    --bg-button-red:#dd6565;
+    --bg-button-red-hover: #ec8a8a;
     --bg-checked: #e4e9ce;
     --txt-color: #434641;
     --txt-color-secondary: #173800;
     --border-color:#1e390a;
+    --border-color-secondary:#39290a;
 }
 
 [data-theme='dark'] {
@@ -16,11 +21,17 @@
     --bg-input: #312535;
     --bg-button-default: #461959;
     --bg-button-default-hover: #69388b;
+    --bg-button-gray:#575757;
+    --bg-button-gray-hover:#868686;
+    --bg-button-red:#ca2c2c;
+    --bg-button-red-hover: #af4747;
     --bg-checked: #5b340a;
     --txt-color: #f6fff0;
     --txt-color-secondary: #ecdbb9;
     --border-color:#cbd6c4;
+    --border-color-secondary:#ccc4d6;
 }
+
 
 * {
     margin: 0;

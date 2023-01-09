@@ -5,12 +5,13 @@ import { Responsavel } from '../../../interfaces/Responsavel';
 import './listCadastros.css';
 import { FormDetailResponsavel } from '../FormDetailResponsavel';
 import { Button, LinkButton, Option, Select } from '../../utils/HtmlComponents';
+// @ts-ignore
 import moment from "moment/min/moment-with-locales";
 import 'moment/locale/pt-br';
 import { Veterinario } from '../../../interfaces/Veterinario';
 import { FormDetailVeterinario } from '../FormDetailVeterinario';
 import { FormDetailPet } from '../FormDetailPet';
-import { MdRefresh } from 'react-icons/md';
+import { MdAdd, MdRefresh } from 'react-icons/md';
 import { Loading } from '../../utils/Loading';
 import { Pet, Pet_Resp } from '../../../interfaces/Pet';
 
@@ -396,13 +397,13 @@ export function ListCadastros (props:listCadastrosProps) {
           { showList==='responsavel' && 
               <div className='content_list'>
                 <div id="controller_table">
-                  <Select value={paginateList.perPage} onChange={setItensPerPage}>
-                      <Option value={2}>2</Option>
-                      <Option value={5}>5</Option>
-                      <Option value={10}>10</Option>
-                      <Option value={25}>25</Option>
-                      <Option value={50}>50</Option>
-                      <Option value={100}>100</Option>
+                  <Select size={'small'} value={paginateList.perPage} onChange={setItensPerPage}>
+                      <Option size={'small'} value={2}>2</Option>
+                      <Option size={'small'} value={5}>5</Option>
+                      <Option size={'small'} value={10}>10</Option>
+                      <Option size={'small'} value={25}>25</Option>
+                      <Option size={'small'} value={50}>50</Option>
+                      <Option size={'small'} value={100}>100</Option>
                   </Select>
                   <ReactPaginate
                           ref={paginationRef}
@@ -415,9 +416,9 @@ export function ListCadastros (props:listCadastrosProps) {
                           activeClassName={'active'}
                       />
                   <MdRefresh size={22} onClick={() => getListResponsaveis()} style={{cursor:'pointer'}} />
-                  <Button color={'light'} onClick={(e) => props.editResFormClick(e,null)} >Novo</Button>
+                  <Button size={'small'} onClick={(e) => props.editResFormClick(e,null)}><MdAdd size={15}/></Button>
                 </div>
-                <div id="responsavel_table">
+                <div id="content_table">
                     <table>
                       <thead>
                         <tr>
@@ -465,13 +466,13 @@ export function ListCadastros (props:listCadastrosProps) {
           { showList==='pet' && 
               <div className='content_list'>
                 <div id="controller_table">
-                  <Select value={paginateListPet.perPage} onChange={setItensPerPagePet}>
-                      <Option value={2}>2</Option>
-                      <Option value={5}>5</Option>
-                      <Option value={10}>10</Option>
-                      <Option value={25}>25</Option>
-                      <Option value={50}>50</Option>
-                      <Option value={100}>100</Option>
+                  <Select size={'small'} value={paginateListPet.perPage} onChange={setItensPerPagePet}>
+                      <Option size={'small'} value={2}>2</Option>
+                      <Option size={'small'} value={5}>5</Option>
+                      <Option size={'small'} value={10}>10</Option>
+                      <Option size={'small'} value={25}>25</Option>
+                      <Option size={'small'} value={50}>50</Option>
+                      <Option size={'small'} value={100}>100</Option>
                   </Select>
                   <ReactPaginate
                           ref={paginationPetRef}
@@ -484,9 +485,9 @@ export function ListCadastros (props:listCadastrosProps) {
                           activeClassName={'active'}
                       />
                   <MdRefresh size={22} onClick={() => getListResponsaveis()} style={{cursor:'pointer'}} />
-                  <Button color={'light'} onClick={(e) => props.editPetFormClick(e,null)} >Novo</Button>
+                  <Button size={'small'} onClick={(e) => props.editPetFormClick(e,null)} ><MdAdd size={15}/></Button>
                 </div>
-                <div id="pet_table">
+                <div id="content_table">
                     <table>
                       <thead>
                         <tr>
@@ -531,13 +532,13 @@ export function ListCadastros (props:listCadastrosProps) {
           { showList==='veterinario' && 
               <div className='content_list'>
                 <div id="controller_table">
-                  <Select value={paginateListVet.perPage} onChange={setItensPerPageVet}>
-                      <Option value={2}>2</Option>
-                      <Option value={5}>5</Option>
-                      <Option value={10}>10</Option>
-                      <Option value={25}>25</Option>
-                      <Option value={50}>50</Option>
-                      <Option value={100}>100</Option>
+                  <Select size={'small'} value={paginateListVet.perPage} onChange={setItensPerPageVet}>
+                      <Option size={'small'} value={2}>2</Option>
+                      <Option size={'small'} value={5}>5</Option>
+                      <Option size={'small'} value={10}>10</Option>
+                      <Option size={'small'} value={25}>25</Option>
+                      <Option size={'small'} value={50}>50</Option>
+                      <Option size={'small'} value={100}>100</Option>
                   </Select>
                   <ReactPaginate
                           ref={paginationVetRef}
@@ -550,9 +551,9 @@ export function ListCadastros (props:listCadastrosProps) {
                           activeClassName={'active'}
                       />
                   <MdRefresh size={22} onClick={() => getListVeterinarios()} style={{cursor:'pointer'}} />
-                  <Button color={'light'} onClick={(e) => props.editVetFormClick(e,null)} >Novo</Button>
+                  <Button size={'small'} onClick={(e) => props.editVetFormClick(e,null)} ><MdAdd size={15}/></Button>
                 </div>
-                <div id="responsavel_table">
+                <div id="content_table">
                     <table>
                       <thead>
                         <tr>
@@ -588,15 +589,15 @@ export function ListCadastros (props:listCadastrosProps) {
               </div>
           }
         </div>
-          <div id='form_detail_responsavel' className={showCadResp?"navbarSticky":"navbar"}>
-            <FormDetailResponsavel responsavelDetail={respSelected} cancelFormClick={() => setShowCadResp(false)} editFormClick={(e, resp) => props.editResFormClick(e, resp)} />
-          </div>
-          <div id='form_detail_pet' className={showCadPet?"navbarSticky":"navbar"}>
-            <FormDetailPet petDetail={petSelected} cancelFormClick={() => setShowCadPet(false)} editFormClick={(e, petR) => props.editPetFormClick(e, petR)}/>
-          </div>
-          <div id='form_detail_veterinario' className={showCadVet?"navbarSticky":"navbar"}>
-            <FormDetailVeterinario veterinarioDetail={vetSelected} cancelFormClick={() => setShowCadVet(false)} editFormClick={(e,vet) => props.editVetFormClick(e, vet)}/>
-          </div>
+        <div id='form_detail_responsavel' className={showCadResp?"navbarSticky":"navbar"}>
+          <FormDetailResponsavel responsavelDetail={respSelected} cancelFormClick={() => setShowCadResp(false)} editFormClick={(e, resp) => props.editResFormClick(e, resp)} />
+        </div>
+        <div id='form_detail_pet' className={showCadPet?"navbarSticky":"navbar"}>
+          <FormDetailPet petDetail={petSelected} cancelFormClick={() => setShowCadPet(false)} editFormClick={(e, petR) => props.editPetFormClick(e, petR)}/>
+        </div>
+        <div id='form_detail_veterinario' className={showCadVet?"navbarSticky":"navbar"}>
+          <FormDetailVeterinario veterinarioDetail={vetSelected} cancelFormClick={() => setShowCadVet(false)} editFormClick={(e,vet) => props.editVetFormClick(e, vet)}/>
+        </div>
       </div>
   )
 }

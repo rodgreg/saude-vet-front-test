@@ -1,8 +1,9 @@
 import './formCadResponsavel.css';
 import { Responsavel, Endereco, Contato } from '../../../interfaces/Responsavel';
+// @ts-ignore
 import moment from "moment/min/moment-with-locales";
 import { useEffect, useState } from 'react';
-import { Button } from '../../utils/HtmlComponents';
+import { Button, InputText, Label, Select, Option, InputDate } from '../../utils/HtmlComponents';
 import { Pet } from '../../../interfaces/Pet';
 import { MdEdit, MdDeleteOutline, MdSearch } from "react-icons/md";
 import { ApiConsultaCep } from '../../../services/ApiConsultaCep';
@@ -412,63 +413,63 @@ export function FormCadResponsavel(props:formCadProps) {
         <div className='form_container_cad_responsavel'>
             <form className='form_cad_responsavel' onSubmit={formSubmit}>
                 <h2>Cadastrar Responsável</h2>
-                <span>Nome: </span>
-                <input type={'text'} name={'nome'} value={responsavel?.nome?responsavel.nome.toString():""} onChange={inputChange}/>
+                <Label htmlFor='nome'>Nome: </Label>
+                <InputText size={'max'} type={'text'} id='nome' name={'nome'} value={responsavel?.nome?responsavel.nome.toString():""} onChange={inputChange}/>
                 {(!addEndereco && !addContato && !addPet) && <>
-                    <span>Sobrenome: </span>
-                    <input  type={'text'} name={'sobrenome'} value={responsavel?.sobrenome?responsavel.sobrenome.toString():""} onChange={inputChange}/>
+                    <Label htmlFor='sobrenome'>Sobrenome: </Label>
+                    <InputText size={'max'} id='sobrenome' type={'text'} name={'sobrenome'} value={responsavel?.sobrenome?responsavel.sobrenome.toString():""} onChange={inputChange}/>
                     <div style={{display:'grid', gridTemplateColumns:'45% 40%'}}>
                         <div style={{display:'flex', flexDirection:'column'}}>
-                            <span>Sexo:</span>
-                            <select onChange={selectItem} name={'genero'} value={responsavel?.genero?responsavel.genero.toString():""}>
-                                <option value={""}>Selecione</option>
-                                <option value={"Feminino"}>Feminino</option>
-                                <option value={"Masculino"}>Masculino</option>
-                            </select>
+                            <Label htmlFor='genero'>Sexo:</Label>
+                            <Select id='genero' onChange={selectItem} name={'genero'} value={responsavel?.genero?responsavel.genero.toString():""}>
+                                <Option value={""}>Selecione</Option>
+                                <Option value={"Feminino"}>Feminino</Option>
+                                <Option value={"Masculino"}>Masculino</Option>
+                            </Select>
                         </div>
                         <div style={{display:'flex', flexDirection:'column'}}>
-                            <span>Tipo de Pessoa:</span>
-                            <select onChange={selectItem} name={'tipoPessoa'} value={responsavel?.tipoPessoa?responsavel.tipoPessoa.toString():""}>
-                                <option value={""}>Selecione</option>
-                                <option value={"Física"}>Física</option>
-                                <option value={"Jurídica"}>Jurídica</option>
-                            </select>
+                            <Label htmlFor='tipoPessoa'>Tipo de Pessoa:</Label>
+                            <Select id='tipoPessoa' onChange={selectItem} name={'tipoPessoa'} value={responsavel?.tipoPessoa?responsavel.tipoPessoa.toString():""}>
+                                <Option value={""}>Selecione</Option>
+                                <Option value={"Física"}>Física</Option>
+                                <Option value={"Jurídica"}>Jurídica</Option>
+                            </Select>
                         </div>
                     </div>
                     {responsavel?.tipoPessoa != "" &&
                         <>
-                            <span>{responsavel?.tipoRegistro}: </span>
-                            <input type={'text'} name={'registroNum'} 
+                            <Label htmlFor='registroNum'>{responsavel?.tipoRegistro}: </Label>
+                            <InputText size={'max'} type={'text'} id='registroNum' name={'registroNum'} 
                                                 value={responsavel?.tipoRegistro && responsavel?.registroNum?cpf_cnpj_mask(responsavel?.tipoRegistro,responsavel?.registroNum):""} 
                                                 onChange={inputChange}/>
                         </>
                     }
                     <div style={{display:'grid', gridTemplateColumns:'45% 50%'}}>
                         <div style={{display:'flex', flexDirection:'column'}}>
-                            <span>Data de nascimento: </span>
-                            <input type={'date'} name={'nascimento'} value={responsavel?.nascimento?moment(responsavel?.nascimento).format('yyyy-MM-DD'):""}
+                            <Label htmlFor='nascimento'>Data de nascimento: </Label>
+                            <InputDate type={'date'} name={'nascimento'} value={responsavel?.nascimento?moment(responsavel?.nascimento).format('yyyy-MM-DD'):""}
                                                                     max={moment().subtract(16,'year').format('yyyy-MM-DD')} onChange={inputChange}/>
                         </div>
                         <div style={{display:'flex', flexDirection:'column'}}>
-                            <span>Aceita receber e-mails?</span>
-                            <select onChange={selectItem} name={'aceitaEmail'} value={responsavel?.aceitaEmail!=null? responsavel.aceitaEmail.toString():""}>
-                                <option value={""}>Selecione</option>
-                                <option value={"true"}>Sim</option>
-                                <option value={"false"}>Não</option>
-                            </select>
+                            <Label htmlFor='aceitaEmail'>Aceita receber e-mails?</Label>
+                            <Select onChange={selectItem} id='aceitaEmail' name={'aceitaEmail'} value={responsavel?.aceitaEmail!=null? responsavel.aceitaEmail.toString():""}>
+                                <Option value={""}>Selecione</Option>
+                                <Option value={"true"}>Sim</Option>
+                                <Option value={"false"}>Não</Option>
+                            </Select>
                         </div>
                     </div>
                 </>}
-                <div>
+                <div style={{display:'flex', flexDirection:'row', marginTop:'20px'}}>
                     <Button type='submit'>{responsavel?.responsavelID!=null?"Alterar":"Salvar"}</Button>
                     {responsavel?.responsavelID!=null?
-                                    <Button type='button' color={'light_danger'} 
+                                    <Button type='button' color={'red'} 
                                             onClick={() => removeResponsavel()}>Remover</Button>:""}
-                    <Button type='button' color={'light_cancel'} >Voltar</Button>
-                    <Button type='button' color={'light_cancel'} onClick={() => limparForm()} >Limpar</Button>
+                    <Button type='button' color={'gray'} >Voltar</Button>
+                    <Button type='button' color={'gray'} onClick={() => limparForm()} >Limpar</Button>
                 </div>
                 {responsavel?.responsavelID!=null?
-                    <div>
+                    <div style={{display:'flex', flexDirection:'row'}}>
                         <Button type='button' onClick={() => {setAddEndereco(!addEndereco);setAddContato(false);setAddPet(false)}}>+ Endereço</Button>
                         <Button type='button' onClick={() => {setAddContato(!addContato); setAddEndereco(false);setAddPet(false)}}>+ Contato</Button>
                         <Button type='button' onClick={() => {setAddPet(!addPet);setAddEndereco(false);setAddContato(false)}}>+ Pet</Button>
@@ -505,9 +506,9 @@ export function FormCadResponsavel(props:formCadProps) {
                     <input type={'text'} name={'cidade'} value={endereco?.cidade?endereco.cidade.toString():""} onChange={inputChangeEndereco}/>
                     <span>UF: </span>
                     <input type={'text'} name={'uf'} value={endereco?.uf?endereco.uf.toString():""} onChange={inputChangeEndereco}/>
-                    <div>
+                    <div style={{display:'flex', flexDirection:'row'}}>
                         <Button type='submit'>{indexEndereco>=0?"Alterar":"Adicionar"}</Button>
-                        <Button type='button' color={'light_cancel'} onClick={() => {setAddEndereco(false); setIndexEndereco(-1);
+                        <Button type='button' color={'gray'} onClick={() => {setAddEndereco(false); setIndexEndereco(-1);
                                                                                     setEndereco({enderecoID:null, tipoEndereco:"", cep:"", logradouro:"", numero:"", endereco:"", complemento:"", bairro:"", cidade:"", uf:""})
                                                                                     }}>Cancelar</Button>
                     </div>
@@ -539,9 +540,9 @@ export function FormCadResponsavel(props:formCadProps) {
                             <option value={"false"}>Não</option>
                         </select>
                     </span>
-                    <div>
+                    <div style={{display:'flex', flexDirection:'row'}}>
                         <Button type='submit'>{indexContato>=0?"Alterar":"Adicionar"}</Button>
-                        <Button type='button' color={'light_cancel'} onClick={() => {setAddContato(false); setIndexContato(-1);
+                        <Button type='button' color={'gray'} onClick={() => {setAddContato(false); setIndexContato(-1);
                                                                                     setContato({contatoID:null, tipoContato:"", principal:false, descricao:"", anotacao:""})
                                                                                     }}>Cancelar</Button>
                     </div>
@@ -611,9 +612,9 @@ export function FormCadResponsavel(props:formCadProps) {
                             </select>
                         </div>
                     </div>
-                    <div>
+                    <div style={{display:'flex', flexDirection:'row'}}>
                         <Button type='submit'>{indexPet>=0?"Alterar":"Adicionar"}</Button>
-                        <Button type='button' color={'light_cancel'} onClick={() => {setAddPet(false); setIndexPet(-1);
+                        <Button type='button' color={'gray'} onClick={() => {setAddPet(false); setIndexPet(-1);
                                                                                 setPet({petID:null ,nome:"", genero:"", especie:"", raca:"", cor:"", nascimento:null, fertil:false, pedigree:false})
                                                                             }}>Cancelar</Button>
                     </div>

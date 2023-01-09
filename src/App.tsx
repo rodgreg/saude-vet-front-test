@@ -1,8 +1,7 @@
-import { useState } from 'react';
 import { AppRoutes } from './AppRoutes';
 import './app.css';
 
-function App() {
+const App: React.FC = () => {
   return (
     <AppRoutes />
   )

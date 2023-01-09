@@ -1,7 +1,8 @@
 import './formCadVeterinario.css';
+// @ts-ignore
 import moment from "moment/min/moment-with-locales";
 import { useEffect, useState } from 'react';
-import { Button } from '../../utils/HtmlComponents';
+import { Button, InputText, Label, Select } from '../../utils/HtmlComponents';
 import { MdEdit, MdDeleteOutline } from "react-icons/md";
 import { ApiRegistro } from '../../../services/ApiRegistro';
 import { AxiosResponse } from 'axios';
@@ -109,7 +110,17 @@ export function FormCadVeterinario(props:formCadProps) {
 
     const inputChange = (e:any) => {
         e.target.classList.remove("shake");
-        setVeterinario({...veterinario,[e.target.name]:e.target.value});
+        if(e.target.name === "cpf") {
+            let regex = /\D/g;
+            let registroNum = e.target.value.replace(regex,"");
+            
+            if((registroNum.length<=11)) {
+                setVeterinario({...veterinario,[e.target.name]:registroNum});
+            } else {
+            }
+        } else {
+            setVeterinario({...veterinario,[e.target.name]:e.target.value});
+        }
     };
 
     const inputChangeCrmv = (e:any) => {
@@ -124,11 +135,6 @@ export function FormCadVeterinario(props:formCadProps) {
     const selectItem = (select:any) => {
         select.target.classList.remove("shake");
         setVeterinario({...veterinario,[select.target.name]:select.target[select.target.selectedIndex].value})
-    };
-
-    const selectItemCrmv = (select:any) => {
-        select.target.classList.remove("shake");
-        setCrmv({...crmv,[select.target.name]:select.target[select.target.selectedIndex].value})
     };
 
     const cpf_cnpj_mask = (tipo:String,numero:String) => {
@@ -175,45 +181,45 @@ export function FormCadVeterinario(props:formCadProps) {
         <div className='form_container_cad_veterinario'>
             <form className='form_cad_veterinario' onSubmit={formSubmit}>
                 <h2>Cadastrar Veterinário</h2>
-                <span>Nome: </span>
-                <input type={'text'} name={'nome'} value={veterinario?.nome?veterinario.nome.toString():""} onChange={inputChange}/>
+                <Label htmlFor='nome'>Nome: </Label>
+                <InputText size={'max'} type={'text'} id='nome' name={'nome'} value={veterinario?.nome?veterinario.nome.toString():""} onChange={inputChange}/>
                 {(!addCrmv) && <>
-                    <span>Sobrenome: </span>
-                    <input  type={'text'} name={'sobrenome'} value={veterinario?.sobrenome?veterinario.sobrenome.toString():""} onChange={inputChange}/>
+                    <Label htmlFor='sobrenome'>Sobrenome: </Label>
+                    <InputText size={'max'}  type={'text'} id='sobrenome' name={'sobrenome'} value={veterinario?.sobrenome?veterinario.sobrenome.toString():""} onChange={inputChange}/>
                     <div style={{display:'grid', gridTemplateColumns:'50% 40%'}}>
                         <div style={{display:'flex', flexDirection:'column'}}>
-                            <span>Sexo:</span>
-                            <select onChange={selectItem} name={'genero'} value={veterinario?.genero?veterinario.genero.toString():""}>
+                            <Label htmlFor='genero'>Sexo:</Label>
+                            <Select id='genero' onChange={selectItem} name={'genero'} value={veterinario?.genero?veterinario.genero.toString():""}>
                                 <option value={""}>Selecione</option>
                                 <option value={"Feminino"}>Feminino</option>
                                 <option value={"Masculino"}>Masculino</option>
-                            </select>
+                            </Select>
                         </div>
                         <div style={{display:'flex', flexDirection:'column'}}>
-                            <span>CPF: </span>
-                            <input type={'text'} name={'cpf'} 
+                            <Label htmlFor='cpf'>CPF: </Label>
+                            <InputText size={'max'} id='cpf' type={'text'} name={'cpf'} 
                                         value={veterinario?.cpf?cpf_cnpj_mask('CPF',veterinario?.cpf):""} 
                                         onChange={inputChange}/>
                         </div>
                     </div>
                     <div style={{display:'grid', gridTemplateColumns:'50% 30%'}}>
                         <div style={{display:'flex', flexDirection:'column'}}>
-                            <span>Cidade: </span>
-                            <input type={'text'} name={'cidade'} value={veterinario?.cidade?veterinario?.cidade.toString():""} onChange={inputChange}/>
+                            <Label htmlFor='cidade'>Cidade: </Label>
+                            <InputText size={'max'} type={'text'} id='cidade' name={'cidade'} value={veterinario?.cidade?veterinario?.cidade.toString():""} onChange={inputChange}/>
                         </div>
                         <div style={{display:'flex', flexDirection:'column'}}>
-                            <span>UF: </span>
-                            <input type={'text'} name={'uf'} value={veterinario?.uf?veterinario?.uf.toString():""} onChange={inputChange}/>
+                            <Label htmlFor='uf'>UF: </Label>
+                            <InputText size={'max'} type={'text'} id='uf' name={'uf'} value={veterinario?.uf?veterinario?.uf.toString():""} onChange={inputChange}/>
                         </div>
                     </div>
                 </>}
-                <div>
+                <div style={{display:'flex', flexDirection:'row', marginTop:'20px'}}>
                     <Button type='submit'>{veterinario?.veterinarioID!=null?"Alterar":"Salvar"}</Button>
                     {veterinario?.veterinarioID!=null?
-                                    <Button type='button' color={'light_danger'} 
+                                    <Button type='button' color={'red'} 
                                             onClick={() => removeVeterinario()}>Remover</Button>:""}
-                    <Button type='button' color={'light_cancel'} >Voltar</Button>
-                    <Button type='button' color={'light_cancel'} onClick={() => limparForm()} >Novo</Button>
+                    <Button type='button' color={'gray'} >Voltar</Button>
+                    <Button type='button' color={'gray'} onClick={() => limparForm()} >Novo</Button>
                 </div>
                 {veterinario?.veterinarioID!=null?
                     <div>
@@ -225,17 +231,17 @@ export function FormCadVeterinario(props:formCadProps) {
             {addCrmv && 
                 <form className='form_cad_veterinario' onSubmit={addCrmvToVeterinario}>
                     <h2>Cadastrar CRMV</h2>
-                    <span>Numero:</span>
-                    <input type={'text'} name={'numero'} value={crmv?.numero?crmv.numero.toString():""} onChange={inputChangeCrmv}/>
-                    <span>UF: </span>
-                    <input type={'text'} name={'uf'} value={crmv?.uf?crmv.uf.toString():""} onChange={inputChangeCrmv}/>
-                    <span>Area: </span>
-                    <input type={'text'} name={'area'} value={crmv?.area?crmv.area.toString():""} onChange={inputChangeCrmv}/>
-                    <span>Data de Registro: </span>
-                    <input type={'date'} name={'dataRegistro'} value={crmv?.dataRegistro?moment(crmv.dataRegistro).format('yyyy-MM-DD'):""} onChange={inputChangeCrmv}/>
-                    <div>
+                    <Label>Numero:</Label>
+                    <InputText size={'max'} type={'text'} name={'numero'} value={crmv?.numero?crmv.numero.toString():""} onChange={inputChangeCrmv}/>
+                    <Label>UF: </Label>
+                    <InputText size={'max'} type={'text'} name={'uf'} value={crmv?.uf?crmv.uf.toString():""} onChange={inputChangeCrmv}/>
+                    <Label>Area: </Label>
+                    <InputText size={'max'} type={'text'} name={'area'} value={crmv?.area?crmv.area.toString():""} onChange={inputChangeCrmv}/>
+                    <Label>Data de Registro: </Label>
+                    <InputText size={'max'} type={'date'} name={'dataRegistro'} value={crmv?.dataRegistro?moment(crmv.dataRegistro).format('yyyy-MM-DD'):""} onChange={inputChangeCrmv}/>
+                    <div style={{display:'flex', flexDirection:'row', marginTop:'20px'}}> 
                         <Button type='submit'>{indexCrmv>=0?"Alterar":"Adicionar"}</Button>
-                        <Button type='button' color={'light_cancel'} onClick={() => {setCrmv({crmvID:null, numero:"", dataRegistro:null, uf:"", area:""}); setAddCrmv(false); setIndexCrmv(-1);}}>
+                        <Button type='button' color={'gray'} onClick={() => {setCrmv({crmvID:null, numero:"", dataRegistro:null, uf:"", area:""}); setAddCrmv(false); setIndexCrmv(-1);}}>
                             Cancelar</Button>
                     </div>
                 </form>
@@ -246,22 +252,22 @@ export function FormCadVeterinario(props:formCadProps) {
                 <h2>Dados do Veterinário</h2>
                 {veterinario?.veterinarioID != null &&
                     <div className='dados_veterinario_item'>
-                        <span>{veterinario?.nome+" "+veterinario?.sobrenome}</span>
-                         <span>{veterinario.veterinarioID!=null?"Salvo":"Não salvo"}</span>
+                        <Label>{veterinario?.nome+" "+veterinario?.sobrenome}</Label>
+                         <Label>{veterinario.veterinarioID!=null?"Salvo":"Não salvo"}</Label>
                     </div>
                 }
                 <h2>CRMV</h2>
                 {veterinario?.crmvs?.map((crmv, idx) => {return (
                     <div key={idx} className='dados_veterinario_item'>
-                        <span>{crmv.numero}</span>
-                        <span>{crmv.uf}</span>
-                        <span>{crmv.area}</span>
-                        <span>
+                        <Label>{crmv.numero}</Label>
+                        <Label>{crmv.uf}</Label>
+                        <Label>{crmv.area}</Label>
+                        <Label>
                             <MdEdit size={20} style={{marginLeft:10, marginRight:5, cursor:'pointer'}}
                                 onClick={()=>{setCrmv(crmv); setIndexCrmv(idx); setAddCrmv(true);}} />
-                            <MdDeleteOutline size={20} color={'red'} style={{marginLeft:5, marginRight:5, cursor:'pointer'}}
+                            <MdDeleteOutline size={20} color={'gray'} style={{marginLeft:5, marginRight:5, cursor:'pointer'}}
                                 onClick={()=>removerCrmv(crmv)} />
-                        </span>
+                        </Label>
                     </div>
                 )
                 })}

@@ -1,4 +1,5 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
+// @ts-ignore
 import moment from 'moment/min/moment-with-locales';
 import './formDetailVeterinario.css';
 import * as Accordion from '@radix-ui/react-accordion';
@@ -50,9 +51,9 @@ export function FormDetailVeterinario(props: propsFormVeterinario) {
     return (
         <div id='form_veterinario'>
            <div>
-                <Button color={'light_cancel'} type="button"
+                <Button color={'gray'} type="button"
                         onClick={(e) => props.cancelFormClick(e)}> {"Fechar"} </Button>
-                <Button color={'light'} type="button"
+                <Button type="button"
                         onClick={(e) => props.editFormClick(e, veterinario)}> {"Editar"} </Button>
             </div>
             <p><b>{props.veterinarioDetail?.veterinarioID?props.veterinarioDetail.nome.toString()+" "+props.veterinarioDetail.sobrenome.toString():""}</b></p>

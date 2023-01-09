@@ -1,4 +1,5 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
+// @ts-ignore
 import moment from 'moment/min/moment-with-locales';
 import './formDetailResponsavel.css';
 import { Responsavel } from '../../../interfaces/Responsavel';
@@ -50,9 +51,9 @@ export function FormDetailResponsavel(props: propsFormResponsavel) {
     return (
         <div id='form_responsavel'>
             <div>
-                <Button color={'light_cancel'} type="button"
+                <Button color={'gray'} type="button"
                         onClick={(e) => props.cancelFormClick(e)}> {"Fechar"} </Button>
-                <Button color={'light'} type="button"
+                <Button type="button"
                         onClick={(e) => props.editFormClick(e, responsavel)}> {"Editar"} </Button>
             </div>
             <p><b>{props.responsavelDetail?.nome && props.responsavelDetail.sobrenome?props.responsavelDetail.nome.toString()+" "+props.responsavelDetail.sobrenome.toString():""}</b></p>

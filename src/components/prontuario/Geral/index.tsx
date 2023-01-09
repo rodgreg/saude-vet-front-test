@@ -4,17 +4,19 @@ import { Pet } from "../../../interfaces/Pet"
 import { Consulta } from "../../../interfaces/Prontuario";
 import { Responsavel } from "../../../interfaces/Responsavel";
 import { Veterinario } from "../../../interfaces/Veterinario";
+import { ApiProntuario } from "../../../services/ApiProntuario";
 import { AnamneseQuestoes } from "../../utils/AnamneseQuestoes";
 import { Button, TextArea } from "../../utils/HtmlComponents";
 import './geral.css';
 
 interface GeralProps {
-    petProps?:Pet;
+    petProps:Pet|null;
     respProps?:Responsavel;
 }
 
 export function Geral(props:GeralProps) {
 
+    const api = ApiProntuario();
     const [consulta, setConsulta] = useState<Consulta|null>(null);
     const [consultaList, setConsultaList] = useState<Consulta[]>();
     const [showHistConsulta, setShowHistConsulta] = useState<boolean>(true);
@@ -24,15 +26,29 @@ export function Geral(props:GeralProps) {
         setShowHistConsulta(false);
     }
 
-    const findConsultasPet = () => {
-        if(props.petProps!=null) {
-
+    const findConsultasPet = async (petFind:Pet) => {
+        setConsultaList([consultaTeste]);
+        console.log(petFind.petID);
+        if (petFind.petID != null) {
+            let result = await api.listConsultasPet(petFind.petID.valueOf());
+            console.log(result);
+            if (result.status>=200 && result.status<=300) {
+                setConsultaList(result.data);
+            }
+        }
+        let consultaTmp = consultaList?.filter(cons => cons.petC?.petID === petFind.petID)
+        console.log(petFind);
+        if(consultaTmp!=null && consultaTmp.length===1) {
+            setConsultaList(consultaTmp);
         }
     }
 
     useEffect(() => {
-        setConsultaList([consultaTeste]);
-    },[])
+        if(props.petProps!=null) {
+            findConsultasPet(props.petProps);
+        }
+
+    },[props.petProps])
 
     return (
         <div className="container-geral">
@@ -86,13 +102,14 @@ export function Geral(props:GeralProps) {
                         <span>Tamanho: &nbsp;<b>{consulta?.tamanho}</b></span>
                     </div>
                     <span>Queixa do Responsável:</span>
-                    <TextArea rows={3} value={consulta?.relatoResponsavel} />
+                    <TextArea readOnly rows={3} value={consulta?.relatoResponsavel} />
                     <span>Registro de Veterinário:</span>
-                    <TextArea rows={3} value={consulta?.registroGeral} />
+                    <TextArea readOnly rows={3} value={consulta?.registroGeral} />
                     <span style={{marginBottom:0}}><b>Anamnese:</b></span>
                     <AnamneseQuestoes 
                         anamnese={consulta?.anamnese!=null?consulta.anamnese:null}
                         updateAnamnese={(e,newAnamnese) => {if(newAnamnese!=null){setConsulta({...consulta, anamnese:newAnamnese})}}}
+                        construindo={false}
                         />
                 </div>
             }
@@ -102,7 +119,7 @@ export function Geral(props:GeralProps) {
 
 // Teste
 const petToto:Pet = {
-    petID:1,
+    petID:88,
     nome:'Totó',
     cor:'Pardo',
     especie:'Cachorro',
@@ -131,10 +148,8 @@ const consultaTeste:Consulta = {
     tipo:'Clínica Geral',
     dtRegistro:new Date(),
     anamnese:{
-                anamneseID: 1,
                 dtRegistro: new Date(),
                 questoes: [{
-                            questaoID:1,
                             tipo:'text',
                             label:'Qual a queixa?',
                             descricao:'',
@@ -142,7 +157,6 @@ const consultaTeste:Consulta = {
                             resposta:'',
                         },
                         {
-                            questaoID:2,
                             tipo:'date',
                             label:'Quando iniciou?',
                             descricao:'',
@@ -150,7 +164,6 @@ const consultaTeste:Consulta = {
                             resposta:'',
                         },
                         {
-                            questaoID:3,
                             tipo:'select',
                             label:'Realizou terapia?',
                             descricao:'',
@@ -158,7 +171,6 @@ const consultaTeste:Consulta = {
                             resposta:'',
                         },
                         {
-                            questaoID:4,
                             tipo:'select',
                             label:'Realizou terapia?',
                             descricao:'Teste Descrição.',

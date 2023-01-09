@@ -8,7 +8,7 @@ import { Vacinas } from '../Vacinas';
 import './consulta.css';
 
 interface ConsultaProps {
-    petR:Pet_Resp
+    petR?:Pet_Resp
 }
 
 export function Consulta(props:ConsultaProps) {
@@ -24,19 +24,14 @@ export function Consulta(props:ConsultaProps) {
     const selectPet = (e:any) => {
         if(petR == null) {
             setPetR(JSON.parse(e.target.value))
+            setPetExist(true);
         } else {
             setPetR(null);
-        };
-    };
-
-    const getConsultaPet = async () => {
-        if(petR!=null) {
-            setPetExist(true);
         }
     };
 
     useEffect(() => {
-        if(props.petR == null) {
+        if(props.petR?.pet == null) {
             setPetExist(false)
         } else {
             getListPets();
@@ -52,11 +47,9 @@ export function Consulta(props:ConsultaProps) {
                     <p>Selecione o Pet!</p>
                     <select onChange={selectPet} value={petR!=null?JSON.stringify(petR):""}>
                         <option value={""}>Selecione o Pet</option>
-                        <option value={JSON.stringify({pet:{petID:null, nome:"Totó", cor:"", especie:"", fertil:false, genero:"", nascimento:null, pedigree:false, raca:"", dataRegistro:null} ,
+                        <option value={JSON.stringify({pet:{petID:88, nome:"Totó", cor:"", especie:"", fertil:false, genero:"", nascimento:null, pedigree:false, raca:"", dataRegistro:null} ,
                                         responsavel:{responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, enderecos: [], contatos: [],}})}>Totó</option>
                     </select>
-                    <br/>
-                    <button onClick={() => getConsultaPet()}>Escolher</button>
                 </div>
             </div>
         :null}
@@ -79,7 +72,7 @@ export function Consulta(props:ConsultaProps) {
                 </div>
             </div>
             <div className='tab-content'>
-                {selectedTab==='geral'?<Geral />:null}
+                {selectedTab==='geral'?<Geral petProps={petR?.pet?petR.pet:null} />:null}
                 {selectedTab==='vacinas'?<Vacinas />:null}
                 {selectedTab==='internacoes'?<Internacoes />:null}
                 {selectedTab==='cirurgias'?<Cirurgias />:null}
