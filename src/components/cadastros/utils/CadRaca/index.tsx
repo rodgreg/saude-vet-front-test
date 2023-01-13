@@ -1,15 +1,19 @@
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MdDelete, MdEdit } from "react-icons/md";
+import ReactPaginate, { ReactPaginateProps } from "react-paginate";
 import { Especie, Raca } from "../../../../interfaces/Util";
 import { ApiUtil } from "../../../../services/ApiUtil";
-import { InputText, Label, Select, Option, TextArea, Button } from "../../../utils/HtmlComponents";
+import { InputText, Label, Select, Option, Button } from "../../../utils/HtmlComponents";
 
 export function CadRaca() {
 
     const apiUtil = ApiUtil();
+    const paginationRef = useRef<React.Component<ReactPaginateProps, any, any>|null>(null);
+    const [paginationControl, setPaginationControl] = useState({perPage:10, pages:1});
     const [newRaca, setNewRaca] = useState<Raca>({nome:'', especie:{nome:''}})
     const [racaList, setRacaList] = useState<Raca[]>([]);
+    const [racaListPaginate, setRacaListPaginate] = useState<Raca[]>([]);
     const [especieList, setEspecieList] = useState<Especie[]>([]);
 
     const getListEspecies = async() => {
@@ -24,7 +28,10 @@ export function CadRaca() {
         let result = await apiUtil.listRacas();
         if(result.status >=200 && result.status <=300) {
             let arrayListRaca:Raca[] = result.data;
-            setRacaList(arrayListRaca.sort((a,b) => {if(a.nome > b.nome){return 1;} else {return -1;}}));
+            arrayListRaca = arrayListRaca.sort((a,b) => {if(a.nome > b.nome){return 1;} else {return -1;}});
+            setRacaList(arrayListRaca);
+            setRacaListPaginate(arrayListRaca.slice(0,paginationControl.perPage));
+            setPaginationControl({...paginationControl, pages:Math.floor(arrayListRaca.length/paginationControl.perPage)})
         };
     }
 
@@ -35,13 +42,13 @@ export function CadRaca() {
             let result = await apiUtil.saveRaca(tempRaca);
             if (result.status>=200 && result.status<=300) {
                 await getListRacas();
-                setNewRaca({nome:'', especie:{nome:''}});
+                setNewRaca({...newRaca,nome:'', dataRegistro:null , racaID:null});
             };
         } else {
             let result = await apiUtil.updateRaca(newRaca);
             if (result.status>=200 && result.status<=300) {
                 await getListRacas();
-                setNewRaca({nome:'', especie:{nome:''}});
+                setNewRaca({...newRaca,nome:'', dataRegistro:null , racaID:null});
             };
         };
     }
@@ -63,6 +70,35 @@ export function CadRaca() {
         await getListRacas();
     }
 
+    const handlePageClick = (event:any) => { 
+        let page = event.selected;
+      
+        let start = Math.floor(paginationControl.perPage*page);
+        if(start > racaList.length) {
+          start = 0;
+        };
+      
+        let finish = Number(start)+Number(paginationControl.perPage);
+        if(finish > racaList.length) {
+          finish = racaList.length;
+        };
+      
+        let racaPage:Raca[] = racaList.slice(start,finish);
+        setRacaListPaginate(racaPage);
+    }
+
+    const filterPerEspecie = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        paginationRef.current?.setState({selected:0});
+        if(e.target.value === '') {
+            setRacaListPaginate(racaList.slice(0,paginationControl.perPage));
+            setPaginationControl({...paginationControl, pages:Math.floor(racaList.length/paginationControl.perPage)})
+        } else {
+            let racaListFiltered = racaList.filter(raca => raca.especie.especieID == Number(e.target.value))
+            setRacaListPaginate(racaListFiltered);
+            setPaginationControl({...paginationControl, pages:Math.floor(racaListFiltered.length/paginationControl.perPage)})
+        }
+    }
+
     useEffect(() => {
         getListEspecies();
         getListRacas();
@@ -70,7 +106,7 @@ export function CadRaca() {
     
     return (
         <div>
-            <h2>Cadastro de Raças</h2>
+            <h5>Cadastro de Raças</h5>
             <form onSubmit={saveNewRaca}>
                     <Label htmlFor="nome">Nome</Label> <br/>
                     <InputText name="nome" id="nome" required onChange={inputChange} value={newRaca.nome} /><br/>
@@ -86,6 +122,25 @@ export function CadRaca() {
                         <Button type="button" size={'small'} color={'gray'} onClick={() => setNewRaca({nome:'', especie:{nome:''}})}>Limpar</Button>
                     </div>
                 </form>
+                <div style={{display:'flex', margin:'10px 0px', alignItems:'center', columnGap:5}}>
+                    <span><b>Filtro: </b></span>
+                    <Select name="filtro" onChange={filterPerEspecie} defaultValue={''} >
+                        <Option key={-1} value={''}>Selecione</Option>
+                        {especieList.map((esp,idx) => (
+                            <Option key={idx} value={esp.especieID?.valueOf()}>{esp.nome}</Option>
+                        ))} 
+                    </Select>
+                    <ReactPaginate
+                          ref={paginationRef}
+                          breakLabel={'...'}
+                          previousLabel={'<<'}
+                          nextLabel={'>>'}
+                          pageCount={paginationControl.pages}
+                          onPageChange={handlePageClick}
+                          containerClassName={'pagination'}
+                          activeClassName={'active'}
+                      />
+                </div>
                 <table style={{tableLayout:'fixed', width:'60%'}}>
                     <thead>
                         <tr style={{textAlign:'center'}}>
@@ -96,7 +151,7 @@ export function CadRaca() {
                         </tr>
                     </thead>
                     <tbody>
-                        {racaList.map((raca,idx) => {
+                        {racaListPaginate.map((raca,idx) => {
                             return (
                                 <tr key={idx}>
                                     <td>

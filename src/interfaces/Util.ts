@@ -1,30 +1,30 @@
 export interface Especie {
-    especieID?:number;
+    especieID?:number|null;
     nome:string;
     caracteristica?:string;
-    dataRegistro?:Date;
+    dataRegistro?:Date|null;
 }
 
 export interface Raca {
-    racaID?:number;
+    racaID?:number|null;
     nome:string;
     especie:Especie;
-    dataRegistro?:Date;
+    dataRegistro?:Date|null;
 }
 
 export interface Medicamento {
-    medicamentoID?:number;
+    medicamentoID?:number|null;
     nome:string;
     descricao:string;
     posologia:string;
     indicacao:string;
-    dataRegistro?:Date;
+    dataRegistro?:Date|null;
 }
 
 export interface Patologia {
-    patologiaID:number;
+    patologiaID:number|null;
     nome:string;
     codigo:string;
     descricao:string;
-    dataRegistro?:Date;
+    dataRegistro?:Date|null;
 }

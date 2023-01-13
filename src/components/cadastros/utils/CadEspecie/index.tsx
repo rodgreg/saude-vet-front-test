@@ -1,13 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { Especie } from "../../../../interfaces/Util";
-import { Button, InputText, Label, TextArea } from "../../../utils/HtmlComponents";
+import { Button, InputText, Label, Select, TextArea } from "../../../utils/HtmlComponents";
 import { ApiUtil } from "../../../../services/ApiUtil";
 import { MdDelete, MdEdit } from "react-icons/md";
 import moment from "moment";
+import ReactPaginate, { ReactPaginateProps } from "react-paginate";
 
 export function CadEspecie ()  {
     
     const apiUtil = ApiUtil();
+    const paginationRef = useRef<React.Component<ReactPaginateProps, any, any>|null>(null);
+    const [paginationControl, setPaginationControl] = useState({perPage:10, pages:1});
+    const [especieListPaginate, setEspecieListPaginate] = useState<Especie[]>([]);
     const [newEspecie, setNewEspecie] = useState<Especie>({nome:"", caracteristica:""});
     const [especieList, setEspecieList] = useState<Especie[]>([]);
     
@@ -15,7 +19,10 @@ export function CadEspecie ()  {
         let result = await apiUtil.listEspecies();
         if(result.status >=200 && result.status <=300) {
             let arrayListEspecie:Especie[] = result.data;
-            setEspecieList(arrayListEspecie.sort((a,b) => {if(a.nome > b.nome){return 1;} else {return -1;}}));
+            arrayListEspecie = arrayListEspecie.sort((a,b) => {if(a.nome > b.nome){return 1;} else {return -1;}});
+            setEspecieList(arrayListEspecie);
+            setEspecieListPaginate(arrayListEspecie.slice(0,paginationControl.perPage))
+            setPaginationControl({...paginationControl, pages:Math.floor(arrayListEspecie.length/paginationControl.perPage)})
         };
     }
 
@@ -50,13 +57,30 @@ export function CadEspecie ()  {
         await getListEspecies();
     }
 
+    const handlePageClick = (event:any) => { 
+        let page = event.selected;
+      
+        let start = Math.floor(paginationControl.perPage*page);
+        if(start > especieList.length) {
+          start = 0;
+        };
+      
+        let finish = Number(start)+Number(paginationControl.perPage);
+        if(finish > especieList.length) {
+          finish = especieList.length;
+        };
+      
+        let racaPage:Especie[] = especieList.slice(start,finish);
+        setEspecieListPaginate(racaPage);
+    };
+
     useEffect(() => {
         getListEspecies();
     },[])
 
     return (
         <div>
-            <h2>Cadastro de Espécies</h2>
+            <h5>Cadastro de Espécies</h5>
                 <form onSubmit={saveNewEspecie}>
                     <Label htmlFor="nome">Nome</Label> <br/>
                     <InputText name="nome" id="nome" required onChange={inputChange} value={newEspecie.nome} /><br/>
@@ -69,6 +93,18 @@ export function CadEspecie ()  {
                         <Button type="button" size={'small'} color={'gray'} onClick={() => setNewEspecie({nome:'', caracteristica:''})}>Limpar</Button>
                     </div>
                 </form>
+                <div style={{display:'flex', margin:'10px 0px', alignItems:'center', columnGap:5}}>
+                    <ReactPaginate
+                          ref={paginationRef}
+                          breakLabel={'...'}
+                          previousLabel={'<<'}
+                          nextLabel={'>>'}
+                          pageCount={paginationControl.pages}
+                          onPageChange={handlePageClick}
+                          containerClassName={'pagination'}
+                          activeClassName={'active'}
+                      />
+                </div>
                 <table style={{tableLayout:'fixed', width:'60%'}}>
                     <thead>
                         <tr style={{textAlign:'center'}}>
@@ -78,7 +114,7 @@ export function CadEspecie ()  {
                         </tr>
                     </thead>
                     <tbody>
-                        {especieList.map((especie,idx) => {
+                        {especieListPaginate.map((especie,idx) => {
                             return (
                                 <tr key={idx}>
                                     <td>

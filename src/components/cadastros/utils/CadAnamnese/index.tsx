@@ -138,7 +138,7 @@ export function CadAnamnese() {
                     <InputText size={'medium'} value={newAnamn?.titulo} id={'titulo'} name={'titulo'} onChange={inputChangeAnamnese}/><br/>
                     <div style={{display:'flex'}}>
                         <Button size={'small'} color={'default'} type='submit' >Salvar</Button>
-                        <Button size={'small'} color={'gray'} type='button' onClick={() => { setNewAnamn({titulo:"", dtRegistro:new Date(), questoes:[]}); setShowForm(false); }}>Cancelar</Button>
+                        {!addQuestion && <Button size={'small'} color={'gray'} type='button' onClick={() => { setNewAnamn({titulo:"", dtRegistro:new Date(), questoes:[]}); setShowForm(false); }}>Cancelar</Button>}
                         <Button size={'small'} color={addQuestion?'gray':'default'} type='button' onClick={() => setAddQuestion(!addQuestion)}>{addQuestion?'Cancelar':'Adicionar Pergunta'}</Button>
                         {addQuestion && <Button size={'small'} type='button' onClick={() => addQuestao()}><MdAdd size={19} /></Button>}
                     </div>

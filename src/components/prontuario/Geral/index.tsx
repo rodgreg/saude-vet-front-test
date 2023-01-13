@@ -18,7 +18,7 @@ export function Geral(props:GeralProps) {
 
     const api = ApiProntuario();
     const [consulta, setConsulta] = useState<Consulta|null>(null);
-    const [consultaList, setConsultaList] = useState<Consulta[]>();
+    const [consultaList, setConsultaList] = useState<Consulta[]>([]);
     const [showHistConsulta, setShowHistConsulta] = useState<boolean>(true);
 
     const visualizarConsulta = (consult:Consulta) => {
@@ -28,16 +28,13 @@ export function Geral(props:GeralProps) {
 
     const findConsultasPet = async (petFind:Pet) => {
         setConsultaList([consultaTeste]);
-        console.log(petFind.petID);
         if (petFind.petID != null) {
             let result = await api.listConsultasPet(petFind.petID.valueOf());
-            console.log(result);
             if (result.status>=200 && result.status<=300) {
                 setConsultaList(result.data);
             }
         }
         let consultaTmp = consultaList?.filter(cons => cons.petC?.petID === petFind.petID)
-        console.log(petFind);
         if(consultaTmp!=null && consultaTmp.length===1) {
             setConsultaList(consultaTmp);
         }
@@ -45,7 +42,12 @@ export function Geral(props:GeralProps) {
 
     useEffect(() => {
         if(props.petProps!=null) {
-            findConsultasPet(props.petProps);
+            console.log(consulta);
+            if(consulta != null) {
+                setShowHistConsulta(false);
+            } else {
+                findConsultasPet(props.petProps);
+            }
         }
 
     },[props.petProps])
@@ -89,7 +91,7 @@ export function Geral(props:GeralProps) {
                 </div>
                 :
                 <div className="consulta-detail-container">
-                    <Button onClick={() => setShowHistConsulta(true)}>Voltar</Button>
+                    <Button onClick={() => {setShowHistConsulta(true);setConsulta(null)}}>Voltar</Button>
                     <br/>
                     <span>Tipo de Consulta:&nbsp;
                         <b>{consulta!=null?consulta.tipo:""}</b></span>
