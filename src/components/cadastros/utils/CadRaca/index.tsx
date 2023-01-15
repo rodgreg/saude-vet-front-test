@@ -15,6 +15,7 @@ export function CadRaca() {
     const [racaList, setRacaList] = useState<Raca[]>([]);
     const [racaListPaginate, setRacaListPaginate] = useState<Raca[]>([]);
     const [especieList, setEspecieList] = useState<Especie[]>([]);
+    const [cadOpen, setCadOpen] = useState<boolean>(false);
 
     const getListEspecies = async() => {
         let result = await apiUtil.listEspecies();
@@ -31,7 +32,7 @@ export function CadRaca() {
             arrayListRaca = arrayListRaca.sort((a,b) => {if(a.nome > b.nome){return 1;} else {return -1;}});
             setRacaList(arrayListRaca);
             setRacaListPaginate(arrayListRaca.slice(0,paginationControl.perPage));
-            setPaginationControl({...paginationControl, pages:Math.floor(arrayListRaca.length/paginationControl.perPage)})
+            setPaginationControl({...paginationControl, pages:Math.ceil(arrayListRaca.length/paginationControl.perPage)})
         };
     }
 
@@ -73,7 +74,7 @@ export function CadRaca() {
     const handlePageClick = (event:any) => { 
         let page = event.selected;
       
-        let start = Math.floor(paginationControl.perPage*page);
+        let start = Math.ceil(paginationControl.perPage*page);
         if(start > racaList.length) {
           start = 0;
         };
@@ -91,11 +92,11 @@ export function CadRaca() {
         paginationRef.current?.setState({selected:0});
         if(e.target.value === '') {
             setRacaListPaginate(racaList.slice(0,paginationControl.perPage));
-            setPaginationControl({...paginationControl, pages:Math.floor(racaList.length/paginationControl.perPage)})
+            setPaginationControl({...paginationControl, pages:Math.ceil(racaList.length/paginationControl.perPage)})
         } else {
             let racaListFiltered = racaList.filter(raca => raca.especie.especieID == Number(e.target.value))
             setRacaListPaginate(racaListFiltered);
-            setPaginationControl({...paginationControl, pages:Math.floor(racaListFiltered.length/paginationControl.perPage)})
+            setPaginationControl({...paginationControl, pages:Math.ceil(racaListFiltered.length/paginationControl.perPage)})
         }
     }
 
@@ -107,6 +108,7 @@ export function CadRaca() {
     return (
         <div>
             <h5>Cadastro de Raças</h5>
+            {cadOpen? 
             <form onSubmit={saveNewRaca}>
                     <Label htmlFor="nome">Nome</Label> <br/>
                     <InputText name="nome" id="nome" required onChange={inputChange} value={newRaca.nome} /><br/>
@@ -120,8 +122,11 @@ export function CadRaca() {
                     <div style={{display:'flex', margin:'10px 0px'}}>
                         <Button type="submit" size={'small'}>Salvar</Button>
                         <Button type="button" size={'small'} color={'gray'} onClick={() => setNewRaca({nome:'', especie:{nome:''}})}>Limpar</Button>
+                        <Button type="button" size={'small'} color={'gray'} onClick={() => {setNewRaca({nome:'', especie:{nome:''}});setCadOpen(false)}}>Cancelar</Button>
                     </div>
                 </form>
+                :
+                <>
                 <div style={{display:'flex', margin:'10px 0px', alignItems:'center', columnGap:5}}>
                     <span><b>Filtro: </b></span>
                     <Select name="filtro" onChange={filterPerEspecie} defaultValue={''} >
@@ -140,6 +145,7 @@ export function CadRaca() {
                           containerClassName={'pagination'}
                           activeClassName={'active'}
                       />
+                    <Button size={'small'} onClick={() => setCadOpen(true)}>Novo</Button>
                 </div>
                 <table style={{tableLayout:'fixed', width:'60%'}}>
                     <thead>
@@ -155,9 +161,9 @@ export function CadRaca() {
                             return (
                                 <tr key={idx}>
                                     <td>
-                                        <MdEdit onClick={() => {setNewRaca(raca);}}/>
+                                        <MdEdit onClick={() => {setNewRaca(raca);setCadOpen(true)}} style={{cursor:'pointer'}}/>
                                         &nbsp;
-                                        <MdDelete onClick={() => {deleteRaca(Number(raca.racaID)); setNewRaca({nome:'', especie:{nome:''}})}} />
+                                        <MdDelete onClick={() => {deleteRaca(Number(raca.racaID)); setNewRaca({nome:'', especie:{nome:''}})}} style={{cursor:'pointer'}}/>
                                     </td>
                                     <td>{raca.nome}</td>
                                     <td>{raca.especie.nome}</td>
@@ -167,6 +173,7 @@ export function CadRaca() {
                         })}
                     </tbody>
                 </table>
+                </>}
         </div>
     )
 }

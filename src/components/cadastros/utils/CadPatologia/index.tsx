@@ -14,6 +14,7 @@ export function CadPatologia() {
     const [patologiaListPaginate, setPatologiaListPaginate] = useState<Patologia[]>([]);
     const [newPatologia, setNewPatologia] = useState<Patologia>({nome:'', codigo:'', descricao:'', dataRegistro:null, patologiaID:null});
     const [patologiaList, setPatologiaList] = useState<Patologia[]>([]);
+    const [cadOpen, setCadOpen] = useState<boolean>(false);
 
     const getListPatologia = async () => {
         let result = await apiUtil.listPatologias();
@@ -59,7 +60,7 @@ export function CadPatologia() {
     const handlePageClick = (event:any) => { 
         let page = event.selected;
       
-        let start = Math.floor(paginationControl.perPage*page);
+        let start = Math.ceil(paginationControl.perPage*page);
         if(start > patologiaList.length) {
           start = 0;
         };
@@ -80,6 +81,7 @@ export function CadPatologia() {
     return (
         <div>
             <h5>Cadastro de Patologias</h5>
+            {cadOpen? 
             <form onSubmit={saveNewPatologia}>
                 <Label htmlFor="nome">Nome</Label><br/>
                 <InputText id="nome" name="nome" required value={newPatologia.nome} onChange={inputChange} /><br/>
@@ -90,8 +92,11 @@ export function CadPatologia() {
                 <div style={{display:'flex'}}>
                     <Button type="submit" size={'small'}>Salvar</Button>
                     <Button type="button" size={'small'} color={'gray'} onClick={() => setNewPatologia({nome:'', codigo:'', descricao:'', dataRegistro:null, patologiaID:null})}>Limpar</Button>
+                    <Button type="button" size={'small'} color={'gray'} onClick={() => {setNewPatologia({nome:'', codigo:'', descricao:'', dataRegistro:null, patologiaID:null});setCadOpen(false)}}>Cancelar</Button>
                 </div>
             </form>
+            :
+            <>
             <div style={{display:'flex', margin:'10px 0px', alignItems:'center', columnGap:5}}>
                 <ReactPaginate
                         ref={paginationRef}
@@ -102,7 +107,8 @@ export function CadPatologia() {
                         onPageChange={handlePageClick}
                         containerClassName={'pagination'}
                         activeClassName={'active'}
-                    />
+                />
+                <Button size={'small'} onClick={() => setCadOpen(true)}>Novo</Button>
             </div>
             <table style={{tableLayout:'fixed', width:'60%'}}>
                 <thead>
@@ -118,9 +124,9 @@ export function CadPatologia() {
                         return (
                             <tr key={idx}>
                                 <td>
-                                    <MdEdit onClick={() => {setNewPatologia(patologia)}}/>
+                                    <MdEdit onClick={() => {setNewPatologia(patologia);setCadOpen(true)}} style={{cursor:'pointer'}}/>
                                     &nbsp;
-                                    <MdDelete onClick={() => {deletePatologia(Number(patologia.patologiaID)); setNewPatologia({nome:'', codigo:'', descricao:'', dataRegistro:null, patologiaID:null})}} />
+                                    <MdDelete onClick={() => {deletePatologia(Number(patologia.patologiaID)); setNewPatologia({nome:'', codigo:'', descricao:'', dataRegistro:null, patologiaID:null})}} style={{cursor:'pointer'}}/>
                                 </td>
                                 <td>{patologia.nome}</td>
                                 <td>{patologia.codigo}</td>
@@ -130,6 +136,7 @@ export function CadPatologia() {
                     })}
                 </tbody>
             </table>
+            </>}
         </div>
     )
 }

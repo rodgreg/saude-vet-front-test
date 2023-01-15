@@ -49,7 +49,7 @@ export function FormDetailPet(props: propsFormResponsavel) {
 
     return (
         <div id='form_pet'>
-            <div>
+            <div style={{display:'flex'}}>
                 <Button color={'gray'} type="button"
                         onClick={(e) => props.cancelFormClick(e)}> {"Fechar"} </Button>
                 <Button type="button"

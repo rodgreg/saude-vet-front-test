@@ -50,7 +50,7 @@ export function FormDetailVeterinario(props: propsFormVeterinario) {
 
     return (
         <div id='form_veterinario'>
-           <div>
+           <div style={{display:'flex'}}>
                 <Button color={'gray'} type="button"
                         onClick={(e) => props.cancelFormClick(e)}> {"Fechar"} </Button>
                 <Button type="button"

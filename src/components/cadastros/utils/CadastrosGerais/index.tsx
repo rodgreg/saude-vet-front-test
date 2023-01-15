@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { MdAssignment, MdHealthAndSafety, MdMedication, MdPets } from 'react-icons/md';
+import { TbVaccine } from 'react-icons/tb';
 import { CadAnamnese } from '../CadAnamnese';
 import { CadEspecie } from '../CadEspecie';
 import { CadMedicamento } from '../CadMedicamento';
 import { CadPatologia } from '../CadPatologia';
 import { CadRaca } from '../CadRaca';
+import { CadVacina } from '../CadVacina';
 import './cadastrosGerais.css';
 
 interface propsCadSelected {
@@ -24,6 +26,9 @@ const CadastroSelected = (props:propsCadSelected) => {
             break;
         case "cadMedicamento":
             return <CadMedicamento />
+            break;
+        case "cadVacina":
+            return <CadVacina />
             break;
         case "cadAnamnese":
             return <CadAnamnese />
@@ -49,6 +54,8 @@ export function CadastrosGerais () {
                         onClick={() => setPageCad('cadPatologia')}><MdHealthAndSafety size={18} />Patologias</button>
                 <button className='button-select-type-cadastro'
                         onClick={() => setPageCad('cadMedicamento')}><MdMedication size={18} />Medicamentos</button>
+                <button className='button-select-type-cadastro'
+                        onClick={() => setPageCad('cadVacina')}><TbVaccine size={18} />Vacinas</button>
                 <button className='button-select-type-cadastro'
                         onClick={() => setPageCad('cadAnamnese')}><MdAssignment size={18}  />Anamneses</button>
             </div>

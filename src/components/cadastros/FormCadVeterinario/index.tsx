@@ -252,22 +252,22 @@ export function FormCadVeterinario(props:formCadProps) {
                 <h2>Dados do Veterinário</h2>
                 {veterinario?.veterinarioID != null &&
                     <div className='dados_veterinario_item'>
-                        <Label>{veterinario?.nome+" "+veterinario?.sobrenome}</Label>
-                         <Label>{veterinario.veterinarioID!=null?"Salvo":"Não salvo"}</Label>
+                        <span>{veterinario?.nome+" "+veterinario?.sobrenome}</span>
+                         <span>{veterinario.veterinarioID!=null?"Salvo":"Não salvo"}</span>
                     </div>
                 }
                 <h2>CRMV</h2>
                 {veterinario?.crmvs?.map((crmv, idx) => {return (
                     <div key={idx} className='dados_veterinario_item'>
-                        <Label>{crmv.numero}</Label>
-                        <Label>{crmv.uf}</Label>
-                        <Label>{crmv.area}</Label>
-                        <Label>
+                        <span>{crmv.numero}</span>
+                        <span>{crmv.uf}</span>
+                        <span>{crmv.area}</span>
+                        <span>
                             <MdEdit size={20} style={{marginLeft:10, marginRight:5, cursor:'pointer'}}
                                 onClick={()=>{setCrmv(crmv); setIndexCrmv(idx); setAddCrmv(true);}} />
                             <MdDeleteOutline size={20} color={'gray'} style={{marginLeft:5, marginRight:5, cursor:'pointer'}}
                                 onClick={()=>removerCrmv(crmv)} />
-                        </Label>
+                        </span>
                     </div>
                 )
                 })}

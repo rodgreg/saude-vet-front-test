@@ -50,7 +50,7 @@ export function FormDetailResponsavel(props: propsFormResponsavel) {
 
     return (
         <div id='form_responsavel'>
-            <div>
+            <div style={{display:'flex'}}>
                 <Button color={'gray'} type="button"
                         onClick={(e) => props.cancelFormClick(e)}> {"Fechar"} </Button>
                 <Button type="button"
