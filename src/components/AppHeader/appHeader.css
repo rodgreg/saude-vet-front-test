@@ -103,3 +103,8 @@ a {
         font-size: 18pt;
     }
 }
+
+.home-button:hover {
+    background-color: var(--bg-button-default-hover);
+
+}

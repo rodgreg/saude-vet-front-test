@@ -7,14 +7,15 @@ import { Veterinario } from "../../../interfaces/Veterinario";
 import { ApiProntuario } from "../../../services/ApiProntuario";
 import { AnamneseQuestoes } from "../../utils/AnamneseQuestoes";
 import { Button, TextArea } from "../../utils/HtmlComponents";
-import './geral.css';
+import { HiEye, HiPrinter } from "react-icons/hi";
+import './consulta.css';
 
-interface GeralProps {
+interface ConsultaProps {
     petProps:Pet|null;
     respProps?:Responsavel;
 }
 
-export function Geral(props:GeralProps) {
+export function Consultas(props:ConsultaProps) {
 
     const api = ApiProntuario();
     const [consulta, setConsulta] = useState<Consulta|null>(null);
@@ -27,7 +28,6 @@ export function Geral(props:GeralProps) {
     }
 
     const findConsultasPet = async (petFind:Pet) => {
-        setConsultaList([consultaTeste]);
         if (petFind.petID != null) {
             let result = await api.listConsultasPet(petFind.petID.valueOf());
             if (result.status>=200 && result.status<=300) {
@@ -42,7 +42,6 @@ export function Geral(props:GeralProps) {
 
     useEffect(() => {
         if(props.petProps!=null) {
-            console.log(consulta);
             if(consulta != null) {
                 setShowHistConsulta(false);
             } else {
@@ -75,8 +74,8 @@ export function Geral(props:GeralProps) {
                                 {consultaList?.map((consulta,idx) => {
                                                 return (<tr key={idx}>
                                                             <td>    
-                                                                <button >Imprimir</button>&nbsp;
-                                                                <button onClick={() => visualizarConsulta(consulta)}>Visualizar</button>
+                                                                <button ><HiPrinter /></button>&nbsp;
+                                                                <button onClick={() => visualizarConsulta(consulta)}><HiEye /></button>
                                                             </td>
                                                             <td>{moment(consulta.dtRegistro).format('DD/MM/yyyy')}</td>
                                                             <td>{consulta.veterinarioC?.nome}</td>

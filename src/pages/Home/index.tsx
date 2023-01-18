@@ -1,4 +1,4 @@
-import { AppHeader } from "../../components/cadastros/AppHeader";
+import { AppHeader } from "../../components/AppHeader";
 import { styled } from "@stitches/react";
 import { MdAssignment, MdAssignmentInd, MdEvent, MdPets, MdEqualizer, MdDarkMode, MdLightMode, MdHome, MdAssessment, MdAssignmentLate, MdAssignmentReturn, MdAssignmentTurnedIn } from "react-icons/md";
 import "./home.css";
@@ -11,7 +11,7 @@ import { Pet, Pet_Resp } from "../../interfaces/Pet";
 import { Veterinario } from "../../interfaces/Veterinario";
 import { FormCadVeterinario } from "../../components/cadastros/FormCadVeterinario";
 import { FormCadPet } from "../../components/cadastros/FormCadPet";
-import { Consulta } from "../../components/prontuario/Consulta";
+import { Prontuario } from "../../components/prontuario/Prontuario";
 import { CadastrosGerais } from "../../components/cadastros/utils/CadastrosGerais"
 
 const Div = styled('div', {
@@ -58,7 +58,7 @@ const Principal = (props:principalProps) => {
             break;
 
         case "consulta":
-            return <Consulta />
+            return <Prontuario />
             break;
 
         case "loading":

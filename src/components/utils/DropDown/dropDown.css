@@ -9,7 +9,9 @@
 
 .dropdown-label {
     display: flex;
-    flex-direction: row;
+    height: fit-content;
+    width: fit-content;
+    padding: 5px;
     column-gap: 5px;
     align-items: center;
     justify-content: center;
@@ -21,6 +23,7 @@
 .dropdown-label:hover {
     text-decoration: underline;
     cursor: pointer;
+    background-color: var(--bg-button-default-hover);
 }
 
 .dropdown-select {
@@ -31,25 +34,45 @@
     display: flex;
     flex-direction: column;
     position: fixed;
-    background-color: var(--bg-header);
     border: none;
-    border-radius: 0px 0px 5px 5px;
-    top: 40px;
+    background-color: var(--bg-header);
+    border-radius: 5px 5px 5px 5px;
+    top: 55px;
     list-style-type: none;
     padding: 0px;
-    animation: showMenu 0.2s ease-out;
+    animation: showMenu 0.15s ease-out;
+    box-shadow: 0px 2px 10px var(--border-color);
+}
+
+.pointer-dropdown-select-active {
+    height: 15px;
+	width: 15px;
+	background:var(--bg-header);
+    top: -7px;
+	transform: rotate(-135deg);
+	border-radius: 0 0 4px 0;
+	position: absolute;
+	left: calc(0.5vw + 40px);
+    z-index: -1;
 }
 
 .dropdown-select-active li {
     font-weight: bold;
     height: 100%;
     width: 100%;
-    padding: 8px;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.dropdown-select-active li:nth-child(2) {
+    border-radius: 5px 5px 0px 0px;
 }
 
 .dropdown-select-active li:hover {
     background-color: var(--bg-checked);
 }
+
+
 
 .dropdown-select-active li:last-child {
     border-radius: 0px 0px 5px 5px;

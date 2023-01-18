@@ -61,9 +61,15 @@ export const Button = styled('button', {
 })
 
 export const LinkButton = styled('button', {
+    display: 'flex',
     background: 'none',
+    height: 'fit-content',
+    width: 'fit-content',
     border: 'none',
+    alignItems: 'center',
+    justifyContent: 'center',
     padding: '5px',
+    margin: '0px 5px 0px 5px',
     cursor: 'pointer',
     '&:hover': {
         textDecoration: 'underline',

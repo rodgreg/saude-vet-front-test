@@ -51,12 +51,14 @@ export function CadAnamnese() {
                     let result:AxiosResponse<any,any> = await api.saveTemplateAnamnese(newAnamn);
                     if(result != null && result?.status >= 200 && result?.status <= 300) {
                         setNewAnamn({titulo:"", dtRegistro:new Date(), questoes:[]});
+                        setShowForm(false);
                         await listAnamnese();
                     };
                 } else {
                     let result:AxiosResponse<any,any> = await api.saveTemplateAnamnese(newAnamn);
                     if(result != null && result?.status >= 200 && result?.status <= 300) {
                         setNewAnamn({titulo:"", dtRegistro:new Date(), questoes:[]});
+                        setShowForm(false);
                         await listAnamnese();
                     };
                 };

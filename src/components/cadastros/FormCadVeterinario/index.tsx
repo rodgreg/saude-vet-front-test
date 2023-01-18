@@ -219,7 +219,7 @@ export function FormCadVeterinario(props:formCadProps) {
                                     <Button type='button' color={'red'} 
                                             onClick={() => removeVeterinario()}>Remover</Button>:""}
                     <Button type='button' color={'gray'} >Voltar</Button>
-                    <Button type='button' color={'gray'} onClick={() => limparForm()} >Novo</Button>
+                    <Button type='button' color={'gray'} onClick={() => limparForm()} >Limpar</Button>
                 </div>
                 {veterinario?.veterinarioID!=null?
                     <div>

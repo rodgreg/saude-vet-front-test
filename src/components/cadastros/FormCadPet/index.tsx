@@ -1,12 +1,14 @@
 import './formCadPet.css';
 // @ts-ignore
 import moment from "moment/min/moment-with-locales";
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Label, Select, Option, InputText, InputDate } from '../../utils/HtmlComponents';
 import { Pet, Pet_Resp } from '../../../interfaces/Pet';
 import { ApiRegistro } from '../../../services/ApiRegistro';
 import { AxiosResponse } from 'axios';
 import { Responsavel } from '../../../interfaces/Responsavel';
+import { Especie, Raca } from '../../../interfaces/Util';
+import { ApiUtil } from '../../../services/ApiUtil';
 
 
 interface formCadProps {
@@ -16,11 +18,15 @@ interface formCadProps {
 export function FormCadPet(props:formCadProps) {
 
     const apiRegistro = ApiRegistro();
+    const apiUtil = ApiUtil();
     const [petR,setPetR] = useState<Pet_Resp>({pet:{petID:null ,nome:"", genero:"", especie:"", raca:"", cor:"", nascimento:null, fertil:false, pedigree:false},
                                                 responsavel:{responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, enderecos: [], contatos: [],}});
     const [pet, setPet] = useState<Pet>({petID:null ,nome:"", genero:"", especie:"", raca:"", cor:"", nascimento:null, fertil:false, pedigree:false});
     const [responsavel, setResponsavel] = useState<Omit<Responsavel,"pets">>({responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, enderecos: [], contatos: [],});
     const [responsavelList, setResponsavelList] = useState<Omit<Responsavel,"pets">[]>([]);
+    const [listEspecie, setListEspecie] = useState<Especie[]>([]);
+    const [listRaca, setListRaca] = useState<Raca[]>([]);
+    const [listRacaFiltered, setListRacaFiltered] = useState<Raca[]>([]);
 
     const listResponsaveis = async () => {
         var list:any = await apiRegistro.listResponsaveis();
@@ -112,9 +118,13 @@ export function FormCadPet(props:formCadProps) {
         };
     };
 
-    const selectItemPet = (select:any) => {
+    const selectItemPet = (select:React.ChangeEvent<HTMLSelectElement>) => {
         select.target.classList.remove("shake");
-        setPet({...pet,[select.target.name]:select.target[select.target.selectedIndex].value})
+        setPet({...pet,[select.target.name]:select.target.value});
+        if(select.target.name === 'especie') {
+            let filteredRaca = listRaca.filter(raca => raca.especie.nome === select.target.value)
+            setListRacaFiltered(filteredRaca);
+        }
     };
 
     const limparForm = () => {
@@ -150,6 +160,19 @@ export function FormCadPet(props:formCadProps) {
         return mask;
     };
 
+    const listUtilForm = async () => {
+        let espResult:AxiosResponse = await apiUtil.listEspecies();
+        if (espResult.status >=200 && espResult.status <=300) {
+            setListEspecie(espResult.data);
+        }
+        let racaResult:AxiosResponse = await apiUtil.listRacas();
+        if (racaResult.status >=200 && racaResult.status <=300) {
+            setListRaca(racaResult.data);
+        }
+    };
+
+
+
     useEffect(() => {
         moment.locale('pt-br');
         if (props.petForm!=null) {
@@ -163,6 +186,7 @@ export function FormCadPet(props:formCadProps) {
             });
         }
         listResponsaveis();
+        listUtilForm();
     },[])
 
     return (
@@ -195,19 +219,22 @@ export function FormCadPet(props:formCadProps) {
                             <Label htmlFor='especie'>Espécie: </Label>
                             <Select size={'big'} id='especie' onChange={selectItemPet} name={'especie'} value={pet?.especie?pet.especie.toString():""}>
                                 <Option value={""}>Selecione</Option>
-                                <Option value={"Cachorro"}>Cachorro</Option>
-                                <Option value={"Gato"}>Gato</Option>
+                                {listEspecie.map((especie,idx) => {
+                                    return (
+                                        <Option key={idx} value={especie.nome}>{especie.nome}</Option>
+                                    )
+                                })}
                             </Select>
                         </div>
                         <div style={{display:'flex', flexDirection:'column'}}>
                             <Label htmlFor='raca' size={'medium'}>Raça: </Label>
                             <Select size={'big'} id='raca' onChange={selectItemPet} name={'raca'} value={pet?.raca?pet.raca.toString():""}>
                                 <Option value={""}>Selecione</Option>
-                                <Option value={"Vira-Lata"}>Vira-Lata</Option>
-                                <Option value={"Labrador"}>Labrador</Option>
-                                <Option value={"BullTerrie"}>Bullterrie</Option>
-                                <Option value={"Teste"}>Teste</Option>
-                                <Option value={"Sei não"}>Sei não</Option>
+                                {listRacaFiltered.map((raca,idx) => {
+                                    return (
+                                        <Option key={idx} value={raca.nome}>{raca.nome}</Option>
+                                    )
+                                })}
                             </Select>
                         </div>
                     </div>
