@@ -46,15 +46,6 @@ export function Prontuario(props:ProntuarioProps) {
                             return 1;
                         }
                         if (fa === fb) {
-                        let la = a?.pet.nome?.toLowerCase(),
-                            lb = b?.pet.nome?.toLowerCase();
-                        
-                        if (la < lb) {
-                            return -1;
-                        }
-                        if (la > lb) {
-                            return 1;
-                        }
                         return 0;
                         }
                         return 0;
@@ -145,16 +136,18 @@ export function Prontuario(props:ProntuarioProps) {
                                     <Label size={'small'} style={{marginTop:0, marginBottom:8}}><u>Contatos:</u></Label>
                                     {petR.responsavel.contatos.map((contato,idx) => {
                                         return (
-                                            <div style={{margin:'0px 0px 5px 0px'}}>
+                                            <div key={idx} style={{margin:'0px 0px 5px 0px'}}>
                                                 {contato.principal?
-                                                <b>
-                                                <span key={idx} ><b>{(idx+1)+"- "}</b>{contato.tipoContato}: </span>
-                                                <span><b>{Number(contato.descricao)&&contato.descricao!=null?telefone_mask(contato.descricao):contato.descricao}</b></span>
-                                                </b> : 
-                                                <>
-                                                <span key={idx} ><b>{(idx+1)+"- "}</b>{contato.tipoContato}: </span>
-                                                <span><b>{Number(contato.descricao)&&contato.descricao!=null?telefone_mask(contato.descricao):contato.descricao}</b></span>
-                                                </>}
+                                                <div>
+                                                    <b>
+                                                    <span><b>{(idx+1)+"- "}</b>{contato.tipoContato}: </span>
+                                                    <span><b>{Number(contato.descricao)&&contato.descricao!=null?telefone_mask(contato.descricao):contato.descricao}</b></span>
+                                                    </b>
+                                                </div> : 
+                                                <div>
+                                                    <span><b>{(idx+1)+"- "}</b>{contato.tipoContato}: </span>
+                                                    <span><b>{Number(contato.descricao)&&contato.descricao!=null?telefone_mask(contato.descricao):contato.descricao}</b></span>
+                                                </div>}
                                             </div>
                                         )
                                     })}

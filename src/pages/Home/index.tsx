@@ -1,6 +1,6 @@
 import { AppHeader } from "../../components/AppHeader";
 import { styled } from "@stitches/react";
-import { MdAssignment, MdAssignmentInd, MdEvent, MdPets, MdEqualizer, MdDarkMode, MdLightMode, MdHome, MdAssessment, MdAssignmentLate, MdAssignmentReturn, MdAssignmentTurnedIn } from "react-icons/md";
+import { MdAssignment, MdAssignmentInd, MdEqualizer, MdDarkMode, MdLightMode, MdHome, MdAssignmentTurnedIn, MdCalendarToday } from "react-icons/md";
 import "./home.css";
 import { HomeDash } from "../../components/HomeDash";
 import { ListCadastros } from "../../components/cadastros/ListCadastros";
@@ -112,6 +112,10 @@ export function Home () {
                     <Div className="button_aside" title="Início"
                             onClick={() => setShowPage("home")}>
                         <MdHome size={25} />
+                    </Div>
+                    <Div className="button_aside" title="Ver Agenda"
+                            onClick={() => console.log("Agenda")}>
+                        <MdCalendarToday size={25} />
                     </Div>
                     <Div className="button_aside" title="Ver Cadastros de Pets/Pessoas"
                             onClick={() => setShowPage("listCadastros")}>

@@ -21,6 +21,32 @@ export const ApiProntuario = () => ({
     });
     return result;
   },[]),
+
+  saveConsultaPet: useCallback(async (consulta:Consulta) => {
+    var result:any = null;
+    await api.post('/consulta/geral/save', consulta)
+    .then(function (response) {
+        result = response;
+    })
+    .catch(function (error) {
+        result = error;
+        console.log(error);
+    });
+    return result;
+  },[]),
+
+  updateConsultaPet: useCallback(async (consulta:Consulta) => {
+    var result:any = null;
+    await api.put('/consulta/geral/update', consulta)
+    .then(function (response) {
+        result = response;
+    })
+    .catch(function (error) {
+        result = error;
+        console.log(error);
+    });
+    return result;
+  },[]),
     
   saveTemplateAnamnese: useCallback(async (Anamnese:Anamnese) => {
     var result:any = null;

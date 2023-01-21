@@ -10,8 +10,8 @@ export interface Consulta {
     tamanho?:string;
     relatoResponsavel?:string;
     registroGeral?:string;
-    petC?:Pet;
-    veterinarioC?:Veterinario;    
+    pet?:Pet|null;
+    veterinario?:Veterinario;    
 }
 
 export interface Anamnese {

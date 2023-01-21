@@ -49,7 +49,7 @@
     border: solid 1px var(--border-color);
     box-shadow: 0px 0px 6px var(--border-color);
     width: max-content;
-    left: -40px;
+    left: -20px;
     animation: showUp 0.2s ease-in;
 }
 

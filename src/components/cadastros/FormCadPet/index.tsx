@@ -28,6 +28,8 @@ export function FormCadPet(props:formCadProps) {
     const [listRaca, setListRaca] = useState<Raca[]>([]);
     const [listRacaFiltered, setListRacaFiltered] = useState<Raca[]>([]);
 
+    const [petPerfilImg, setPetPerfilImg] = useState<File|null>(null);
+
     const listResponsaveis = async () => {
         var list:any = await apiRegistro.listResponsaveis();
     if (list?.status >= 200 && list?.status <= 300){
@@ -84,7 +86,7 @@ export function FormCadPet(props:formCadProps) {
                 };
             } else {
                 if(responsavel.responsavelID != null) {
-                    let result:AxiosResponse<any,any> = await apiRegistro.savePet(pet, responsavel.responsavelID);
+                    let result:AxiosResponse<any,any> = await apiRegistro.savePet(pet, responsavel.responsavelID, petPerfilImg);
                     if(result != null && result?.status >= 200 && result?.status <= 300) {
                         setPet(result?.data);
                     };
@@ -100,10 +102,17 @@ export function FormCadPet(props:formCadProps) {
         };
     };
 
-    const inputChangePet = (e:any) => {
+    const inputChangePet = (e:React.ChangeEvent<HTMLInputElement>) => {
         e.target.classList.remove("shake");
         if(e.target.type === "date") {
             setPet({...pet,[e.target.name]:moment(e.target.value).toISOString()});
+        } else if (e.target.type === "file") {
+            let file = e.target.files;
+            if(file!=null){
+                setPetPerfilImg(file[0]);
+            } else {
+                setPetPerfilImg(null);
+            }
         } else {
             setPet({...pet,[e.target.name]:e.target.value});
         };
@@ -194,6 +203,7 @@ export function FormCadPet(props:formCadProps) {
         <div className='form_container_cad_pet'>
             <form className='form_cad_pet' onSubmit={formSubmit}>
                 <h2>Cadastrar Pet</h2>
+                    <input type={'file'} name="petPerdilImg" id="petPerdilImg" onChange={inputChangePet} accept="image/png, image/jpeg"/>
                     <Label htmlFor='responsavel' size={'medium'} >Responsável: </Label>
                     <Select size={'big'} onChange={selectItemResp} id='responsavel' name={'responsavel'} value={responsavel?JSON.stringify(responsavel):""}>
                         <Option size={'medium'} key={-1} value={""}>Selecione</Option>

@@ -195,21 +195,17 @@ export const ApiRegistro = () => ({
         return result;
     },[]),
 
-    savePet: useCallback(async (pet:Pet, responsavelID:Number) => {
-        // Objeto Pet
-        // {
-        //     "nome":"String",
-        //     "especie":"String",
-        //     "raca":"String",
-        //     "cor":"String",
-        //     "tamanho":"String",
-        //     "peso":"String",
-        //     "nascimento":"Date",
-        //     "pedigree":boolean,
-        //     "fertil":boolean
-        // }
+    savePet: useCallback(async (pet:Pet, responsavelID:Number, petPerfilImg:File|null) => {
+
+        var formData = new FormData();
+        var headers = {headers: {'Content-Type': 'multipart/form-data'}}
         var result:any = "";
-        await api.post('/registro/pet/save/responsavel/'+responsavelID, pet)
+
+        formData.append("pet",JSON.stringify(pet));
+        if(petPerfilImg!=null) {
+            formData.append("file",petPerfilImg);
+        }
+        await api.post('/registro/pet/save/responsavel/'+responsavelID, formData, headers)
         .then(function (response) {
             result = response;
         })
@@ -217,6 +213,16 @@ export const ApiRegistro = () => ({
             result = error;
         });
         return result;
+
+        // var result:any = "";
+        // await api.post('/registro/pet/save/responsavel/'+responsavelID, pet)
+        // .then(function (response) {
+        //     result = response;
+        // })
+        // .catch(function (error) {
+        //     result = error;
+        // });
+        // return result;
     },[]),
 
     updatePet: useCallback(async (pet:Pet) => {
@@ -262,7 +268,7 @@ export const ApiRegistro = () => ({
 
     // Apis CRUD Veterinarios PET #####
     listVeterinarios: useCallback(async () => {
-        var result = null;
+        var result:any = "";
         await api.get('/registro/veterinario/all')
         .then(function (response) {
             result = response;

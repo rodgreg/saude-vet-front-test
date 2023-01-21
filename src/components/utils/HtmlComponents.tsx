@@ -217,6 +217,9 @@ export const InputText = styled('input', {
     },
     variants: {
         size: {
+            verysmall: {
+                width:'80px',
+            },
             small: {
                 width:'200px',
             },

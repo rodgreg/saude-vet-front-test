@@ -45,6 +45,7 @@ export function ListCadastros (props:listCadastrosProps) {
 
   const getListResponsaveis = async () => {
     setIsLoading(true);
+    await api.listPets();
     var list:any = await api.listResponsaveis();
     if (list?.status >= 200 && list?.status <= 300){
         setListResponsaveis(list.data);
