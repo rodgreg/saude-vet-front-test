@@ -30,11 +30,48 @@
 }
 
 .consulta-detail-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    padding: 10px;
+}
+
+.consulta-detail-form-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    max-height: 435px;
+}
+
+.consulta-detail-form {
     display: flex;
     flex-direction: column;
     padding: 10px;
     overflow: auto;
-    max-height: 770px;
+    max-height: 440px;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.consulta-detail-form textarea {
+    min-height: 80px;
+}
+
+.consulta-detail-historico {
+    max-height: 435px;
+    overflow: auto;
+    padding: 6px;
+    border: 1px solid var(--border-color);
+}
+
+.consulta-detail-historico-title p {
+    font-weight: bold;
+    text-decoration: underline;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.consulta-detail-historico-content {
+    padding: 0px;
 }
 
 .questao-item {

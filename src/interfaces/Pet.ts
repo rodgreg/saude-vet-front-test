@@ -1,16 +1,17 @@
 import { Responsavel } from "./Responsavel";
+import { Raca } from "./Util";
 
 export interface Pet {
     petID:Number | null;
-    nome:String;
-    especie:String;
-    raca:String;
-    cor:String;
-    genero:String;
+    nome:string;
+    raca:Raca|null;
+    cor:string;
+    genero:string;
     nascimento:Date | null;
     pedigree:boolean;
     fertil:boolean;
     dataRegistro?:Date | null;
+    imgPerfil?:string | null;
 }
 
 export interface Pet_Resp {

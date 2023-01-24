@@ -1,7 +1,7 @@
 import './formCadPet.css';
 // @ts-ignore
 import moment from "moment/min/moment-with-locales";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, Label, Select, Option, InputText, InputDate } from '../../utils/HtmlComponents';
 import { Pet, Pet_Resp } from '../../../interfaces/Pet';
 import { ApiRegistro } from '../../../services/ApiRegistro';
@@ -9,7 +9,7 @@ import { AxiosResponse } from 'axios';
 import { Responsavel } from '../../../interfaces/Responsavel';
 import { Especie, Raca } from '../../../interfaces/Util';
 import { ApiUtil } from '../../../services/ApiUtil';
-
+import { MdRemove, MdUpload } from 'react-icons/md';
 
 interface formCadProps {
     petForm?: Pet_Resp;
@@ -19,9 +19,10 @@ export function FormCadPet(props:formCadProps) {
 
     const apiRegistro = ApiRegistro();
     const apiUtil = ApiUtil();
-    const [petR,setPetR] = useState<Pet_Resp>({pet:{petID:null ,nome:"", genero:"", especie:"", raca:"", cor:"", nascimento:null, fertil:false, pedigree:false},
+    const inputFileRef = useRef<HTMLInputElement|null>(null);
+    const [petR,setPetR] = useState<Pet_Resp>({pet:{petID:null ,nome:"", genero:"", raca:null, cor:"", nascimento:null, fertil:false, pedigree:false},
                                                 responsavel:{responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, enderecos: [], contatos: [],}});
-    const [pet, setPet] = useState<Pet>({petID:null ,nome:"", genero:"", especie:"", raca:"", cor:"", nascimento:null, fertil:false, pedigree:false});
+    const [pet, setPet] = useState<Pet>({petID:null ,nome:"", genero:"", raca:null, cor:"", nascimento:null, fertil:false, pedigree:false});
     const [responsavel, setResponsavel] = useState<Omit<Responsavel,"pets">>({responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, enderecos: [], contatos: [],});
     const [responsavelList, setResponsavelList] = useState<Omit<Responsavel,"pets">[]>([]);
     const [listEspecie, setListEspecie] = useState<Especie[]>([]);
@@ -29,60 +30,68 @@ export function FormCadPet(props:formCadProps) {
     const [listRacaFiltered, setListRacaFiltered] = useState<Raca[]>([]);
 
     const [petPerfilImg, setPetPerfilImg] = useState<File|null>(null);
+    const [imgDefault, setImgDefault] = useState<string>("src\\assets\\Logo exemplo.jpg");
 
     const listResponsaveis = async () => {
         var list:any = await apiRegistro.listResponsaveis();
-    if (list?.status >= 200 && list?.status <= 300){
-        let listResponsavelTmp:Omit<Responsavel,"pets">[]= list.data;
-        // let listResponsavelTmp = listTeste;
-        listResponsavelTmp = listResponsavelTmp.sort((a,b) => {
-                      if(a.nome == null || b.nome == null){return 0;}
-                      let fa = a.nome.toLowerCase(),
-                          fb = b.nome.toLowerCase();
+        if (list?.status >= 200 && list?.status <= 300){
+            let listResponsavelTmp:Omit<Responsavel,"pets">[]= list.data;
+            // let listResponsavelTmp = listTeste;
+            listResponsavelTmp = listResponsavelTmp.sort((a,b) => {
+                        if(a.nome == null || b.nome == null){return 0;}
+                        let fa = a.nome.toLowerCase(),
+                            fb = b.nome.toLowerCase();
 
-                      if (fa < fb) {
-                          return -1;
-                      }
-                      if (fa > fb) {
-                          return 1;
-                      }
-                      if (fa === fb) {
-                      let la = a?.nome?.toLowerCase(),
-                          lb = b?.nome?.toLowerCase();
-                      
-                      if (la < lb) {
-                          return -1;
-                      }
-                      if (la > lb) {
-                          return 1;
-                      }
-                      return 0;
-                      }
-                      return 0;
-                  } 
-              );
+                        if (fa < fb) {
+                            return -1;
+                        }
+                        if (fa > fb) {
+                            return 1;
+                        }
+                        if (fa === fb) {
+                        let la = a?.nome?.toLowerCase(),
+                            lb = b?.nome?.toLowerCase();
+                        
+                        if (la < lb) {
+                            return -1;
+                        }
+                        if (la > lb) {
+                            return 1;
+                        }
+                        return 0;
+                        }
+                        return 0;
+                    } 
+                );
 
-        // Monta Lista Responsável.
-        setResponsavelList(listResponsavelTmp);
-    } else {
-   
-    }
+            // Monta Lista Responsável.
+            setResponsavelList(listResponsavelTmp);
+        } else {
+    
+        }
     };
 
-    const formSubmit = async (e:any) => {
+    const getImgPetPerfil = async () => {
+        if (props.petForm?.pet.petID!=null) {
+            setImgDefault('http://localhost:8765/registro/pet/imgPerfil/'+props.petForm?.pet.petID)
+        }
+    };
+
+    const formSubmit = async (e:React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
         let hasBlank = false;
         for (let i=0; i < e.target.length; i++) {
-            if (e.target[i].value === '' && e.target[i].name !== '') {
+            if (e.target[i].getAttribute('value') === '' && e.target[i].getAttribute('name') !== '') {
               e.target[i].classList.add("shake")
               hasBlank = true;
             };
         };
         if (!hasBlank) {
             if(pet.petID != null) {
-                let result:AxiosResponse<any,any> = await apiRegistro.updatePet(pet);
+                let result:AxiosResponse<any,any> = await apiRegistro.updatePet(pet, petPerfilImg);
                 if(result != null && result?.status >= 200 && result?.status <= 300) {
                     setPet(result?.data);
+                    console.log(result.data);
                 };
             } else {
                 if(responsavel.responsavelID != null) {
@@ -108,20 +117,26 @@ export function FormCadPet(props:formCadProps) {
             setPet({...pet,[e.target.name]:moment(e.target.value).toISOString()});
         } else if (e.target.type === "file") {
             let file = e.target.files;
-            if(file!=null){
-                setPetPerfilImg(file[0]);
+            if(file!=null&&file?.length>0){
+                let type = file[0].type.split('/')[1];
+                let size = file[0].size;
+                if((type==="png" || type==="jpg" || type==="jpeg")&&(size<(102400))) {
+                    setPetPerfilImg(file[0]);
+                    setImgDefault(URL.createObjectURL(file[0]));
+                } else {
+                    console.log(type+" não é aceito! ou o tamanho está maior que o permitido de 100kb: "+size);
+                }
             } else {
-                setPetPerfilImg(null);
             }
         } else {
             setPet({...pet,[e.target.name]:e.target.value});
         };
     };
 
-    const selectItemResp = (select:any) => {
+    const selectItemResp = (select:React.ChangeEvent<HTMLSelectElement>) => {
         select.target.classList.remove("shake");
-        if(select.target[select.target.selectedIndex].value != "") {
-            setResponsavel(JSON.parse(select.target[select.target.selectedIndex].value))
+        if(select.target.value != "") {
+            setResponsavel(JSON.parse(select.target.value))
         } else {
             setResponsavel({responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, enderecos: [], contatos: [],});
         };
@@ -129,19 +144,27 @@ export function FormCadPet(props:formCadProps) {
 
     const selectItemPet = (select:React.ChangeEvent<HTMLSelectElement>) => {
         select.target.classList.remove("shake");
-        setPet({...pet,[select.target.name]:select.target.value});
         if(select.target.name === 'especie') {
             let filteredRaca = listRaca.filter(raca => raca.especie.nome === select.target.value)
             setListRacaFiltered(filteredRaca);
+        } else if(select.target.name === 'raca' && select.target.value!=="") {
+            setPet({...pet,[select.target.name]:JSON.parse(select.target.value)});
+        } else {
+            setPet({...pet,[select.target.name]:select.target.value});
         }
     };
 
     const limparForm = () => {
-        setPet({petID:null ,nome:"", genero:"", especie:"", raca:"", cor:"", nascimento:null, fertil:false, pedigree:false});
+        setPet({petID:null ,nome:"", genero:"", raca:null, cor:"", nascimento:null, fertil:false, pedigree:false});
         setResponsavel({responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, enderecos: [], contatos: [],})
-        setPetR({pet:{petID:null ,nome:"", genero:"", especie:"", raca:"", cor:"", nascimento:null, fertil:false, pedigree:false},
+        setPetR({pet:{petID:null ,nome:"", genero:"", raca:null, cor:"", nascimento:null, fertil:false, pedigree:false},
                 responsavel:{responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, enderecos: [], contatos: [],}
-            });
+        });
+        setPetPerfilImg(null);
+        if(inputFileRef.current!=null) {
+            inputFileRef.current.value = "src\\assets\\Logo exemplo.jpg";
+        }
+        setImgDefault("src\\assets\\Logo exemplo.jpg");
     };
 
     const telefone_mask = (numero:String) => {
@@ -177,10 +200,13 @@ export function FormCadPet(props:formCadProps) {
         let racaResult:AxiosResponse = await apiUtil.listRacas();
         if (racaResult.status >=200 && racaResult.status <=300) {
             setListRaca(racaResult.data);
+            if(props.petForm?.pet.raca?.especie.nome!=null) {
+                let filteredRaca:Raca[] = racaResult.data;
+                filteredRaca = filteredRaca.filter(raca => raca.especie.nome === props.petForm?.pet.raca?.especie.nome);
+                setListRacaFiltered(filteredRaca);
+            }
         }
     };
-
-
 
     useEffect(() => {
         moment.locale('pt-br');
@@ -190,30 +216,51 @@ export function FormCadPet(props:formCadProps) {
             setResponsavel(props.petForm.responsavel);
         } else {
             setPetR({
-                pet:{petID:null ,nome:"", genero:"", especie:"", raca:"", cor:"", nascimento:null, fertil:false, pedigree:false},
+                pet:{petID:null ,nome:"", genero:"", raca:null, cor:"", nascimento:null, fertil:false, pedigree:false},
                 responsavel: {responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, enderecos: [], contatos: [],},
             });
         }
         listResponsaveis();
         listUtilForm();
-    },[])
+        getImgPetPerfil();
+    },[props.petForm])
 
     return (
     <div className='container'>
         <div className='form_container_cad_pet'>
             <form className='form_cad_pet' onSubmit={formSubmit}>
-                <h2>Cadastrar Pet</h2>
-                    <input type={'file'} name="petPerdilImg" id="petPerdilImg" onChange={inputChangePet} accept="image/png, image/jpeg"/>
-                    <Label htmlFor='responsavel' size={'medium'} >Responsável: </Label>
-                    <Select size={'big'} onChange={selectItemResp} id='responsavel' name={'responsavel'} value={responsavel?JSON.stringify(responsavel):""}>
-                        <Option size={'medium'} key={-1} value={""}>Selecione</Option>
-                        {responsavelList.length>0? 
-                            responsavelList.map((resp,idx) => 
-                                <option key={idx} value={JSON.stringify(resp)}>{resp?.nome+' '+resp?.sobrenome}</option>
-                            )
-                            :null
-                        } 
+                <h2>Cadastrar Pet</h2> 
+                    <div style={{display:'grid', gridTemplateColumns:'1fr 1fr'}}>
+                        <div style={{display:'flex', flexDirection:'column'}}>
+                            <Label htmlFor='responsavel' size={'medium'} >Responsável: </Label>
+                            <Select size={'big'} onChange={selectItemResp} id='responsavel' name={'responsavel'} value={responsavel?JSON.stringify(responsavel):""}>
+                                <Option size={'medium'} key={-1} value={""}>Selecione</Option>
+                                {responsavelList.length>0? 
+                                    responsavelList.map((resp,idx) => 
+                                        <option key={idx} value={JSON.stringify(resp)}>{resp?.nome+' '+resp?.sobrenome}</option>
+                                    )
+                                    :null
+                                } 
                             </Select>
+                        </div>              
+                        <div className='upload-perfil-img'>
+                            <img src={imgDefault} 
+                                style={{height:90, width:90,objectFit: 'cover', objectPosition: 'center', borderRadius:5, border:'solid 2px var(--border-color)'}} />
+                            <div className='upload-perfil-img-button'>
+                                {petPerfilImg == null && imgDefault!=='http://localhost:8765/registro/pet/imgPerfil/'+props.petForm?.pet.petID? 
+                                                <>
+                                                    <label htmlFor='petPerdilImg' >Adicione <MdUpload size={22} /></label>
+                                                    <input ref={inputFileRef} type={'file'} name="petPerdilImg" id="petPerdilImg" onChange={inputChangePet} accept="image/png, image/jpeg, image/jpg"/>
+                                                </>
+                                                :null
+                                }
+                                {petPerfilImg != null || imgDefault==='http://localhost:8765/registro/pet/imgPerfil/'+props.petForm?.pet.petID? 
+                                                <button type='button' onClick={() => {setPetPerfilImg(null); setImgDefault("src\\assets\\Logo exemplo.jpg");if(inputFileRef.current!=null){inputFileRef.current.value = ""};}}>Remover<MdRemove size={22}/></button>
+                                                :null
+                                }
+                            </div>
+                        </div>
+                    </div>
                     <Label htmlFor='nome' size={'medium'} >Nome: </Label>
                     <InputText size={'max'} type={'text'} id='nome' name={'nome'} value={pet?.nome?pet.nome.toString():""} onChange={inputChangePet}/>
                     <div style={{display:'grid', gridTemplateColumns:'40% 30% 20%'}}>
@@ -227,7 +274,7 @@ export function FormCadPet(props:formCadProps) {
                         </div>
                         <div style={{display:'flex', flexDirection:'column'}}>
                             <Label htmlFor='especie'>Espécie: </Label>
-                            <Select size={'big'} id='especie' onChange={selectItemPet} name={'especie'} value={pet?.especie?pet.especie.toString():""}>
+                            <Select size={'big'} id='especie' onChange={selectItemPet} name={'especie'} value={pet?.raca?.especie.nome?pet?.raca?.especie.nome.toString():""}>
                                 <Option value={""}>Selecione</Option>
                                 {listEspecie.map((especie,idx) => {
                                     return (
@@ -238,11 +285,11 @@ export function FormCadPet(props:formCadProps) {
                         </div>
                         <div style={{display:'flex', flexDirection:'column'}}>
                             <Label htmlFor='raca' size={'medium'}>Raça: </Label>
-                            <Select size={'big'} id='raca' onChange={selectItemPet} name={'raca'} value={pet?.raca?pet.raca.toString():""}>
+                            <Select size={'big'} id='raca' onChange={selectItemPet} name={'raca'} value={pet?.raca?JSON.stringify(pet.raca):""}>
                                 <Option value={""}>Selecione</Option>
                                 {listRacaFiltered.map((raca,idx) => {
                                     return (
-                                        <Option key={idx} value={raca.nome}>{raca.nome}</Option>
+                                        <Option key={idx} value={JSON.stringify(raca)}>{raca.nome}</Option>
                                     )
                                 })}
                             </Select>

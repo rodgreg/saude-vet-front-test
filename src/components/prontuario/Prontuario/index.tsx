@@ -160,15 +160,15 @@ export function Prontuario(props:ProntuarioProps) {
                 </div>
                 <div className="consulta-title-pet">
                     <div style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
-                        <img src="https://resources.diariolibre.com/images/binrepository/perro-labrador_14531788_20200809181008.jpg"
-                             style={{height:90, width:90,objectFit: 'cover', objectPosition: '25% 25%', borderRadius:5, border:'solid 2px var(--border-color)'}}
+                        <img src={petR?.pet.imgPerfil!=null?'http://localhost:8765/registro/pet/imgPerfil/'+petR?.pet.petID:"src\\assets\\Logo exemplo.jpg"}
+                             style={{height:90, width:90,objectFit: 'cover', objectPosition: 'center', borderRadius:5, border:'solid 2px var(--border-color)'}}
                         />
                         <Label size={'big'} ><b>{petR?.pet.nome}</b></Label>
                     </div>
                     <div>
                         <Label size={'small'}>{petR?.pet.genero}</Label><span> de cor </span><Label size={'small'}>{petR?.pet.cor}</Label><br/>
                         <span>Nascimento: </span><Label size={'small'}>{moment(petR?.pet.nascimento).format('DD/MM/yyyy')} ({moment(petR?.pet.nascimento).add(1,'year').fromNow(true)})</Label><br/>
-                        <Label size={'small'}>{petR?.pet.especie} ({petR?.pet.raca})</Label><br/>
+                        <Label size={'small'}>{petR?.pet.raca?.especie.nome} ({petR?.pet.raca?.nome})</Label><br/>
                         <Label size={'small'}>{petR?.pet.fertil?"Fertil":"Estéril"}</Label><span> e </span><Label size={'small'}>{petR?.pet.pedigree?"Com Pedigree":"Sem Pedigree"}</Label>
                     </div>
                 </div>

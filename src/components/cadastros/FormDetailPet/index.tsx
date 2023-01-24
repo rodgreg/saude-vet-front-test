@@ -70,8 +70,8 @@ export function FormDetailPet(props: propsFormResponsavel) {
                         <div className="AccordionContentTextP">
                             <div className='AccordionCardP'>
                                 <span>Sexo: <b>{pet.pet?pet.pet.genero:""}</b></span>
-                                <span>Espécie: <b>{pet.pet?pet.pet.especie:""}</b></span>
-                                <span>Raça: <b>{pet.pet?pet.pet.raca:""}</b></span>
+                                <span>Espécie: <b>{pet.pet.raca?pet.pet.raca.especie.nome:""}</b></span>
+                                <span>Raça: <b>{pet.pet?pet.pet.raca?.nome:""}</b></span>
                                 <span>Cor: <b>{pet.pet?pet.pet.cor:""}</b></span>
                                 <span>Data de nascimento: <b>{pet.pet?moment(pet.pet.nascimento).format('DD/MM/YYYY'):""}
                                                                                        </b>

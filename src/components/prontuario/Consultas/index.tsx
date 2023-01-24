@@ -6,7 +6,7 @@ import { Responsavel } from "../../../interfaces/Responsavel";
 import { Veterinario } from "../../../interfaces/Veterinario";
 import { ApiProntuario } from "../../../services/ApiProntuario";
 import { AnamneseQuestoes } from "../../utils/AnamneseQuestoes";
-import { Button, Select, TextArea, Option, InputDate, InputText, LinkButton } from "../../utils/HtmlComponents";
+import { Button, Select, TextArea, Option, InputDate, InputText, Label } from "../../utils/HtmlComponents";
 import { HiEye, HiPrinter } from "react-icons/hi";
 import './consulta.css';
 import { MdAddCircleOutline, MdArrowBack, MdEdit } from "react-icons/md";
@@ -23,6 +23,7 @@ export function Consultas(props:ConsultaProps) {
     const api = ApiProntuario();
     const apiRegistro = ApiRegistro();
     const [consulta, setConsulta] = useState<Consulta|null>(null);
+    const [ultimaConsulta, setUltimaConsulta] = useState<Consulta|null>(null);
     const [consultaList, setConsultaList] = useState<Consulta[]>([]);
     const [showHistConsulta, setShowHistConsulta] = useState<boolean>(true);
     const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -33,7 +34,10 @@ export function Consultas(props:ConsultaProps) {
 
     const registrarConsulta = async () => {
         if(consulta?.anamnese!=null) {
-
+            console.log(consulta);
+            if(consulta.dtRegistro==null) {
+                consulta.dtRegistro=new Date();
+            }
             let result:AxiosResponse
             if(consulta.consultaID == null) {
                 result = await api.saveConsultaPet(consulta);
@@ -76,6 +80,7 @@ export function Consultas(props:ConsultaProps) {
                      return 0;
                 })
                 setConsultaList(consListTemp);
+                setUltimaConsulta(consListTemp[0]);
             }
         }
         let consultaTmp = consultaList?.filter(cons => cons.pet?.petID === petFind.petID)
@@ -184,184 +189,151 @@ export function Consultas(props:ConsultaProps) {
                                 </tr>
                             </thead>
                             <tbody>
-                                {consultaList?.map((consulta,idx) => {
-                                                return (<tr key={idx}>
-                                                            <td>    
-                                                                <button ><HiPrinter /></button>&nbsp;
-                                                                <button onClick={() => visualizarConsulta(consulta)}><HiEye /></button>
-                                                            </td>
-                                                            <td>{moment(consulta.dtRegistro).format('DD/MM/yyyy HH:mm')}</td>
-                                                            <td>{consulta.tipo}</td>
-                                                            <td>{consulta.veterinario?.nome}</td>
-                                                            <td>{consulta.peso}</td>
-                                                            <td>{consulta.tamanho}</td>
-                                                        </tr>)
-                                                        })
-                                }
+                            {consultaList?.map((consulta,idx) => {
+                                        return (<tr key={idx}>
+                                                    <td>    
+                                                        <button ><HiPrinter /></button>&nbsp;
+                                                        <button onClick={() => visualizarConsulta(consulta)}><HiEye /></button>
+                                                    </td>
+                                                    <td>{moment(consulta.dtRegistro).format('DD/MM/yyyy HH:mm')}</td>
+                                                    <td>{consulta.tipo}</td>
+                                                    <td>{consulta.veterinario?.nome}</td>
+                                                    <td>{consulta.peso}</td>
+                                                    <td>{consulta.tamanho}</td>
+                                                </tr>)
+                                                })
+                            }
                             </tbody>
                         </table>
                     </div>
                 </div>
-                :
+            :
                 <div className="consulta-detail-container">
-                    <div style={{display:'flex'}}>
-                        <Button size={'small'} onClick={() => {setShowHistConsulta(true);setConsulta({peso:"", registroGeral:"", relatoResponsavel:"", tamanho:"", tipo:"", pet:consulta?.pet});setAnamneseConsulta(null)}}><MdArrowBack size={18}/></Button>
-                        {consulta?.consultaID!=null && <Button size={'small'} onClick={() => {btnEditConsulta()}}><MdEdit size={18}/></Button>}
-                    </div>
-                    <br/>
-                    <span>Tipo de Consulta:&nbsp;
-                        {isEditing? 
-                            <Select id="tipo" name="tipo" value={consulta!=null?consulta.tipo:""} onChange={selectChange}>
-                                <Option value={""}>Selecione</Option>
-                                <Option value={"Clínica Geral"}>Clínica Geral</Option>
-                                <Option value={"Dermato"}>Dermato</Option>
-                                <Option value={"Odonto"}>Odonto</Option>
-                            </Select>
-                            :
-                            <b>{consulta!=null?consulta.tipo:""}</b>
-                        }
-                        &nbsp;&nbsp;&nbsp;
-                        Data de Regitro:&nbsp;
-                        {isEditing?
-                            <InputDate id="dtRegistro" name="dtRegistro" type={'date'} max={moment(new Date()).format('yyyy-MM-DD')} onChange={inputChange}
-                                    value={consulta?.dtRegistro!=null?moment(consulta?.dtRegistro).format("yyyy-MM-DD"):moment(new Date()).format("yyyy-MM-DD")}/>
-                            :
-                            <b>{consulta!=null?moment(consulta?.dtRegistro).format("DD/MM/yyyy HH:mm"):""}</b>
-                        }
-                        
-                    </span>
-                    <span>Médico Veterinário:&nbsp;
-                    {isEditing? 
-                        <Select id="veterinario" name="veterinario" value={consulta?.veterinario?.veterinarioID?.valueOf()} onChange={selectChange}>
-                            <Option value={""}>Selecione</Option>
-                            {vetList.map((vet,idx) => {
-                                return ( <Option key={idx} value={vet.veterinarioID?.valueOf()}>{vet.nome} {vet.sobrenome}</Option> )
-                            })}
-                        </Select>
-                        :
-                        <b>{consulta!=null?consulta?.veterinario?.nome+" "+consulta?.veterinario?.sobrenome:""}</b>
-                    }
-                    &nbsp;&nbsp;
-                    Peso: &nbsp;
-                    {isEditing?
-                        <InputText type={'number'} min={0} size={'verysmall'} id={'peso'} name={'peso'} style={{textAlign:'center'}} value={consulta?.peso?consulta.peso:""} onChange={inputChange}/>
-                        :
-                        <b>{consulta?.peso}</b>
-                    }
-                    &nbsp;kg
-
-                    &nbsp;&nbsp;|&nbsp;&nbsp;
-
-                    Tamanho: &nbsp;
-                    {isEditing?
-                        <InputText type={'number'} min={0} size={'verysmall'} id={'tamanho'} name={'tamanho'} style={{textAlign:'center'}} value={consulta?.tamanho?consulta.tamanho:""} onChange={inputChange}/>
-                        :
-                        <b>{consulta?.tamanho}</b>
-                    }
-                    &nbsp;cm</span>
-                    <span>Queixa do Responsável:</span>
-                    <TextArea disabled={!isEditing} id={'relatoResponsavel'} name={'relatoResponsavel'} rows={3} value={consulta?.relatoResponsavel} onChange={textAreaChange} />
-                    <span>Registro de Veterinário:</span>
-                    <TextArea disabled={!isEditing} id={'registroGeral'} name={'registroGeral'} rows={3} value={consulta?.registroGeral} onChange={textAreaChange} />
-                    <span style={{marginBottom:0}}><b>Anamnese:</b>&nbsp;&nbsp;
-                    {anamneseConsulta!=null?<button onClick={() => setShowAnamnese(true)}>Ver/Responder</button>:null}
-                    </span><br/>
-                    {isEditing? 
+                    <div className="consulta-detail-form-container">
                         <div style={{display:'flex'}}>
-                            <Select value={anamneseConsulta?.titulo} onChange={selectAnamneseTemplate}>
-                                <Option value={""}>Selecione</Option>
-                                {anamneseList.map((anamnese,idx) => {
-                                    return (<Option key={idx} value={anamnese.titulo}>{anamnese.titulo}</Option>)
-                                })}
-                            </Select>
+                            <Button size={'small'} onClick={() => {setShowHistConsulta(true);setConsulta({peso:"", registroGeral:"", relatoResponsavel:"", tamanho:"", tipo:"", pet:consulta?.pet});setAnamneseConsulta(null)}}><MdArrowBack size={18}/></Button>
+                            {consulta?.consultaID!=null && <Button size={'small'} onClick={() => {btnEditConsulta()}}><MdEdit size={18}/></Button>}
                         </div>
-                        :
-                        null
-                    }
-                    {showAnamnese &&
-                        <div style={{display:'flex', position:'absolute', width:'100vw', height:'100vh', top:0, left:0, alignItems:'center', justifyContent:'center', backgroundColor:'rgb(200,200,200,0.4)'}}>
-                            <AnamneseQuestoes 
-                                anamnese={anamneseConsulta}
-                                updateAnamnese={(e,newAnamnese) => {if(newAnamnese!=null){setConsulta({...consulta, anamnese:newAnamnese});setShowAnamnese(false)}}}
-                                construindo={false} respondendo={isEditing}
-                                anyAction={() => setShowAnamnese(false)}
-                                />
-                        </div>
-                    }
-                    {isEditing && <Button size={'small'} onClick={() => registrarConsulta()}>Salvar</Button>}
+                        <div className="consulta-detail-form">
+                            <span>Tipo de Consulta:&nbsp;
+                                {isEditing? 
+                                    <Select id="tipo" name="tipo" value={consulta!=null?consulta.tipo:""} onChange={selectChange}>
+                                        <Option value={""}>Selecione</Option>
+                                        <Option value={"Clínica Geral"}>Clínica Geral</Option>
+                                        <Option value={"Dermato"}>Dermato</Option>
+                                        <Option value={"Odonto"}>Odonto</Option>
+                                    </Select>
+                                    :
+                                    <b>{consulta!=null?consulta.tipo:""}</b>
+                                }
+                                &nbsp;&nbsp;&nbsp;
+                                Data de Regitro:&nbsp;
+                                {isEditing?
+                                    <InputDate id="dtRegistro" name="dtRegistro" type={'datetime-local'} max={moment(new Date()).format('yyyy-MM-DD')} onChange={inputChange}
+                                            value={consulta?.dtRegistro!=null?moment(consulta?.dtRegistro).format("yyyy-MM-DD HH:mm"):moment(new Date()).format("yyyy-MM-DD HH:mm")}/>
+                                    :
+                                    <b>{consulta!=null?moment(consulta?.dtRegistro).format("DD/MM/yyyy HH:mm"):""}</b>
+                                }
+                                
+                            </span>
+                            <span>Médico Veterinário:&nbsp;
+                            {isEditing? 
+                                <Select id="veterinario" name="veterinario" value={consulta?.veterinario?.veterinarioID?.valueOf()} onChange={selectChange}>
+                                    <Option value={""}>Selecione</Option>
+                                    {vetList.map((vet,idx) => {
+                                        return ( <Option key={idx} value={vet.veterinarioID?.valueOf()}>{vet.nome} {vet.sobrenome}</Option> )
+                                    })}
+                                </Select>
+                                :
+                                <b>{consulta!=null?consulta?.veterinario?.nome+" "+consulta?.veterinario?.sobrenome:""}</b>
+                            }
+                            &nbsp;&nbsp;
+                            Peso: &nbsp;
+                            {isEditing?
+                                <InputText type={'number'} min={0} size={'verysmall'} id={'peso'} name={'peso'} style={{textAlign:'center'}} value={consulta?.peso?consulta.peso:""} onChange={inputChange}/>
+                                :
+                                <b>{consulta?.peso}</b>
+                            }
+                            &nbsp;kg
 
+                            &nbsp;&nbsp;|&nbsp;&nbsp;
+
+                            Tamanho: &nbsp;
+                            {isEditing?
+                                <InputText type={'number'} min={0} size={'verysmall'} id={'tamanho'} name={'tamanho'} style={{textAlign:'center'}} value={consulta?.tamanho?consulta.tamanho:""} onChange={inputChange}/>
+                                :
+                                <b>{consulta?.tamanho}</b>
+                            }
+                            &nbsp;cm</span>
+                            <span>Queixa do Responsável:</span>
+                            <TextArea disabled={!isEditing} id={'relatoResponsavel'} name={'relatoResponsavel'} rows={3} value={consulta?.relatoResponsavel} onChange={textAreaChange} />
+                            <span>Registro de Veterinário:</span>
+                            <TextArea disabled={!isEditing} id={'registroGeral'} name={'registroGeral'} rows={3} value={consulta?.registroGeral} onChange={textAreaChange} />
+                            <span style={{marginBottom:0}}><b>Anamnese:</b>&nbsp;&nbsp;
+                            {anamneseConsulta!=null?<button onClick={() => setShowAnamnese(true)}>Ver/Responder</button>:null}
+                            </span><br/>
+                            {isEditing? 
+                                <div style={{display:'flex'}}>
+                                    <Select value={anamneseConsulta?.titulo} onChange={selectAnamneseTemplate}>
+                                        <Option value={""}>Selecione</Option>
+                                        {anamneseList.map((anamnese,idx) => {
+                                            return (<Option key={idx} value={anamnese.titulo}>{anamnese.titulo}</Option>)
+                                        })}
+                                    </Select>
+                                </div>
+                                :
+                                null
+                            }
+                            {showAnamnese &&
+                                <div style={{display:'flex', position:'absolute', width:'100vw', height:'100vh', top:0, left:0, alignItems:'center', justifyContent:'center', backgroundColor:'rgb(200,200,200,0.4)'}}>
+                                    <AnamneseQuestoes 
+                                        anamnese={anamneseConsulta}
+                                        updateAnamnese={(e,newAnamnese) => {if(newAnamnese!=null){setConsulta({...consulta, anamnese:newAnamnese});setShowAnamnese(false)}}}
+                                        construindo={false} respondendo={isEditing}
+                                        anyAction={() => setShowAnamnese(false)}
+                                        />
+                                </div>
+                            }
+                        </div>
+                        {isEditing && <Button size={'small'} onClick={() => registrarConsulta()}>Salvar</Button>}
+                    </div>
+                    <div className="consulta-detail-historico">
+                        <div className="consulta-detail-historico-title">
+                            <p>Dados da última consulta</p>
+                        </div>
+                        <div className="consulta-detail-historico-content">
+                        {ultimaConsulta!=null? <>
+                            <Label size={'small'} >Data: </Label>
+                            <span> {moment(ultimaConsulta?.dtRegistro).format('DD/MM/YYYY HH:mm')}</span><br/>
+                            <Label size={'small'} >Tipo de Consulta: </Label>
+                            <span> {ultimaConsulta?.tipo}</span><br/>
+                            <Label size={'small'} >Veterinário: </Label>
+                            <span> {ultimaConsulta?.veterinario?.nome + " " + ultimaConsulta?.veterinario?.sobrenome}</span><br/>
+                            <Label size={'small'} >Peso: </Label>
+                            <span> {ultimaConsulta?.peso} kg</span><span> | </span>
+                            <Label size={'small'} >Tamanho: </Label>
+                            <span> {ultimaConsulta?.tamanho} cm</span><br/>
+                            <Label size={'small'} >Queixa: </Label><br/>
+                            <div style={{backgroundColor:'#ffffff', padding:6, borderRadius:3, margin:3}}> {ultimaConsulta?.relatoResponsavel}</div>
+                            <Label size={'small'} >Registro Veterinário: </Label><br/>
+                            <div style={{backgroundColor:'#ffffff', padding:6, borderRadius:3, margin:3}}> {ultimaConsulta?.registroGeral}</div>
+                            <Label size={'small'} >Anamnese: </Label><br/>
+                            {ultimaConsulta?.anamnese !=null ? <div style={{display:'flex', width:'100%', alignItems:'center', justifyContent:'center'}}>
+                                                                    <AnamneseQuestoes anamnese={ultimaConsulta.anamnese} 
+                                                                                construindo={false} 
+                                                                                respondendo={false}
+                                                                                updateAnamnese={() => console.log()}
+                                                                    />
+                                                                </div>
+                            :null}
+                        </>
+                        :
+                        <h5>Sem dados para apresentar.</h5>
+                        }
+                        </div>
+                    </div>
                 </div>
             }
         </div>
     )
-}
-
-// Teste
-const petToto:Pet = {
-    petID:88,
-    nome:'Totó',
-    cor:'Pardo',
-    especie:'Cachorro',
-    fertil:true,
-    genero:'Macho',
-    nascimento:new Date(2020,2,24),
-    pedigree:false,
-    raca:'Vira-Lata',
-    dataRegistro:new Date(2022,11,26),
-}
-
-const vetPedro:Veterinario = {
-    veterinarioID:1,
-    nome:'Pedro',
-    sobrenome:'Gomes',
-    cidade:'Brasília',
-    cpf:'87493202343',
-    genero:'Masculino',
-    uf:'DF',
-    dataRegistro:new Date(2022,11,26),
-    crmvs:[{area:'Medicina Veterinária', crmvID:1, dataRegistro:new Date(2013,3,21), numero:'123332', uf:'DF'}]
-}
-
-const consultaTeste:Consulta = {
-    consultaID:1,
-    tipo:'Clínica Geral',
-    dtRegistro:new Date(),
-    anamnese:{
-                dtRegistro: new Date(),
-                questoes: [{
-                            tipo:'text',
-                            label:'Qual a queixa?',
-                            descricao:'',
-                            options:[],
-                            resposta:'',
-                        },
-                        {
-                            tipo:'date',
-                            label:'Quando iniciou?',
-                            descricao:'',
-                            options:[],
-                            resposta:'',
-                        },
-                        {
-                            tipo:'select',
-                            label:'Realizou terapia?',
-                            descricao:'',
-                            options:['sim','não'],
-                            resposta:'',
-                        },
-                        {
-                            tipo:'select',
-                            label:'Realizou terapia?',
-                            descricao:'Teste Descrição.',
-                            options:['sim','não', 'talvez'],
-                            resposta:'',
-                        },
-                        ],
-            },
-    peso:'13 kg',
-    tamanho:'34 cm',
-    relatoResponsavel:'Diarreia e prostação.',
-    registroGeral:'Cachorro com sinais de desidratação e suspeita de infecção intestinal.',
-    pet:petToto,
-    veterinario:vetPedro,  
 }

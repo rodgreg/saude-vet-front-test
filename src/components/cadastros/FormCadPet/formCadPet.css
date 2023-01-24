@@ -36,6 +36,16 @@
     font-weight: 600;
 }
 
+.upload-perfil-img {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+}
+
+.upload-perfil-img-button>input {
+    display: none;
+}
+
 .dados_container_pet {
     display: flex;
     flex-direction: column;

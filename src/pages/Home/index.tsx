@@ -106,7 +106,7 @@ export function Home () {
 
     return (
             <Div id="body" data-theme={theme}>
-                <AppHeader clickMenu={(e,page) => setShowPage(page)} />
+                <AppHeader clickMenu={(e,page) => {setShowPage(page);setPet_Resp(null)}} />
 
                 <Div id="aside">
                     <Div className="button_aside" title="Início"

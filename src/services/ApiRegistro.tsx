@@ -50,17 +50,6 @@ export const ApiRegistro = () => ({
     },[]),
 
     saveResponsavel: useCallback(async (responsavel:Omit<Responsavel,"responsavelID"|"pets"|"enderecos"|"contatos">) => {
-        // Objeto Responsável
-        // {
-        //     "nome":"String",
-        //     "sobrenome":"String",
-        //     "genero":"String",
-        //     "tipoPessoa":"String",
-        //     "tipoRegistro":"String",
-        //     "registroNum":"String",
-        //     "nascimento":"Date",
-        //     "aceitaEmail":Boolean
-        // }
         var result:any = "";
         await api.post('/registro/responsavel/save', responsavel)
         .then(function (response) {
@@ -183,6 +172,18 @@ export const ApiRegistro = () => ({
         return result;
     },[]),
 
+    getImgPerfilPet: useCallback(async (petid:Number) => {
+        var result:any = "";
+        await api.get('/registro/pet/imgPerfil/'+petid)
+        .then(function (response) {
+            result = response;
+        })
+        .catch(function (error) {
+            result = error;
+        });
+        return result;
+    },[]),
+
     listPetsByResponsavel: useCallback(async (responsavelID:Number) => {
         var result = null;
         await api.get('/registro/pet/byresponsavel/'+responsavelID)
@@ -225,22 +226,18 @@ export const ApiRegistro = () => ({
         // return result;
     },[]),
 
-    updatePet: useCallback(async (pet:Pet) => {
-        // Objeto Pet
-        // {
-        //     "petID":Number,
-        //     "nome":"String",
-        //     "especie":"String",
-        //     "raca":"String",
-        //     "cor":"String",
-        //     "tamanho":"String",
-        //     "peso":"String",
-        //     "nascimento":"Date",
-        //     "pedigree":boolean,
-        //     "fertil":boolean
-        // }
+    updatePet: useCallback(async (pet:Pet, petPerfilImg:File|null) => {
+
+        var formData = new FormData();
+        var headers = {headers: {'Content-Type': 'multipart/form-data'}}
         var result:any = "";
-        await api.put('/registro/pet/update', pet)
+
+        formData.append("pet",JSON.stringify(pet));
+        if(petPerfilImg!=null) {
+            formData.append("file",petPerfilImg);
+        }
+        var result:any = "";
+        await api.put('/registro/pet/update', formData, headers)
         .then(function (response) {
             result = response;
         })
