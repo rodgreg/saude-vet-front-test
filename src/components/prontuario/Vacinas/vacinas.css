@@ -1,0 +1,32 @@
+.vacina-conteiner {
+    padding: 0px;
+    margin: 0px;
+    display: flex;
+    gap:20px
+}
+
+.vacina-table table {
+    border: 1px solid var(--border-color);
+    width: 700px;
+}
+
+.vacina-table th {
+    padding: 4px;
+    margin: 0px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+    background-color: var(--bg-button-default);
+    width: 90px;
+}
+
+.vacina-table tr:nth-child(even) {
+    background-color: var(--bg-input);
+}
+
+.vacina-table tr:hover {
+    background-color: var(--bg-checked);
+}
+
+.vacina-calendar {
+    width: 700px;
+}

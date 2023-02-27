@@ -2,7 +2,7 @@ import './formCadResponsavel.css';
 import { Responsavel, Endereco, Contato } from '../../../interfaces/Responsavel';
 // @ts-ignore
 import moment from "moment/min/moment-with-locales";
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, InputText, Label, Select, Option, InputDate } from '../../utils/HtmlComponents';
 import { Pet } from '../../../interfaces/Pet';
 import { MdEdit, MdDeleteOutline, MdSearch } from "react-icons/md";
@@ -14,7 +14,7 @@ import { Especie, Raca } from '../../../interfaces/Util';
 
 
 interface formCadProps {
-    responsavelForm?: Responsavel;
+    responsavelForm?: Responsavel|null;
 }
 
 export function FormCadResponsavel(props:formCadProps) {
@@ -23,7 +23,7 @@ export function FormCadResponsavel(props:formCadProps) {
     const apiRegistro = ApiRegistro();
     const apiUtil = ApiUtil();
     const [responsavel, setResponsavel] = useState<Responsavel>({responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, pets: [], enderecos: [], contatos: [],});
-    const [pet,setPet] = useState<Pet>({petID:null ,nome:"", genero:"", especie:"", raca:"", cor:"", nascimento:null, fertil:false, pedigree:false});
+    const [pet,setPet] = useState<Pet>({petID:null ,nome:"", genero:"", raca:null, cor:"", nascimento:null, fertil:false, pedigree:false});
     const [endereco, setEndereco] = useState<Endereco>({enderecoID:null, tipoEndereco:"", cep:"", logradouro:"", numero:"", endereco:"", complemento:"", bairro:"", cidade:"", uf:""});
     const [contato, setContato] = useState<Contato>({contatoID:null, tipoContato:"", principal:false, descricao:"", anotacao:""});
     const [addEndereco, setAddEndereco] = useState<Boolean>(false);
@@ -35,6 +35,7 @@ export function FormCadResponsavel(props:formCadProps) {
     const [listEspecie, setListEspecie] = useState<Especie[]>([]);
     const [listRaca, setListRaca] = useState<Raca[]>([]);
     const [listRacaFiltered, setListRacaFiltered] = useState<Raca[]>([]);
+    const [especieSelected, setEspecieSelected] = useState<string>("");
 
     const formSubmit = async (e:any) => {
         e.preventDefault();
@@ -93,29 +94,29 @@ export function FormCadResponsavel(props:formCadProps) {
         if (!hasBlank) {
             if(responsavel.responsavelID != null) {
                 if(pet.petID == null) {
-                    let result:AxiosResponse<any,any> = await apiRegistro.savePet(pet, responsavel.responsavelID);
+                    let result:AxiosResponse<any,any> = await apiRegistro.savePet(pet, responsavel.responsavelID, null);
                     if(result != null && result?.status >= 200 && result?.status <= 300) {
                         responsavel.pets?.push(result.data)
                     };
                 } else {
-                    let result:AxiosResponse<any,any> = await apiRegistro.updatePet(pet);
+                    let result:AxiosResponse<any,any> = await apiRegistro.updatePet(pet, null);
                     if(result != null && result?.status >= 200 && result?.status <= 300) {
                         let petTmp:any = responsavel.pets?.filter(petI => petI.petID === pet.petID);
                         responsavel.pets?.splice(responsavel.pets.indexOf(petTmp[0]),1,result.data);
                     };
                 };
             };
-            setPet({petID:null ,nome:"", genero:"", especie:"", raca:"", cor:"", nascimento:null, fertil:false, pedigree:false})
+            setPet({petID:null ,nome:"", genero:"", raca:null, cor:"", nascimento:null, fertil:false, pedigree:false})
             setAddPet(false);
             setIndexPet(-1);
         }
     };
 
-    const addEnderecoToResponsavel = async (e:any) => {
+    const addEnderecoToResponsavel = async (e:React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
         let hasBlank = false;
         for (let i=0; i < e.target.length; i++) {
-            if (e.target[i].value === '' && e.target[i].name !== ''  && e.target[i].name !== 'complemento') {
+            if (e.target[i].getAttribute('value') === '' && e.target[i].getAttribute('value') !== ''  && e.target[i].getAttribute('name') !== 'complemento') {
               e.target[i].classList.add("shake")
               hasBlank = true;
             } else {
@@ -178,8 +179,7 @@ export function FormCadResponsavel(props:formCadProps) {
         setPet({petID:null,
                 nome:"",
                 genero:"",
-                especie:"",
-                raca:"",
+                raca:null,
                 cor:"",
                 nascimento:null,
                 fertil:false,
@@ -192,8 +192,14 @@ export function FormCadResponsavel(props:formCadProps) {
         }
     };
 
-    const removerEndereco = (idx:number) => {
-
+    const removerEndereco = async (idx:number) => {
+        let endDelete:Endereco;
+        if(responsavel.enderecos != null) {
+            endDelete = responsavel.enderecos[idx];
+            responsavel.enderecos.splice(idx,1);
+            await apiRegistro.deleteEndereco(endDelete);
+            setResponsavel({...responsavel,enderecos:responsavel.enderecos});
+        }
     };
 
     const removerContato = (idx:number) => {
@@ -281,10 +287,14 @@ export function FormCadResponsavel(props:formCadProps) {
 
     const selectItemPet = (select:React.ChangeEvent<HTMLSelectElement>) => {
         select.target.classList.remove("shake");
-        setPet({...pet,[select.target.name]:select.target.value});
         if(select.target.name === 'especie') {
             let filteredRaca = listRaca.filter(raca => raca.especie.nome === select.target.value)
             setListRacaFiltered(filteredRaca);
+            setEspecieSelected(select.target.value);
+        } else if(select.target.name === 'raca') {
+            setPet({...pet,[select.target.name]:JSON.parse(select.target.value)});
+        } else {
+            setPet({...pet,[select.target.name]:select.target.value});
         }
     };
 
@@ -293,10 +303,13 @@ export function FormCadResponsavel(props:formCadProps) {
         setEndereco({...endereco,[select.target.name]:select.target[select.target.selectedIndex].value})
     };
 
-    const selectItemContato = (select:any) => {
+    const selectItemContato = (select:React.ChangeEvent<HTMLSelectElement>) => {
         select.target.classList.remove("shake");
-        setContato({...contato,[select.target.name]:select.target[select.target.selectedIndex].value,descricao:""});
-
+        if(select.target.name === 'tipoContato') {
+            setContato({...contato,[select.target.name]:select.target.value, descricao:""});
+        } else {
+            setContato({...contato,[select.target.name]:select.target.value});
+        }
     };
 
     const cpf_cnpj_mask = (tipo:String,numero:String) => {
@@ -409,7 +422,7 @@ export function FormCadResponsavel(props:formCadProps) {
 
     useEffect(() => {
         moment.locale('pt-br');
-        if (props.responsavelForm) {
+        if (props.responsavelForm!=null) {
             setResponsavel(props.responsavelForm);
         } else {
             setResponsavel({
@@ -587,7 +600,7 @@ export function FormCadResponsavel(props:formCadProps) {
                         </div>
                         <div style={{display:'flex', flexDirection:'column'}}>
                             <Label>Espécie: </Label>
-                            <Select onChange={selectItemPet} name={'especie'} value={pet?.especie?pet.especie.toString():""}>
+                            <Select onChange={selectItemPet} name={'especie'} value={pet?.raca?.especie?pet.raca.especie.nome.toString():especieSelected}>
                                 <Option value={""}>Selecione</Option>
                                 {listEspecie.map((especie,idx) => {
                                     return (
@@ -598,11 +611,11 @@ export function FormCadResponsavel(props:formCadProps) {
                         </div>
                         <div style={{display:'flex', flexDirection:'column'}}>
                             <Label>Raça: </Label>
-                            <Select onChange={selectItemPet} name={'raca'} value={pet?.raca?pet.raca.toString():""}>
+                            <Select onChange={selectItemPet} name={'raca'} value={pet?.raca?JSON.stringify(pet.raca):""}>
                                 <Option value={""}>Selecione</Option>
                                 {listRacaFiltered.map((raca,idx) => {
                                     return (
-                                        <Option key={idx} value={raca.nome}>{raca.nome}</Option>
+                                        <Option key={idx} value={JSON.stringify(raca)}>{raca.nome}</Option>
                                     )
                                 })}
                             </Select>
@@ -640,7 +653,7 @@ export function FormCadResponsavel(props:formCadProps) {
                     <div style={{display:'flex', flexDirection:'row'}}>
                         <Button type='submit'>{indexPet>=0?"Alterar":"Adicionar"}</Button>
                         <Button type='button' color={'gray'} onClick={() => {setAddPet(false); setIndexPet(-1);
-                                                                                setPet({petID:null ,nome:"", genero:"", especie:"", raca:"", cor:"", nascimento:null, fertil:false, pedigree:false})
+                                                                                setPet({petID:null ,nome:"", genero:"", raca:null, cor:"", nascimento:null, fertil:false, pedigree:false})
                                                                             }}>Cancelar</Button>
                     </div>
                 </form>
@@ -688,7 +701,7 @@ export function FormCadResponsavel(props:formCadProps) {
                 {responsavel?.pets?.map((petItem,idx) => {return (
                     <div key={idx} className='dados_responsavel_item'>
                         <span>- {petItem.nome}</span>
-                        <span>{petItem.especie}</span>
+                        <span>{petItem.raca?.especie.nome}</span>
                         <span>
                             <MdEdit size={20} style={{marginLeft:10, marginRight:5, cursor:'pointer'}}
                                 onClick={()=>{setPet(petItem); setIndexPet(idx); setAddPet(true); setAddEndereco(false); setAddContato(false)}} />

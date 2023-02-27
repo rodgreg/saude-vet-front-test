@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react";
 import { Pet } from "../../../interfaces/Pet"
 import { Anamnese, Consulta } from "../../../interfaces/Prontuario";
 import { Responsavel } from "../../../interfaces/Responsavel";
@@ -12,6 +12,7 @@ import './consulta.css';
 import { MdAddCircleOutline, MdArrowBack, MdEdit } from "react-icons/md";
 import { AxiosResponse } from "axios";
 import { ApiRegistro } from "../../../services/ApiRegistro";
+import CKEditorA from '../../utils/CKEditor';
 
 interface ConsultaProps {
     petProps:Pet|null;
@@ -46,7 +47,7 @@ export function Consultas(props:ConsultaProps) {
             }
             if(result.status>=200 && result.status<=300) {
                 setShowHistConsulta(true);
-                setConsulta({peso:"", registroGeral:"", relatoResponsavel:"", tamanho:"", tipo:"", pet:consulta?.pet});
+                setConsulta({peso:"", registroGeral:"", tamanho:"", tipo:"", pet:consulta?.pet});
                 setAnamneseConsulta(null);
                 if(props.petProps!=null) {
                     findConsultasPet(props.petProps);
@@ -115,6 +116,10 @@ export function Consultas(props:ConsultaProps) {
         setConsulta({...consulta,[e.target.name]:e.target.value});
     }
 
+    const ckeditorChange = (htmlText:string) => {
+        setConsulta({...consulta,registroGeral:htmlText});
+    }
+
     const selectChange = (e:React.ChangeEvent<HTMLSelectElement>) => {
         if(e.target.name === "veterinario" && e.target.value !== "") {
             let vetSelected = vetList.find(vet => vet.veterinarioID == Number(e.target.value));
@@ -158,7 +163,7 @@ export function Consultas(props:ConsultaProps) {
                 }
             } else {
                 if(isEditing) {
-                    setConsulta({peso:"", registroGeral:"", relatoResponsavel:"", tamanho:"", tipo:"", pet:props.petProps});
+                    setConsulta({peso:"", registroGeral:"", tamanho:"", tipo:"", pet:props.petProps});
                     getListVet();
                     getListAnamense();
                 }
@@ -211,7 +216,7 @@ export function Consultas(props:ConsultaProps) {
                 <div className="consulta-detail-container">
                     <div className="consulta-detail-form-container">
                         <div style={{display:'flex'}}>
-                            <Button size={'small'} onClick={() => {setShowHistConsulta(true);setConsulta({peso:"", registroGeral:"", relatoResponsavel:"", tamanho:"", tipo:"", pet:consulta?.pet});setAnamneseConsulta(null)}}><MdArrowBack size={18}/></Button>
+                            <Button size={'small'} onClick={() => {setShowHistConsulta(true);setConsulta({peso:"", registroGeral:"", tamanho:"", tipo:"", pet:consulta?.pet});setAnamneseConsulta(null)}}><MdArrowBack size={18}/></Button>
                             {consulta?.consultaID!=null && <Button size={'small'} onClick={() => {btnEditConsulta()}}><MdEdit size={18}/></Button>}
                         </div>
                         <div className="consulta-detail-form">
@@ -226,6 +231,18 @@ export function Consultas(props:ConsultaProps) {
                                     :
                                     <b>{consulta!=null?consulta.tipo:""}</b>
                                 }
+                                &nbsp;&nbsp;
+                                Médico Veterinário:&nbsp;
+                                {isEditing? 
+                                    <Select id="veterinario" name="veterinario" value={consulta?.veterinario?.veterinarioID?.valueOf()} onChange={selectChange}>
+                                        <Option value={""}>Selecione</Option>
+                                        {vetList.map((vet,idx) => {
+                                            return ( <Option key={idx} value={vet.veterinarioID?.valueOf()}>{vet.nome} {vet.sobrenome}</Option> )
+                                        })}
+                                    </Select>
+                                    :
+                                    <b>{consulta!=null?consulta?.veterinario?.nome+" "+consulta?.veterinario?.sobrenome:""}</b>
+                                }
                                 &nbsp;&nbsp;&nbsp;
                                 Data de Regitro:&nbsp;
                                 {isEditing?
@@ -236,54 +253,46 @@ export function Consultas(props:ConsultaProps) {
                                 }
                                 
                             </span>
-                            <span>Médico Veterinário:&nbsp;
-                            {isEditing? 
-                                <Select id="veterinario" name="veterinario" value={consulta?.veterinario?.veterinarioID?.valueOf()} onChange={selectChange}>
-                                    <Option value={""}>Selecione</Option>
-                                    {vetList.map((vet,idx) => {
-                                        return ( <Option key={idx} value={vet.veterinarioID?.valueOf()}>{vet.nome} {vet.sobrenome}</Option> )
-                                    })}
-                                </Select>
-                                :
-                                <b>{consulta!=null?consulta?.veterinario?.nome+" "+consulta?.veterinario?.sobrenome:""}</b>
-                            }
-                            &nbsp;&nbsp;
-                            Peso: &nbsp;
-                            {isEditing?
-                                <InputText type={'number'} min={0} size={'verysmall'} id={'peso'} name={'peso'} style={{textAlign:'center'}} value={consulta?.peso?consulta.peso:""} onChange={inputChange}/>
-                                :
-                                <b>{consulta?.peso}</b>
-                            }
-                            &nbsp;kg
+                            <span>
+                                Peso: &nbsp;
+                                {isEditing?
+                                    <InputText type={'number'} min={0} size={'verysmall'} id={'peso'} name={'peso'} style={{textAlign:'center'}} value={consulta?.peso?consulta.peso:""} onChange={inputChange}/>
+                                    :
+                                    <b>{consulta?.peso}</b>
+                                }
+                                &nbsp;kg
 
-                            &nbsp;&nbsp;|&nbsp;&nbsp;
+                                &nbsp;&nbsp;|&nbsp;&nbsp;
 
-                            Tamanho: &nbsp;
-                            {isEditing?
-                                <InputText type={'number'} min={0} size={'verysmall'} id={'tamanho'} name={'tamanho'} style={{textAlign:'center'}} value={consulta?.tamanho?consulta.tamanho:""} onChange={inputChange}/>
-                                :
-                                <b>{consulta?.tamanho}</b>
-                            }
-                            &nbsp;cm</span>
-                            <span>Queixa do Responsável:</span>
-                            <TextArea disabled={!isEditing} id={'relatoResponsavel'} name={'relatoResponsavel'} rows={3} value={consulta?.relatoResponsavel} onChange={textAreaChange} />
-                            <span>Registro de Veterinário:</span>
-                            <TextArea disabled={!isEditing} id={'registroGeral'} name={'registroGeral'} rows={3} value={consulta?.registroGeral} onChange={textAreaChange} />
-                            <span style={{marginBottom:0}}><b>Anamnese:</b>&nbsp;&nbsp;
-                            {anamneseConsulta!=null?<button onClick={() => setShowAnamnese(true)}>Ver/Responder</button>:null}
-                            </span><br/>
-                            {isEditing? 
-                                <div style={{display:'flex'}}>
-                                    <Select value={anamneseConsulta?.titulo} onChange={selectAnamneseTemplate}>
-                                        <Option value={""}>Selecione</Option>
-                                        {anamneseList.map((anamnese,idx) => {
-                                            return (<Option key={idx} value={anamnese.titulo}>{anamnese.titulo}</Option>)
-                                        })}
-                                    </Select>
-                                </div>
-                                :
-                                null
-                            }
+                                Tamanho: &nbsp;
+                                {isEditing?
+                                    <InputText type={'number'} min={0} size={'verysmall'} id={'tamanho'} name={'tamanho'} style={{textAlign:'center'}} value={consulta?.tamanho?consulta.tamanho:""} onChange={inputChange}/>
+                                    :
+                                    <b>{consulta?.tamanho}</b>
+                                }
+                                &nbsp;cm
+                                &nbsp;&nbsp;
+                                {isEditing? 
+                                    <>
+                                        <b>Anamnese:</b>&nbsp;&nbsp;
+                                        <Select value={anamneseConsulta?.titulo} onChange={selectAnamneseTemplate}>
+                                            <Option value={""}>Selecione</Option>
+                                            {anamneseList.map((anamnese,idx) => {
+                                                return (<Option key={idx} value={anamnese.titulo}>{anamnese.titulo}</Option>)
+                                            })}
+                                        </Select>
+                                        &nbsp;&nbsp;
+                                        {anamneseConsulta!=null?<button onClick={() => setShowAnamnese(true)}>Ver/Responder</button>:null}
+                                    </>
+                                    :
+                                    <>
+                                        <b>Anamnese:</b>&nbsp;&nbsp;
+                                        <b>{anamneseConsulta?.titulo}</b>
+                                        &nbsp;&nbsp;
+                                        {anamneseConsulta!=null?<button onClick={() => setShowAnamnese(true)}>Ver/Responder</button>:null}
+                                    </>
+                                }
+                            </span>
                             {showAnamnese &&
                                 <div style={{display:'flex', position:'absolute', width:'100vw', height:'100vh', top:0, left:0, alignItems:'center', justifyContent:'center', backgroundColor:'rgb(200,200,200,0.4)'}}>
                                     <AnamneseQuestoes 
@@ -294,6 +303,13 @@ export function Consultas(props:ConsultaProps) {
                                         />
                                 </div>
                             }
+                            <br/>
+                            <span>Registro de Clínico:</span>
+
+                            {/** Incluir editor de texto */}
+                            <CKEditorA content={consulta?.registroGeral}
+                                        onChange={(event:any,editor:any) => ckeditorChange(editor.getData())}/>
+
                         </div>
                         {isEditing && <Button size={'small'} onClick={() => registrarConsulta()}>Salvar</Button>}
                     </div>
@@ -313,8 +329,6 @@ export function Consultas(props:ConsultaProps) {
                             <span> {ultimaConsulta?.peso} kg</span><span> | </span>
                             <Label size={'small'} >Tamanho: </Label>
                             <span> {ultimaConsulta?.tamanho} cm</span><br/>
-                            <Label size={'small'} >Queixa: </Label><br/>
-                            <div style={{backgroundColor:'#ffffff', padding:6, borderRadius:3, margin:3}}> {ultimaConsulta?.relatoResponsavel}</div>
                             <Label size={'small'} >Registro Veterinário: </Label><br/>
                             <div style={{backgroundColor:'#ffffff', padding:6, borderRadius:3, margin:3}}> {ultimaConsulta?.registroGeral}</div>
                             <Label size={'small'} >Anamnese: </Label><br/>

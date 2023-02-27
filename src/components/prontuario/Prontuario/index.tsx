@@ -92,7 +92,7 @@ export function Prontuario(props:ProntuarioProps) {
     useEffect(() => {
         moment.locale('pt-br');
         if(props.petR?.pet == null && petR == null) {
-            setPetExist(false);
+            setPetExist(true);
             getListPets();
         } else {
             setPetExist(true)

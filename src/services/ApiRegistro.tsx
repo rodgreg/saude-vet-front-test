@@ -84,6 +84,19 @@ export const ApiRegistro = () => ({
         return result;
     },[]),
 
+    deleteEndereco: useCallback(async (endereco:Endereco) => {
+
+        var result:any = "";
+        await api.delete('/registro/responsavel/deleteEndereco', {data:endereco})
+        .then(function (response) {
+            result = response;
+        })
+        .catch(function (error) {
+            result = error;
+        });
+        return result;
+    },[]),
+
     addContatoToResponsavel: useCallback(async (responsavelID:Number, contato:Contato) => {
         // Objeto Endereço
         // {

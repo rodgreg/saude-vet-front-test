@@ -20,10 +20,10 @@ const Div = styled('div', {
 
 interface principalProps {
     page:String;
-    responsavel:Responsavel;
+    responsavel:Responsavel|null;
     pet?:Pet;
-    pet_resp?:Pet_Resp;
-    veterinario:Veterinario;
+    pet_resp?:Pet_Resp|null;
+    veterinario:Veterinario|null;
     editResFormClick:(event: React.MouseEvent<HTMLButtonElement>, responsavel:Responsavel|null) => void;
     editVetFormClick:(event: React.MouseEvent<HTMLButtonElement>, veterinario:Veterinario|null) => void;
     editPetFormClick:(event: React.MouseEvent<HTMLButtonElement>, petR:Pet_Resp|null) => void;
@@ -73,10 +73,10 @@ const Principal = (props:principalProps) => {
 
 export function Home () {
     const [showPage, setShowPage] = useState<String>("home");
-    const [responsavel, setResponsavel] = useState<Responsavel>({responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, pets: [], enderecos: [], contatos: [],});
-    const [pet_resp, setPet_Resp] = useState<Pet_Resp>({pet:{petID:null, nome:"", genero:"", cor:"", especie:"", fertil:false, nascimento:null, pedigree:false, raca:"", dataRegistro:null},
+    const [responsavel, setResponsavel] = useState<Responsavel|null>({responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, pets: [], enderecos: [], contatos: [],});
+    const [pet_resp, setPet_Resp] = useState<Pet_Resp|null>({pet:{petID:null, nome:"", genero:"", cor:"", fertil:false, nascimento:null, pedigree:false, raca:null, dataRegistro:null},
                                                         responsavel:{responsavelID:null, nome: "", sobrenome: "", genero:"", tipoPessoa:"", tipoRegistro:"", registroNum:"", nascimento:null, aceitaEmail:false, enderecos: [], contatos: [],}});
-    const [veterinario, setVeterinario] = useState<Veterinario>({veterinarioID:null, nome:"", sobrenome:"", genero:"", cpf:"", cidade:"", uf:"",crmvs:[]});
+    const [veterinario, setVeterinario] = useState<Veterinario|null>({veterinarioID:null, nome:"", sobrenome:"", genero:"", cpf:"", cidade:"", uf:"",crmvs:[]});
     const [theme, setTheme] = useState<String>('ligth')
 
     const changeTheme = () => {
@@ -84,16 +84,12 @@ export function Home () {
     };
 
     const editResponsavel = (resp:Responsavel|null) => {
-        if(resp!=null){
-            setResponsavel(resp);
-        }
+        setResponsavel(resp);
         setShowPage('cadResponsavel');
     };
 
     const editVeterinario = (vet:Veterinario|null) => {
-        if (vet!=null) {
-            setVeterinario(vet);
-        }
+        setVeterinario(vet);
         setShowPage('cadVeterinario');
     };
 

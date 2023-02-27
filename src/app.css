@@ -2,8 +2,9 @@
     --bg: #eeeeee;
     --bg-header: #a8c990;
     --bg-input: #ffffff;
+    --bg-form: #d7e3d1;
     --bg-button-default: #b4c6a7;
-    --bg-button-default-hover: #e1eab8;
+    --bg-button-default-hover: #ccda91;
     --bg-button-gray:#bdbdbd;
     --bg-button-gray-hover:#dfdfdf;
     --bg-button-red:#dd6565;
@@ -19,6 +20,7 @@
     --bg: #1e1e1e;
     --bg-header: #0d1805;
     --bg-input: #312535;
+    --bg-form: #a8c999;
     --bg-button-default: #461959;
     --bg-button-default-hover: #69388b;
     --bg-button-gray:#575757;

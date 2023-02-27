@@ -1,4 +1,5 @@
 import { Pet } from "./Pet";
+import { Vacina } from "./Util";
 import { Veterinario } from "./Veterinario";
 
 export interface Consulta {
@@ -8,7 +9,6 @@ export interface Consulta {
     anamnese?:Anamnese;
     peso?:string;
     tamanho?:string;
-    relatoResponsavel?:string;
     registroGeral?:string;
     pet?:Pet|null;
     veterinario?:Veterinario;    
@@ -27,4 +27,20 @@ export interface Questao {
     descricao?:string;
     options?:string[];
     resposta?:string;
+}
+
+export interface CartaoVacina {
+    cartaoVacinaID?: number;
+    pet:Pet | null;
+    aplicacao: AplicacaoVacina[] | null;
+
+}
+
+export interface AplicacaoVacina {
+    aplicacaoVacinaID?: number;
+    vacina: Vacina;
+    dataProgramada?: Date | null;
+    dataAplicada?: Date | null;
+    dosagem: string | null;
+    veterinario?: Veterinario | null;
 }

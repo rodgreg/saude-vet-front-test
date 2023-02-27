@@ -31,21 +31,22 @@
 
 .consulta-detail-container {
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    padding: 10px;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 2px;
 }
 
 .consulta-detail-form-container {
     display: flex;
     flex-direction: column;
-    padding: 10px;
+    padding: 0px;
     max-height: 435px;
 }
 
 .consulta-detail-form {
     display: flex;
     flex-direction: column;
-    padding: 10px;
+    padding: 5px;
     overflow: auto;
     max-height: 440px;
     border-top: 1px solid var(--border-color);

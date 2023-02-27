@@ -10,7 +10,7 @@ import { Veterinario, Crmv } from '../../../interfaces/Veterinario';
 
 
 interface formCadProps {
-    veterinarioForm?: Veterinario;
+    veterinarioForm?: Veterinario|null;
 }
 
 export function FormCadVeterinario(props:formCadProps) {

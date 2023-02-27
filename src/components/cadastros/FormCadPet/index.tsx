@@ -12,7 +12,7 @@ import { ApiUtil } from '../../../services/ApiUtil';
 import { MdRemove, MdUpload } from 'react-icons/md';
 
 interface formCadProps {
-    petForm?: Pet_Resp;
+    petForm?: Pet_Resp|null;
 }
 
 export function FormCadPet(props:formCadProps) {

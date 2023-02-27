@@ -416,7 +416,7 @@ export function ListCadastros (props:listCadastrosProps) {
                           activeClassName={'active'}
                       />
                   <MdRefresh size={22} onClick={() => getListResponsaveis()} style={{cursor:'pointer'}} />
-                  <Button size={'small'} onClick={(e) => props.editResFormClick(e,null)}><MdAdd size={15}/></Button>
+                  <Button size={'small'} onClick={(e) => props.editResFormClick(e, null)}><MdAdd size={15}/></Button>
                 </div>
                 <div id="content_table">
                     <table>

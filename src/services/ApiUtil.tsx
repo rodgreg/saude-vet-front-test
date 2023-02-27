@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useCallback } from 'react';
-import { Especie, Medicamento, Patologia, Raca } from '../interfaces/Util';
+import { Especie, Medicamento, Patologia, Raca, Vacina } from '../interfaces/Util';
 
 const api = axios.create({
     baseURL: 'http://localhost:8765',
@@ -261,6 +261,69 @@ export const ApiUtil = () => ({
     deletePatologia: useCallback(async (patologiaid:number) => {
         var result:any = "";
         await api.delete('/registro/util/patologia/delete/'+patologiaid)
+        .then(function (response) {
+            result = response;
+        })
+        .catch(function (error) {
+            result = error;
+        });
+        return result;
+    },[]),
+
+    //Crud Vacina
+    listVacinas: useCallback(async () => {
+        var result:any = null;
+        await api.get<Vacina[]>('/vacina/all')
+        .then(function (response) {
+            result = response;
+        })
+        .catch(function (error) {
+            result = error;
+            console.log(error);
+        });
+        return result;
+    },[]),
+
+    getVacinaById: useCallback(async (vacinaid:number) => {
+        var result:any = "";
+        await api.get<Patologia>('/vacina/'+vacinaid)
+        .then(function (response) {
+            result = response;
+        })
+        .catch(function (error) {
+            result = error;
+        });
+        return result;
+    },[]),
+
+    saveVacina: useCallback(async (vacina:Vacina) => {
+        var result:any = "";
+        await api.post('/vacina/save', vacina)
+        .then(function (response) {
+            result = response;
+        })
+        .catch(function (error) {
+            result = error;
+        });
+        return result;
+    },[]),
+
+    updateVacina: useCallback(async (vacina:Vacina) => {
+        var result:any = "";
+        console.log(vacina)
+        await api.post('/vacina/save', vacina)
+        .then(function (response) {
+            result = response;
+        })
+        .catch(function (error) {
+            result = error;
+        });
+        return result;
+    },[]),
+
+    deleteVacina: useCallback(async (vacinaid:number) => {
+        var result:any = "";
+        await api.delete('/vacina/delete/'+vacinaid)
         .then(function (response) {
             result = response;
         })

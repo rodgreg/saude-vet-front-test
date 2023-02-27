@@ -28,3 +28,11 @@ export interface Patologia {
     descricao:string;
     dataRegistro?:Date|null;
 }
+
+export interface Vacina {
+    vacinaID:number|null;
+    nome:string;
+    periodicidade:string;
+    indicacao:string;
+    dataRegistro?:Date|null;
+}
