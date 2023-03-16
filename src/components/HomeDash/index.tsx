@@ -1,10 +1,14 @@
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
+// @ts-ignore
 import moment from "moment/min/moment-with-locales";
 import { styled } from "@stitches/react";
 import { MdCalendarToday, MdCake, MdAssessment } from "react-icons/md";
 import '../../../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import {Chart} from 'react-google-charts';
 import './homeDash.css';
+import { Responsavel } from "../../interfaces/Responsavel";
+import { Pet_Resp } from "../../interfaces/Pet";
+import { AxiosResponse } from "axios";
+import { ApiRegistro } from "../../services/ApiRegistro";
 
 const Div = styled('div', {
 
@@ -12,8 +16,71 @@ const Div = styled('div', {
 
 export function HomeDash() {
     const [saudacao,setSaudacao] = useState<string>('');
+    const apiRegistro = ApiRegistro();
+    const [listResponsaveis, setListResponsaveis] = useState<Responsavel[]>([]);
+    const [listPets, setListPets] = useState<Pet_Resp[]>([]);
 
-    useLayoutEffect(() => {
+    const getListResponsaveis = async() => {
+        var result:AxiosResponse = await apiRegistro.listResponsaveis();
+        if(result.status>=200 && result.status<=300) {
+            var responsaveisNiverAtual:Responsavel[] = result.data
+            responsaveisNiverAtual = responsaveisNiverAtual.filter(resp => {
+                if(resp.nascimento!=null) {
+                    var aniversarianteMes:boolean = moment(resp.nascimento).toDate().getMonth()===new Date().getMonth();
+                    if (aniversarianteMes) {
+                        return resp;
+                    } else {
+                        return;
+                    }
+                }
+            })
+            responsaveisNiverAtual = responsaveisNiverAtual.sort((a,b) => {
+                if(moment(a.nascimento).toDate().getDate()>moment(b.nascimento).toDate().getMonth()) {
+                    return 1;
+                } else if(moment(a.nascimento).toDate().getDate()<moment(b.nascimento).toDate().getMonth()) {
+                     return -1;
+                } else {
+                    return 0;
+                }});
+            setListResponsaveis(responsaveisNiverAtual);
+            getListPets(result.data);
+        }
+    }
+
+    const getListPets = (list:Responsavel[]) => {
+        
+            var petsNiverAtual:Pet_Resp[] | any[] = list.map((resp,idx) =>
+                resp.pets?.map((pet,idx) => {
+                    return {responsavel:resp, pet:pet};
+                }))
+            let listTmpConcat:any[] = [];
+            for (let i=0; i<petsNiverAtual.length; i++) {
+                listTmpConcat = listTmpConcat.concat(petsNiverAtual[i]);
+            };
+            petsNiverAtual = listTmpConcat;
+            petsNiverAtual = petsNiverAtual.filter(pet => {
+                if(pet.pet.nascimento!=null) {
+                    var aniversarianteMes:boolean = moment(pet.pet.nascimento).toDate().getMonth()===new Date().getMonth();
+                    if (aniversarianteMes) {
+                        return pet;
+                    } else {
+                        return;
+                    }
+                }
+            });
+
+            petsNiverAtual = petsNiverAtual.sort((a,b) => {
+                if(moment(a.nascimento).toDate().getDate()>moment(b.nascimento).toDate().getMonth()) {
+                    return 1;
+                } else if(moment(a.nascimento).toDate().getDate()<moment(b.nascimento).toDate().getMonth()) {
+                     return -1;
+                } else {
+                    return 0;
+                }});
+            setListPets(petsNiverAtual);
+    }
+    
+    useEffect(() => {
         moment.locale('pt-br');
         var currentHour = parseInt(moment(new Date()).format('HH'));
         if(currentHour >= 5 && currentHour <= 12) {
@@ -23,6 +90,7 @@ export function HomeDash() {
         } else {
             setSaudacao("Boa noite");
         }
+        getListResponsaveis();
     },[]);
 
     return (
@@ -34,7 +102,7 @@ export function HomeDash() {
                 <div id="eventos_proximos_title" className="module_title">
                     <MdCalendarToday size={22}/>
                     <span><b>Próximos Eventos</b></span>
-                    <a href="">ver agenda</a>
+                    <a href="/home?page=cadPet">ver agenda</a>
                 </div>
                 <div id="eventos_proximos_content">
                     <div className="evento_card">
@@ -63,99 +131,46 @@ export function HomeDash() {
                 <div id="aniver_pets_title" className="module_title">
                     <MdCake size={22} />
                     <span><b>Aniversariantes do mês (Pets)</b></span>
-                    <span>Dezembro</span>
+                    <span><b>{moment(new Date()).format('MMMM')}</b></span>
                 </div>
                 <div id="aniver_pets_content">
-                    <table>
+                    <table id='responsaveis_aniversariantes_mes'>
                         <thead>
-                            <tr>
+                            <tr style={{textAlign:'center'}}>
                                 <th style={{width:'10%'}}>Dia</th>
                                 <th style={{width:'90%'}}>Responsável</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td style={{textAlign:'center'}}>01</td>
-                                <td>Marcelo</td>
-                            </tr>
-                            <tr>
-                                <td style={{textAlign:'center'}}>03</td>
-                                <td>Maria Elisa</td>
-                            </tr>
-                            <tr>
-                                <td style={{textAlign:'center'}}>03</td>
-                                <td>Totó</td>
-                            </tr>
-                            <tr>
-                                <td style={{textAlign:'center'}}>04</td>
-                                <td>Totó</td>
-                            </tr>
-                            <tr>
-                                <td style={{textAlign:'center'}}>10</td>
-                                <td>Totó</td>
-                            </tr>
-                            <tr>
-                                <td style={{textAlign:'center'}}>11</td>
-                                <td>Totó</td>
-                            </tr>
-                            <tr>
-                                <td style={{textAlign:'center'}}>13</td>
-                                <td>Totó</td>
-                            </tr>
-                            <tr>
-                                <td style={{textAlign:'center'}}>19</td>
-                                <td>Totó</td>
-                            </tr>
-                            <tr>
-                                <td style={{textAlign:'center'}}>22</td>
-                                <td>Totó</td>
-                            </tr>
+                            {listResponsaveis.length>0?listResponsaveis.map((resp,idx) => {
+                                return (
+                                    <tr key={idx}>
+                                        <td style={{textAlign:'center'}}>{moment(resp.nascimento).toDate().getDate()}</td>
+                                        <td>{resp.nome + ' ' + resp.sobrenome}</td>
+                                    </tr>
+                                )
+                            }
+                            ):<tr><td colSpan={2}>Sem aniversariantes no mês!</td></tr>}                            
                         </tbody>    
                     </table>
-                    <table>
+                    <table id='pets_aniversariantes_mes'>
                         <thead>
-                            <tr>
+                            <tr style={{textAlign:'center'}}>
                                 <th style={{width:'10%'}}>Dia</th>
-                                <th style={{width:'90%'}}>Pets</th>
+                                <th style={{width:'45%'}}>Pets</th>
+                                <th style={{width:'45%'}}>Responsável</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td style={{textAlign:'center'}}>01</td>
-                                <td>Totó</td>
-                            </tr>
-                            <tr>
-                                <td style={{textAlign:'center'}}>03</td>
-                                <td>Nina</td>
-                            </tr>
-                            <tr>
-                                <td style={{textAlign:'center'}}>03</td>
-                                <td>Totó</td>
-                            </tr>
-                            <tr>
-                                <td style={{textAlign:'center'}}>04</td>
-                                <td>Totó</td>
-                            </tr>
-                            <tr>
-                                <td style={{textAlign:'center'}}>10</td>
-                                <td>Totó</td>
-                            </tr>
-                            <tr>
-                                <td style={{textAlign:'center'}}>11</td>
-                                <td>Totó</td>
-                            </tr>
-                            <tr>
-                                <td style={{textAlign:'center'}}>13</td>
-                                <td>Totó</td>
-                            </tr>
-                            <tr>
-                                <td style={{textAlign:'center'}}>19</td>
-                                <td>Totó</td>
-                            </tr>
-                            <tr>
-                                <td style={{textAlign:'center'}}>22</td>
-                                <td>Totó</td>
-                            </tr>
+                        {listPets.length>0?listPets.map((pet,idx) => {
+                            return(
+                                <tr key={idx}>
+                                    <td>{moment(pet.pet.nascimento).toDate().getDate()}</td>
+                                    <td>{pet.pet.nome}</td>
+                                    <td>{pet.responsavel.nome+' '+pet.responsavel.sobrenome}</td>
+                                </tr>
+                            )
+                        }):<tr><td colSpan={3}>Sem aniversariantes no mês!</td></tr>}         
                         </tbody>    
                     </table>
                 </div>

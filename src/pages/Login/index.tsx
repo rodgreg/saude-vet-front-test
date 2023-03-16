@@ -36,7 +36,7 @@ export function Login() {
         <div className="login-container">
             <div className='login-form-container'>
                 <form className='login-form' onSubmit={submitLogin}>
-                    <img src='src\assets\Logo exemplo.jpg' 
+                    <img src='src\assets\Logo-exemplo.jpg' 
                         style={{height:80, width:180, objectFit: 'cover', objectPosition: 'center', borderRadius:5, border:'solid 1px var(--border-color)'}}
                     />
                     <div>

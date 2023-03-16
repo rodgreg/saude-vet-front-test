@@ -1,5 +1,6 @@
 :root {
     --bg: #eeeeee;
+    --bg-div1: #ded;
     --bg-header: #a8c990;
     --bg-input: #ffffff;
     --bg-form: #d7e3d1;
@@ -12,12 +13,15 @@
     --bg-checked: #e4e9ce;
     --txt-color: #434641;
     --txt-color-secondary: #173800;
+    --txt-color-dark: #f3f3f3;
     --border-color:#1e390a;
     --border-color-secondary:#39290a;
+
 }
 
 [data-theme='dark'] {
     --bg: #1e1e1e;
+    --bg-div1: rgb(3, 40, 3);
     --bg-header: #0d1805;
     --bg-input: #312535;
     --bg-form: #a8c999;
@@ -30,6 +34,7 @@
     --bg-checked: #5b340a;
     --txt-color: #f6fff0;
     --txt-color-secondary: #ecdbb9;
+    --txt-color-dark: #1b350b;
     --border-color:#cbd6c4;
     --border-color-secondary:#ccc4d6;
 }

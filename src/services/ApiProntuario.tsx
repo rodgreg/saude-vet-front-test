@@ -1,14 +1,18 @@
 import axios from 'axios';
 import { useCallback } from 'react';
-import { Anamnese, CartaoVacina, Consulta } from '../interfaces/Prontuario';
+import { BASE_URL } from '../configs/constants';
+import { Anamnese, AplicacaoVacina, CartaoVacina, Consulta } from '../interfaces/Prontuario';
+
+const baseAdress = BASE_URL;
 
 const api = axios.create({
-    baseURL: 'http://localhost:8765',
-    timeout: 2000
-  });
+    baseURL: baseAdress,
+    timeout: 1000
+});
 
 export const ApiProntuario = () => ({
 
+  // Chamadas para Consultas de Pets
   listConsultasPet: useCallback(async (petID:number) => {
     var result:any = null;
     await api.get<Consulta[]>('/consulta/geral/pet/'+petID)
@@ -47,7 +51,8 @@ export const ApiProntuario = () => ({
     });
     return result;
   },[]),
-    
+
+  // Chamadas para Template de Anamnese    
   saveTemplateAnamnese: useCallback(async (Anamnese:Anamnese) => {
     var result:any = null;
     await api.post('/consulta/geral/template/save', Anamnese)
@@ -74,9 +79,10 @@ export const ApiProntuario = () => ({
     return result;
   },[]),
 
+  // Chamadas para Cartão de Vacina
   listCartaoVacinaByPet: useCallback(async(petid:number) => {
     var result:any = null;
-    await api.get<CartaoVacina[]>('/vacina/cartao/byPet/1'+petid)
+    await api.get<CartaoVacina[]>('/vacina/cartao/byPet/'+petid)
     .then(function (response) {
         result = response;
     })
@@ -109,6 +115,33 @@ export const ApiProntuario = () => ({
     .catch(function (error) {
         result = error;
         console.log(error);
+    });
+    return result;
+  },[]),
+
+  // Chamadas para Aplicações de Vacinas
+  addAplicacaoToCartaoVacina: useCallback(async(cartaoid:number, aplicacao:AplicacaoVacina) => {
+    var result:any = "";
+    await api.post<CartaoVacina>('/vacina/cartao/addAplicacao/'+cartaoid, aplicacao)
+    .then(function (response){
+      result = response;
+    })
+    .catch(function (error) {
+      result = error;
+      console.log(error);
+    });
+    return result;
+  },[]),
+
+  removeAplicacaoToCartaoVacina: useCallback(async(aplicacaoid:number) => {
+    var result:any = "";
+    await api.delete<CartaoVacina>('/vacina/cartao/removeAplicacao/'+aplicacaoid)
+    .then(function (response){
+      result = response;
+    })
+    .catch(function (error) {
+      result = error;
+      console.log(error);
     });
     return result;
   },[]),

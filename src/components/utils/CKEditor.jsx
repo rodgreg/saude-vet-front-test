@@ -8,8 +8,8 @@ class CKEditorA extends Component {
     render() {
         return (
             <div id='ckeditor'>
-                <div id='ckeditor_toolbar'></div>
-                <div id='ckeditor_editable-component' style={{display:'flex', backgroundColor:'var(--bg-input)', minHeight:300, maxHeight:300, overflowY:'scroll' }}>
+                <div id='ckeditor_toolbar' style={{zIndex:0}}></div>
+                <div id='ckeditor_editable-component' style={{display:'block',width:'100%', backgroundColor:'var(--bg-input)', minHeight:400, maxHeight:450, overflowY:'scroll' }}>
                     <CKEditor
                         editor={ DecoupledEditor }
                         data={this.props.content}
@@ -22,16 +22,16 @@ class CKEditorA extends Component {
                             toolbarContainer.appendChild( editor.ui.view.toolbar.element );
                         } }
                         onChange={( event, editor ) => {
-                            //console.log( 'Blur.', editor );
+                            // console.log( 'Blur.', editor );
                             this.props.onChange(event, editor);
                         } }
                         onBlur={ ( event, editor ) => {
-                            //console.log( 'Blur.', editor );
-                            this.props.onBlur(event, editor);
+                            console.log( 'Blur.', editor );
+                            // this.props.onBlur(event, editor);
                         } }
                         onFocus={ ( event, editor ) => {
-                            //console.log( 'Focus.', editor );
-                            this.props.onFocus(event,editor)
+                            console.log( 'Focus.', editor );
+                            // this.props.onFocus(event,editor)
                         } }
                     />
                 </div>

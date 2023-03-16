@@ -1,9 +1,12 @@
 import axios from 'axios';
 import { useCallback } from 'react';
+import { BASE_URL } from '../configs/constants';
 import { Especie, Medicamento, Patologia, Raca, Vacina } from '../interfaces/Util';
 
+const baseAdress = BASE_URL;
+
 const api = axios.create({
-    baseURL: 'http://localhost:8765',
+    baseURL: baseAdress,
     timeout: 1000
 });
 

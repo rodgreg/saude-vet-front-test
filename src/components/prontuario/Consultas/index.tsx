@@ -13,11 +13,19 @@ import { MdAddCircleOutline, MdArrowBack, MdEdit } from "react-icons/md";
 import { AxiosResponse } from "axios";
 import { ApiRegistro } from "../../../services/ApiRegistro";
 import CKEditorA from '../../utils/CKEditor';
+import { Chart } from "react-google-charts";
 
 interface ConsultaProps {
     petProps:Pet|null;
     respProps?:Responsavel;
 }
+
+interface HistPesoTam {
+    data:Date | null;
+    peso:string | null;
+    tamanho:string | null;
+}
+
 
 export function Consultas(props:ConsultaProps) {
 
@@ -32,14 +40,17 @@ export function Consultas(props:ConsultaProps) {
     const [anamneseList, setAnamneseList] = useState<Anamnese[]>([]);
     const [anamneseConsulta, setAnamneseConsulta] = useState<Anamnese|null>(null);
     const [showAnamnese, setShowAnamnese] = useState<boolean>(false);
+    const [dataChart, setDataChart] = useState<any[][]>([]);
+
+    const [pesoHist,setPesoHist] = useState<HistPesoTam[]>([]);
+    const [registroConsultaHist, setRegistroConsultaHist] = useState<string>("");
 
     const registrarConsulta = async () => {
         if(consulta?.anamnese!=null) {
-            console.log(consulta);
             if(consulta.dtRegistro==null) {
                 consulta.dtRegistro=new Date();
             }
-            let result:AxiosResponse
+            let result:AxiosResponse;
             if(consulta.consultaID == null) {
                 result = await api.saveConsultaPet(consulta);
             } else {
@@ -82,6 +93,24 @@ export function Consultas(props:ConsultaProps) {
                 })
                 setConsultaList(consListTemp);
                 setUltimaConsulta(consListTemp[0]);
+                var tempPesoHist:any[] = consListTemp.map(cons => {var pesoH:HistPesoTam = {data:cons.dtRegistro?cons.dtRegistro:null,
+                                                                                            peso:cons.peso?cons.peso:null,
+                                                                                            tamanho:cons.tamanho?cons.tamanho:null}; return(pesoH)});
+                setPesoHist(tempPesoHist);
+                
+                // Popula dados do gráfico
+                var dataTmpchart:any[][] = [["Data", "Peso", "Tamanho"]];
+                tempPesoHist.sort((a,b) => {if(a.data>b.data){return 1;} else if(a.data<b.data){return -1;} else {return 0;}});
+                for (let i=0;i<tempPesoHist.length;i++) {
+                    dataTmpchart.push([moment(tempPesoHist[i].data).format("DD/MM/YYYY"),Number(tempPesoHist[i].peso), Number(tempPesoHist[i].tamanho)])
+                }
+                setDataChart(dataTmpchart);
+                
+                var registroHist:string = "";
+                for(let i=0;i<consListTemp.length;i++) {
+                    registroHist=registroHist+`<h3>Registro de: <b>${moment(consListTemp[i].dtRegistro).format("DD/MM/YYYY HH:mm")}</b></h3><br/>`+consListTemp[i].registroGeral+"<br/><br/>";
+                }
+                setRegistroConsultaHist(registroHist);
             }
         }
         let consultaTmp = consultaList?.filter(cons => cons.pet?.petID === petFind.petID)
@@ -294,7 +323,7 @@ export function Consultas(props:ConsultaProps) {
                                 }
                             </span>
                             {showAnamnese &&
-                                <div style={{display:'flex', position:'absolute', width:'100vw', height:'100vh', top:0, left:0, alignItems:'center', justifyContent:'center', backgroundColor:'rgb(200,200,200,0.4)'}}>
+                                <div style={{display:'flex', position:'absolute', width:'100vw', height:'100vh', top:0, left:0, alignItems:'center', justifyContent:'center', backgroundColor:'rgb(200,200,200,0.4)', zIndex:2}}>
                                     <AnamneseQuestoes 
                                         anamnese={anamneseConsulta}
                                         updateAnamnese={(e,newAnamnese) => {if(newAnamnese!=null){setConsulta({...consulta, anamnese:newAnamnese});setShowAnamnese(false)}}}
@@ -305,32 +334,56 @@ export function Consultas(props:ConsultaProps) {
                             }
                             <br/>
                             <span>Registro de Clínico:</span>
-
-                            {/** Incluir editor de texto */}
-                            <CKEditorA content={consulta?.registroGeral}
-                                        onChange={(event:any,editor:any) => ckeditorChange(editor.getData())}/>
+                            {isEditing?
+                            
+                            <CKEditorA content={consulta?.registroGeral?.toString()}
+                                        onChange={(event:any,editor:any) => ckeditorChange(editor.getData())} />
+                            :<div
+                                style={{backgroundColor:"var(--bg-input)", borderRadius:4, paddingInline:10, overflow:'auto', maxHeight:700}}
+                                dangerouslySetInnerHTML={{ __html: consulta!=null && consulta.registroGeral!=null?consulta.registroGeral:"<p>Sem registro</p>"}} />
+                            }
 
                         </div>
                         {isEditing && <Button size={'small'} onClick={() => registrarConsulta()}>Salvar</Button>}
                     </div>
                     <div className="consulta-detail-historico">
                         <div className="consulta-detail-historico-title">
-                            <p>Dados da última consulta</p>
+                            <p>Histórico</p>
                         </div>
                         <div className="consulta-detail-historico-content">
+                        <Chart
+                            chartType="LineChart"
+                            data={dataChart}
+                            width="100%"
+                            height="200px"
+                            options={{
+                                title: "Histórico de Peso e Altura",
+                                curveType: "function",
+                                legend: { position: "bottom" },
+                              }}
+                            legendToggle
+                        />
+                        {/* {pesoHist.map(hist => (<>
+                                                    <span>data: {moment(hist.data).format('DD/MM/YYYY')} </span>
+                                                    <span>Peso: {hist.peso} kg </span>
+                                                    <span>Tamanho: {hist.tamanho} cm </span><br/>
+                                                </>)
+                                    )} */}
                         {ultimaConsulta!=null? <>
-                            <Label size={'small'} >Data: </Label>
+                            <br/>
+                            <Label size={'small'} >Ultimo registro em: </Label>
                             <span> {moment(ultimaConsulta?.dtRegistro).format('DD/MM/YYYY HH:mm')}</span><br/>
-                            <Label size={'small'} >Tipo de Consulta: </Label>
+                            {/* <Label size={'small'} >Tipo de Consulta: </Label>
                             <span> {ultimaConsulta?.tipo}</span><br/>
                             <Label size={'small'} >Veterinário: </Label>
                             <span> {ultimaConsulta?.veterinario?.nome + " " + ultimaConsulta?.veterinario?.sobrenome}</span><br/>
                             <Label size={'small'} >Peso: </Label>
                             <span> {ultimaConsulta?.peso} kg</span><span> | </span>
                             <Label size={'small'} >Tamanho: </Label>
-                            <span> {ultimaConsulta?.tamanho} cm</span><br/>
+                            <span> {ultimaConsulta?.tamanho} cm</span><br/> */}
                             <Label size={'small'} >Registro Veterinário: </Label><br/>
-                            <div style={{backgroundColor:'#ffffff', padding:6, borderRadius:3, margin:3}}> {ultimaConsulta?.registroGeral}</div>
+                            <div style={{backgroundColor:'#ffffff', padding:6, borderRadius:3, margin:3, overflow:'auto',maxHeight:400}}
+                                dangerouslySetInnerHTML={{ __html: registroConsultaHist}} ></div>
                             <Label size={'small'} >Anamnese: </Label><br/>
                             {ultimaConsulta?.anamnese !=null ? <div style={{display:'flex', width:'100%', alignItems:'center', justifyContent:'center'}}>
                                                                     <AnamneseQuestoes anamnese={ultimaConsulta.anamnese} 

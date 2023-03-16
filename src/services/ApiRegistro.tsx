@@ -3,10 +3,13 @@ import { Contato, Endereco, Responsavel } from '../interfaces/Responsavel';
 import { Pet } from '../interfaces/Pet';
 import { useCallback } from 'react';
 import { Crmv, Veterinario } from '../interfaces/Veterinario';
+import { BASE_URL } from '../configs/constants';
+
+const baseAdress = BASE_URL;
 
 const api = axios.create({
-    baseURL: 'http://localhost:8765',
-    timeout: 2000
+    baseURL: baseAdress,
+    timeout: 1000
 });
 
 export const ApiRegistro = () => ({
@@ -162,8 +165,8 @@ export const ApiRegistro = () => ({
 
     // Apis CRUD PETs #####
     listPets: useCallback(async () => {
-        var result = null;
-        await api.get('/registro/pet/all')
+        var result:any = "";
+        await api.get<Pet[]>('/registro/pet/all')
         .then(function (response) {
             result = response;
         })

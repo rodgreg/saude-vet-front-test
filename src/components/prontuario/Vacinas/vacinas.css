@@ -30,3 +30,16 @@
 .vacina-calendar {
     width: 700px;
 }
+
+.vacina-form-add {
+    display:flex;
+    gap:20px; 
+    padding:10px;
+}
+
+.vacina-form-add-button {
+    display:flex;
+    gap:20px; 
+    padding:10px;
+    justify-content: end;
+}

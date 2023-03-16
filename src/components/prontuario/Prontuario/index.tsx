@@ -11,6 +11,7 @@ import { ApiRegistro } from "../../../services/ApiRegistro";
 import './prontuario.css';
 import { Responsavel } from "../../../interfaces/Responsavel";
 import { MdOutlineChangeCircle } from "react-icons/md";
+import { BASE_URL } from "../../../configs/constants";
 
 interface ProntuarioProps {
     petR?:Pet_Resp
@@ -102,7 +103,7 @@ export function Prontuario(props:ProntuarioProps) {
     },[])
 
     return (
-        <>
+    <>
         {!petExist?
             <div className='modal-select-pet-overlay'>
                 <div className='modal-select-pet'>
@@ -115,86 +116,85 @@ export function Prontuario(props:ProntuarioProps) {
                     </Select>
                 </div>
             </div>
-        :
-        <>
-        <div className='consulta-container'>
-            <div className='consulta-title'>
-                <div className="consulta-title-responsavel">
-                    <div style={{display:'flex', columnGap:15}}>
+            :
+            <div className='consulta-container'>
+                <div className='consulta-title'>
+                    <div className="consulta-title-pet">
                         <Button size={'small'} onClick={() => {setPetR(null);setPetExist(false);setShowContatos(false)}}><MdOutlineChangeCircle size={22}/></Button>
-                        <div style={{display:'flex', flexDirection:'column', alignItems:'flex-start', justifyContent:'flex-start'}}>
-                            <span style={{marginTop:0, marginBottom:0}}>Responsável:</span>
-                            <span style={{marginTop:0, marginBottom:8}}><b>{petR?.responsavel.nome + " " + petR?.responsavel.sobrenome}</b></span>
-                            <Button size={'small'} onClick={() => setShowContatos(!showContatos)}>Ver Contatos</Button>  
+                        <div style={{display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', height:'100%'}}>
+                            <img src={petR?.pet.imgPerfil!=null?BASE_URL+'/registro/pet/imgPerfil/'+petR?.pet.petID:"src\\assets\\Logo-exemplo.jpg"}
+                                style={{height:90, width:90, objectFit: 'cover', objectPosition: 'center', borderRadius:5, border:'solid 2px var(--border-color)'}}
+                            />
+                        </div>
+                        <div>
+                            <Label size={'medium'} ><b>{petR?.pet.nome}</b></Label><br/>
+                            <Label size={'small'}>{petR?.pet.genero}</Label><span> de cor </span><Label size={'small'}>{petR?.pet.cor}</Label>
+                            <span> nascido em: </span><Label size={'small'}>{moment(petR?.pet.nascimento).format('DD/MM/yyyy')} ({moment(petR?.pet.nascimento).add(1,'year').fromNow(true)})</Label><br/>
+                            <span>Espécie </span><Label size={'small'}>{petR?.pet.raca?.especie.nome}</Label><span> de raça </span><Label size={'small'}>{petR?.pet.raca?.nome}</Label>
+                            <span>. Encontra-se </span><Label size={'small'}>{petR?.pet.fertil?"Fertil":"Estéril"}</Label><span> e </span><Label size={'small'}>{petR?.pet.pedigree?"Com Pedigree":"Sem Pedigree"}</Label>
                         </div>
                     </div>
-                    <div>
-                        {petR?.responsavel!=null && petR?.responsavel.contatos!=null && petR?.responsavel.contatos?.length>0?
-                            <>
-                            {showContatos && 
-                                <div className="consulta-title-responsavel-contatos">
-                                    <Label size={'small'} style={{marginTop:0, marginBottom:8}}><u>Contatos:</u></Label>
-                                    {petR.responsavel.contatos.map((contato,idx) => {
-                                        return (
-                                            <div key={idx} style={{margin:'0px 0px 5px 0px'}}>
-                                                {contato.principal?
-                                                <div>
-                                                    <b>
-                                                    <span><b>{(idx+1)+"- "}</b>{contato.tipoContato}: </span>
-                                                    <span><b>{Number(contato.descricao)&&contato.descricao!=null?telefone_mask(contato.descricao):contato.descricao}</b></span>
-                                                    </b>
-                                                </div> : 
-                                                <div>
-                                                    <span><b>{(idx+1)+"- "}</b>{contato.tipoContato}: </span>
-                                                    <span><b>{Number(contato.descricao)&&contato.descricao!=null?telefone_mask(contato.descricao):contato.descricao}</b></span>
-                                                </div>}
-                                            </div>
-                                        )
-                                    })}
-                                </div>
+                    <div className="consulta-title-responsavel">
+                        <div style={{display:'flex', columnGap:15}}>
+                            <div style={{display:'flex', flexDirection:'column', alignItems:'flex-start', justifyContent:'flex-start'}}>
+                                <span style={{marginTop:0, marginBottom:0}}>Responsável:</span>
+                                <span style={{marginTop:0, marginBottom:8}}><b>{petR?.responsavel.nome + " " + petR?.responsavel.sobrenome}</b></span>
+                                <Button size={'small'} onClick={() => setShowContatos(!showContatos)}>Ver Contatos</Button>  
+                            </div>
+                        </div>
+                        <div>
+                            {petR?.responsavel!=null && petR?.responsavel.contatos!=null && petR?.responsavel.contatos?.length>0?
+                                <>
+                                {showContatos && 
+                                    <div className="consulta-title-responsavel-contatos">
+                                        <Label size={'small'} style={{marginTop:0, marginBottom:8}}><u>Contatos:</u></Label>
+                                        {petR.responsavel.contatos.map((contato,idx) => {
+                                            return (
+                                                <div key={idx} style={{margin:'0px 0px 5px 0px'}}>
+                                                    {contato.principal?
+                                                    <div>
+                                                        <b>
+                                                        <span><b>{(idx+1)+"- "}</b>{contato.tipoContato}: </span>
+                                                        <span><b>{Number(contato.descricao)&&contato.descricao!=null?telefone_mask(contato.descricao):contato.descricao}</b></span>
+                                                        </b>
+                                                    </div> : 
+                                                    <div>
+                                                        <span><b>{(idx+1)+"- "}</b>{contato.tipoContato}: </span>
+                                                        <span><b>{Number(contato.descricao)&&contato.descricao!=null?telefone_mask(contato.descricao):contato.descricao}</b></span>
+                                                    </div>}
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                }
+                                </>:
+                                <Label size={'small'}>Sem contato registrado</Label>
                             }
-                            </>:
-                            <Label size={'small'}>Sem contato registrado</Label>
-                        }
+                        </div>
+                    </div>
+                    
+                </div>
+                <div className='tab-container'>
+                    <div className={selectedTab==='consultas'?'tab-selected':'tab'}>
+                        <LinkButton color={'dark'} size={'small'} onClick={() => setSelectedTab('consultas')}>Consultas</LinkButton>
+                    </div>
+                    <div className={selectedTab==='vacinas'?'tab-selected':'tab'}>
+                        <LinkButton color={'dark'} size={'small'} onClick={() => setSelectedTab('vacinas')}>Vacinas</LinkButton>
+                    </div>
+                    <div className={selectedTab==='internacoes'?'tab-selected':'tab'}>
+                        <LinkButton color={'dark'} size={'small'} onClick={() => setSelectedTab('internacoes')}>Internações</LinkButton>
+                    </div>
+                    <div className={selectedTab==='cirurgias'?'tab-selected':'tab'}>
+                        <LinkButton color={'dark'} size={'small'} onClick={() => setSelectedTab('cirurgias')}>Cirurgias</LinkButton>
                     </div>
                 </div>
-                <div className="consulta-title-pet">
-                    <div style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
-                        <img src={petR?.pet.imgPerfil!=null?'http://localhost:8765/registro/pet/imgPerfil/'+petR?.pet.petID:"src\\assets\\Logo exemplo.jpg"}
-                             style={{height:90, width:90,objectFit: 'cover', objectPosition: 'center', borderRadius:5, border:'solid 2px var(--border-color)'}}
-                        />
-                        <Label size={'big'} ><b>{petR?.pet.nome}</b></Label>
+                    <div className='tab-content'>
+                        {selectedTab==='consultas'?<Consultas petProps={petR?.pet?petR.pet:null} />:null}
+                        {selectedTab==='vacinas'?<Vacinas petProps={petR?.pet?petR.pet:null}/>:null}
+                        {selectedTab==='internacoes'?<Internacoes />:null}
+                        {selectedTab==='cirurgias'?<Cirurgias />:null}
                     </div>
-                    <div>
-                        <Label size={'small'}>{petR?.pet.genero}</Label><span> de cor </span><Label size={'small'}>{petR?.pet.cor}</Label><br/>
-                        <span>Nascimento: </span><Label size={'small'}>{moment(petR?.pet.nascimento).format('DD/MM/yyyy')} ({moment(petR?.pet.nascimento).add(1,'year').fromNow(true)})</Label><br/>
-                        <Label size={'small'}>{petR?.pet.raca?.especie.nome} ({petR?.pet.raca?.nome})</Label><br/>
-                        <Label size={'small'}>{petR?.pet.fertil?"Fertil":"Estéril"}</Label><span> e </span><Label size={'small'}>{petR?.pet.pedigree?"Com Pedigree":"Sem Pedigree"}</Label>
-                    </div>
-                </div>
             </div>
-            <div className='tab-container'>
-                <div className={selectedTab==='consultas'?'tab-selected':'tab'}>
-                    <LinkButton color={'dark'} size={'small'} onClick={() => setSelectedTab('consultas')}>Consultas</LinkButton>
-                </div>
-                <div className={selectedTab==='vacinas'?'tab-selected':'tab'}>
-                    <LinkButton color={'dark'} size={'small'} onClick={() => setSelectedTab('vacinas')}>Vacinas</LinkButton>
-                </div>
-                <div className={selectedTab==='internacoes'?'tab-selected':'tab'}>
-                    <LinkButton color={'dark'} size={'small'} onClick={() => setSelectedTab('internacoes')}>Internações</LinkButton>
-                </div>
-                <div className={selectedTab==='cirurgias'?'tab-selected':'tab'}>
-                    <LinkButton color={'dark'} size={'small'} onClick={() => setSelectedTab('cirurgias')}>Cirurgias</LinkButton>
-                </div>
-            </div>
-                <div className='tab-content'>
-                    {selectedTab==='consultas'?<Consultas petProps={petR?.pet?petR.pet:null} />:null}
-                    {selectedTab==='vacinas'?<Vacinas />:null}
-                    {selectedTab==='internacoes'?<Internacoes />:null}
-                    {selectedTab==='cirurgias'?<Cirurgias />:null}
-                </div>
-        </div>
-        </>
         }
     </>
     )

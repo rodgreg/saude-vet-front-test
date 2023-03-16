@@ -31,7 +31,7 @@
 
 .consulta-detail-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 0.9fr 0.5fr;
     gap: 10px;
     padding: 2px;
 }
@@ -40,7 +40,7 @@
     display: flex;
     flex-direction: column;
     padding: 0px;
-    max-height: 435px;
+    max-height: 800px;
 }
 
 .consulta-detail-form {
@@ -48,18 +48,14 @@
     flex-direction: column;
     padding: 5px;
     overflow: auto;
-    max-height: 440px;
+    max-height: 600px;
     border-top: 1px solid var(--border-color);
     border-bottom: 1px solid var(--border-color);
 }
 
-.consulta-detail-form textarea {
-    min-height: 80px;
-}
-
 .consulta-detail-historico {
-    max-height: 435px;
-    overflow: auto;
+    margin-top: 35px;
+    max-height: 600px;
     padding: 6px;
     border: 1px solid var(--border-color);
 }
@@ -72,7 +68,9 @@
 }
 
 .consulta-detail-historico-content {
+    max-height: 550px;
     padding: 0px;
+    overflow: auto;
 }
 
 .questao-item {

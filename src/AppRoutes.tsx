@@ -14,7 +14,7 @@ export function AppRoutes() {
                 <Route path={"/"} element={<Login />}/>
                 <Route path={"/home"} element={<Home />}/>
                 <Route path={"/login"} element={<Login />}/>
-
+                <Route path={"/home/:page"} element={<Home />}/>
             </Routes>
         </Router>
     )

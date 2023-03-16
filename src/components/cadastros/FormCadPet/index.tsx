@@ -30,7 +30,7 @@ export function FormCadPet(props:formCadProps) {
     const [listRacaFiltered, setListRacaFiltered] = useState<Raca[]>([]);
 
     const [petPerfilImg, setPetPerfilImg] = useState<File|null>(null);
-    const [imgDefault, setImgDefault] = useState<string>("src\\assets\\Logo exemplo.jpg");
+    const [imgDefault, setImgDefault] = useState<string>("src\\assets\\Logo-exemplo.jpg");
 
     const listResponsaveis = async () => {
         var list:any = await apiRegistro.listResponsaveis();
@@ -72,7 +72,7 @@ export function FormCadPet(props:formCadProps) {
     };
 
     const getImgPetPerfil = async () => {
-        if (props.petForm?.pet.petID!=null) {
+        if (props.petForm?.pet.petID!=null && props.petForm.pet.imgPerfil!=null) {
             setImgDefault('http://localhost:8765/registro/pet/imgPerfil/'+props.petForm?.pet.petID)
         }
     };

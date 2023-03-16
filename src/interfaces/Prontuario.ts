@@ -32,15 +32,15 @@ export interface Questao {
 export interface CartaoVacina {
     cartaoVacinaID?: number;
     pet:Pet | null;
-    aplicacao: AplicacaoVacina[] | null;
+    aplicacaoVacinaDto: AplicacaoVacina[] | null;
 
 }
 
 export interface AplicacaoVacina {
     aplicacaoVacinaID?: number;
-    vacina: Vacina;
-    dataProgramada?: Date | null;
-    dataAplicada?: Date | null;
+    vacina: Vacina | null;
+    dtProgramada: Date | null;
+    dtAplicada: Date | null;
     dosagem: string | null;
     veterinario?: Veterinario | null;
 }

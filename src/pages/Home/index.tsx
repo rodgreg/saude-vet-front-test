@@ -4,7 +4,7 @@ import { MdAssignment, MdAssignmentInd, MdEqualizer, MdDarkMode, MdLightMode, Md
 import "./home.css";
 import { HomeDash } from "../../components/HomeDash";
 import { ListCadastros } from "../../components/cadastros/ListCadastros";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormCadResponsavel } from "../../components/cadastros/FormCadResponsavel";
 import { Responsavel } from "../../interfaces/Responsavel";
 import { Pet, Pet_Resp } from "../../interfaces/Pet";
@@ -13,6 +13,7 @@ import { FormCadVeterinario } from "../../components/cadastros/FormCadVeterinari
 import { FormCadPet } from "../../components/cadastros/FormCadPet";
 import { Prontuario } from "../../components/prontuario/Prontuario";
 import { CadastrosGerais } from "../../components/cadastros/utils/CadastrosGerais"
+import { useSearchParams } from "react-router-dom";
 
 const Div = styled('div', {
 
@@ -79,6 +80,9 @@ export function Home () {
     const [veterinario, setVeterinario] = useState<Veterinario|null>({veterinarioID:null, nome:"", sobrenome:"", genero:"", cpf:"", cidade:"", uf:"",crmvs:[]});
     const [theme, setTheme] = useState<String>('ligth')
 
+    let [searchParams, setSearchParams] = useSearchParams();
+    let page = searchParams.get("page");
+
     const changeTheme = () => {
         setTheme(theme=='ligth'?'dark':'ligth')
     };
@@ -99,6 +103,12 @@ export function Home () {
         }
         setShowPage('cadPet');
     };
+
+    useEffect(() => {
+        if(page!=null) {
+            setShowPage(page);
+        }
+    },[])
 
     return (
             <Div id="body" data-theme={theme}>

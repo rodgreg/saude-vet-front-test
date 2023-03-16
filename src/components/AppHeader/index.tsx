@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import { styled } from "@stitches/react";
 import './appHeader.css';
-import { Button, LinkButton } from '../utils/HtmlComponents';
+import { LinkButton } from '../utils/HtmlComponents';
 import { DropDown } from '../utils/DropDown';
 import { MdHome } from 'react-icons/md';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 interface menuProps {
     clickMenu: (event: React.MouseEvent<HTMLButtonElement>|null, page: String) => void;
@@ -11,6 +12,7 @@ interface menuProps {
 
 export function AppHeader(props:menuProps) {
 
+    const navigate = useNavigate();
     const [showMenu, setShowMenu] = useState('none');
 
     const Div = styled('div', {
@@ -30,12 +32,31 @@ export function AppHeader(props:menuProps) {
     };
 
     const selectMenu = (e:React.MouseEvent<HTMLButtonElement>|null ,page:String) => {
+        
+        switch (page) {
+            case 'home':
+                navigate('/home');
+                break;
+            case 'cadPet':
+                navigate('/home?page=cadPet');
+                break;
+            case 'cadVeterinario':
+                navigate('/home?page=cadVeterinario');
+                break;
+            case 'cadResponsavel':
+                navigate('/home?page=cadResponsavel');
+                break;
+            default:
+                navigate('/home');
+                break;
+
+        }
         props.clickMenu(e,page);
     };
 
     return (
         <Div id="header">
-            <a href="#" id="logo"></a>
+            <a href="/home" id="logo"></a>
             <span id="nome_empresa">SaúdeVET</span>
             <button id="openMenu" onClick={showMenuButton} >&#9776;</button>
             <Div id="nav" >

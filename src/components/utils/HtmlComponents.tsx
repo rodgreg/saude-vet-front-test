@@ -116,7 +116,7 @@ export const Select = styled('select', {
     borderRadius: '3px',
     cursor: 'pointer',
     width: 'max-content',
-    padding: '6px',
+    paddingInline: '6px',
     '&:focus': {
         borderColor:'var(--border-color-secondary)',
     },
@@ -124,12 +124,15 @@ export const Select = styled('select', {
         size: {
             small: {
                 fontSize: '12px',
+                height:'30px',
             },
             medium: {
                 fontSize: '14px',
+                height:'35px',
             },
             big: {
                 fontSize: '16px',
+                height:'40px',
             }
         }
     },
