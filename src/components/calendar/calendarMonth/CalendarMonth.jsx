@@ -1,7 +1,7 @@
 import React from 'react'
 import Day from './Day'
 
-function Month({month}) {
+function CalendarMonth({month}) {
   return (
     <div className='calendar-month'>
       {month.map((row, id) => (
@@ -15,4 +15,4 @@ function Month({month}) {
   )
 }
 
-export default Month;
+export default CalendarMonth;

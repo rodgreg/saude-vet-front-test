@@ -1,21 +1,46 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { MdClose, MdDragHandle, MdSchedule, MdSegment, MdTitle } from 'react-icons/md';
+import { MdClose, MdDelete, MdDragHandle, MdSchedule, MdSegment, MdTitle } from 'react-icons/md';
 import GlobalContext from '../../context/GlobalContext';
 import moment from "moment/min/moment-with-locales";
 import { Button } from '../utils/HtmlComponents';
 
 
 function EventModal() {
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const { setShowEventModal, daySelected } = useContext(GlobalContext);
+
+    const { 
+        setShowEventModal,
+        daySelected,
+        dispatchCalEvent,
+        selectedEvent
+    } = useContext(GlobalContext);
+
+    const [title, setTitle] = useState(selectedEvent?selectedEvent.title:"");
+    const [description, setDescription] = useState(selectedEvent?selectedEvent.description:"");
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        const calendarEvent = {
+            title,
+            description,
+            //label: selectedLabel,
+            day: daySelected.valueOf(),
+            id: selectedEvent? selectedEvent.id:Date.now()
+        }
+        if(selectedEvent) {
+            dispatchCalEvent({type:"update", payload: calendarEvent});
+        } else {
+            dispatchCalEvent({type:"push", payload: calendarEvent});
+        }
+        setShowEventModal(false);
+    }
 
     useEffect(()=>{
         moment().locale('pt_br');
     },[])
+
   return (
     <div className='event-modal'>
-      <form className='event-modal-form'>
+      <form className='event-modal-form' onSubmit={handleSubmit}>
         <header className='event-modal-form-header'>
             <MdDragHandle />
             <div style={{display:'flex', alignItems:'center', gap:10}}>
@@ -26,7 +51,17 @@ function EventModal() {
                     <b>{daySelected.format("DD [de] MMMM - dddd")}</b>
                 </div>
             </div>
-            <MdClose style={{cursor:'pointer'}} onClick={() => {setShowEventModal(false)}}/>
+            <div>
+                {selectedEvent && (
+                    <MdDelete 
+                        style={{cursor:'pointer'}} 
+                        onClick={() => {
+                            dispatchCalEvent({type: 'delete', payload: selectedEvent});
+                            setShowEventModal(false);
+                    }}/>
+                )}
+                <MdClose style={{cursor:'pointer'}} onClick={() => {setShowEventModal(false)}}/>    
+            </div>
         </header>
         <div style={{padding:'0.75rem'}}>
             <div className="event-modal-form-grid">

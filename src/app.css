@@ -1,6 +1,7 @@
 :root {
     --bg: #eeeeee;
     --bg-div1: #ded;
+    --bg-div1-hover:#f3f3f3;
     --bg-header: #a8c990;
     --bg-input: #ffffff;
     --bg-form: #d7e3d1;
@@ -22,6 +23,7 @@
 [data-theme='dark'] {
     --bg: #1e1e1e;
     --bg-div1: rgb(3, 40, 3);
+    --bg-div1-hover:#392c3e;
     --bg-header: #0d1805;
     --bg-input: #312535;
     --bg-form: #a8c999;
