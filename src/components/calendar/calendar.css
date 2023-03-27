@@ -283,6 +283,7 @@
     text-overflow: ellipsis;
     max-lines: 3;
     cursor: pointer;
+    z-index: 10;
 }
 
 .current-time-line {

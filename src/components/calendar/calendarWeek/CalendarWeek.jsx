@@ -1,13 +1,20 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useContext } from 'react';
 import moment from "moment/min/moment-with-locales";
-import { getWeek } from '../util';
+import GlobalContext from '../../../context/GlobalContext';
 
 function CalendarWeek({week}) {
 
   const contentRowsRef = useRef(null);
+  const [dayEvents, setDayEvents] = useState([]);
   const [calendarWeekHeader, setCalendarWeekHeader] = useState([]);
   const [hoursRows, setHoursRows] = useState([]);
   const [hourPosition, setHourPosition] = useState(0);
+  const {
+    setDaySelected,
+    setShowEventModal,
+    savedEvents,
+    setSelectedEvent
+  } = useContext(GlobalContext);
 
   function updatePositionHour() {
     let hour = moment().hour();
@@ -17,11 +24,18 @@ function CalendarWeek({week}) {
   }
   setInterval(updatePositionHour, 60000);
 
+  const showInModalEvent = (idx, day) => {
+    setDaySelected(day);
+    setSelectedEvent(dayEvents[idx]);
+    setShowEventModal(true);
+  }
+
   useEffect(() => {
     setCalendarWeekHeader(week[0]);
     setHoursRows(week.slice(1, week.length));
     updatePositionHour();
-  }, [week])
+    setDayEvents(savedEvents.filter(evt => moment(evt.day).week() === moment(week[0][0],"DD/MM/YYYY").week()));
+  }, [week, savedEvents])
   return (
     <div className='calendar-week'>
       <div className='calendar-week-first-row'>
@@ -45,14 +59,22 @@ function CalendarWeek({week}) {
               <span className='calendar-week-row-data' style={{ backgroundColor: 'var(--bg)' }}>{hour[0]}</span>
               {calendarWeekHeader.map((day, i) => {
                 return (
-                  <span key={i} className='calendar-week-row-data'>
+                  <span key={i} className='calendar-week-row-data' 
+                    onClick={() => {
+                      let hourEvent = hour[0].split(":");
+                      setDaySelected(moment(day,"DD/MM/YYYY").set({'hour':hourEvent[0],'minute':hourEvent[1]}));
+                      setShowEventModal(true);
+                      //setSelectedEvent(null);
+                    }}>
                     {moment().format("DD/MM/YYYY")===moment(day,"DD/MM/YYYY").format("DD/MM/YYYY") &&
                       <div style={{ backgroundColor: 'rgb(200, 250, 200, 0.3)', width: '100%', height: '100%' }}></div>
                     }
-                    {"21/03/2023"===moment(day,"DD/MM/YYYY").format("DD/MM/YYYY") && "09:00"==hour[0] ?
-                      <div className='calendar-week-event' style={{height:75}}> {hour[0]} </div>
-                      :null
-                    }
+                    {dayEvents.map((evt,ind) => {
+                      if(moment(evt.start).format("DD/MM/YYYY")===moment(day,"DD/MM/YYYY").format("DD/MM/YYYY") && moment(evt.start).format("HH:mm")==hour[0]) {
+                        return <div key={ind} className='calendar-week-event' style={{height:Math.floor(25*(evt.duration/30))}}
+                                    onClick={() => showInModalEvent(ind, moment(evt.start,"DD/MM/YYYY HH:mm"))}> {hour[0]} </div>;
+                      }
+                    })}                    
                   </span>
                 )
               })}

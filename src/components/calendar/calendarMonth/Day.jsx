@@ -39,7 +39,7 @@ function Day({ day, rowIdx }) {
 
   useEffect(() => {
     day.locale('pt-br');
-    const events = savedEvents.filter(evt => moment(evt.day).format("DD-MM-YYYY") === day.format("DD-MM-YYYY"));
+    const events = savedEvents.filter(evt => moment(evt.start).format("DD-MM-YYYY") === day.format("DD-MM-YYYY"));
     setDayEvents(events);
   }, [savedEvents, day])
 
