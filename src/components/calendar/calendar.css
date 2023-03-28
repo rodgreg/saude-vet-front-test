@@ -104,6 +104,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 10;
 }
 
 .event-modal-form {
@@ -261,21 +262,23 @@
 
 .calendar-week-row-data {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
     height: 100%;
+    width: 100%;
     font-size: 12px;
     border-right: solid 1px #cfcfcf;
 }
 
 .calendar-week-event {
+    display: block;
     background-color: rgb(200, 250, 200);
+    align-self: flex-start;
     text-align: center;
     width: 95%;
     height: 100%;
     border-radius: 5px;
-    display: block;
     position: relative;
     border: solid 1px rgb(80, 200, 80);
     white-space: break-spaces;
@@ -283,11 +286,11 @@
     text-overflow: ellipsis;
     max-lines: 3;
     cursor: pointer;
-    z-index: 10;
+    z-index: 9;
 }
 
 .current-time-line {
-    border-bottom: 1px solid rgb(247, 168, 168);
+    border-bottom: 2px solid rgb(247, 168, 168);
     width: 92%;
     position: relative;
     margin-left: 50px;

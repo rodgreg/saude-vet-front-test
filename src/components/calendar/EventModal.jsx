@@ -95,6 +95,7 @@ function EventModal() {
                     <MdStart />
                 </div>
                 <input type={'time'}
+                    
                     name="description" 
                     placeholder='Adicione a hora de início' 
                     value={moment(timeStart).format('HH:mm')} 
@@ -107,6 +108,7 @@ function EventModal() {
                     <MdTimelapse />
                 </div>
                 <input type={'number'}
+                    step="15"
                     name="description" 
                     placeholder='Adicione uma duração em horas' 
                     value={duration} 
