@@ -25,6 +25,7 @@ function initEvents() {
 function ContextWrapper(props) {
     const [monthIndex, setMonthIndex] = useState(moment().month());
     const [weekIndex, setWeekIndex] = useState(moment().week());
+    const [dayIndex, setDayIndex] = useState(moment().dayOfYear());
     const [daySelected, setDaySelected] = useState(moment());
     const [showEventModal, setShowEventModal] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
@@ -55,7 +56,9 @@ function ContextWrapper(props) {
         calendarMode,
         setCalendarMode,
         weekIndex,
-        setWeekIndex
+        setWeekIndex,
+        dayIndex,
+        setDayIndex
       }}>
       {props.children}
     </GlobalContext.Provider>

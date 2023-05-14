@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 // @ts-ignore
 import moment from "moment/min/moment-with-locales";
-import { getMonth, getWeek } from "./util";
+import { getDay, getMonth, getWeek } from "./util";
 import CalendarHeader from "./CalendarHeader";
 import Day from "./calendarDay/CalendarDay";
 import Week from "./calendarWeek/CalendarWeek";
@@ -10,14 +10,14 @@ import GlobalContext from "../../context/GlobalContext";
 import EventModal from "./EventModal";
 import './calendar.css';
 
-const LayoutCalendar = (props: { mode: any; month: any; week: any;}) => {
+const LayoutCalendar = (props: { mode: any; month: any; week: any; day: any;}) => {
   switch (props.mode) {
     case 'month':
       return <Month month={props.month} />;
     case 'week':
       return <Week week={props.week} />;
     case 'day':
-      return <Day />;
+      return <Day day={props.day} />;
     default:
       return <Month month={props.month} />;
   }
@@ -26,14 +26,16 @@ const LayoutCalendar = (props: { mode: any; month: any; week: any;}) => {
 export function Calendarutil() {
   const [currentMonth, setCurrentMonth] = useState(getMonth());
   const [currentWeek, setCurrentWeek] = useState(getWeek());
-  const { monthIndex, weekIndex, showEventModal, setDaySelected, calendarMode } = useContext(GlobalContext);
+  const [currentDay, setCurrentDay] = useState(getDay());
+  const { monthIndex, weekIndex, showEventModal, setDaySelected, calendarMode, dayIndex } = useContext(GlobalContext);
 
   useEffect(()=>{
     moment().locale('pt_br');
     setCurrentMonth(getMonth(monthIndex));
     setCurrentWeek(getWeek(weekIndex));
+    setCurrentDay(getDay(dayIndex))
     setDaySelected(moment());
-  },[monthIndex, weekIndex])
+  },[monthIndex, weekIndex, dayIndex])
 
   return (
     <>
@@ -41,7 +43,7 @@ export function Calendarutil() {
       <div className="calendar">
         <CalendarHeader />
         <div className="mode">
-          <LayoutCalendar mode={calendarMode} month={currentMonth} week={currentWeek}/>
+          <LayoutCalendar mode={calendarMode} month={currentMonth} week={currentWeek} day={currentDay}/>
         </div> 
       </div>
     </>

@@ -47,6 +47,28 @@ export function getWeek(week = moment().week()) {
             }
         })
     });
+    return hoursMatrix;
+}
 
+export function getDay(day = moment().dayOfYear()) {
+    let n = 0;
+    const hoursMatrix = new Array(49).fill([]).map((array, idx) => {
+            if (idx === 0) {
+                return day;
+            } else {
+                let hora = n;
+                hora = hora.toString();
+                if (hora.length < 2) {
+                    hora = "0" + hora;
+                }
+                
+                if (idx % 2 === 1) {
+                    return hora + ":00";
+                } else {
+                    n++;
+                    return hora + ":30";
+                }
+            }
+    });
     return hoursMatrix;
 }

@@ -17,6 +17,8 @@ const GlobalContext = React.createContext({
     setCalendarMode: () => { },
     weekIndex: 0,
     setWeekIndex: (index) => { },
+    dayIndex: 0,
+    setDayIndex: (index) => { },
 })
 
 export default GlobalContext;

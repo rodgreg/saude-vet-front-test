@@ -6,17 +6,22 @@ import moment from "moment/min/moment-with-locales";
 import CreateEventButton from './CreateEventButton';
 
 function CalendarHeader() {
-  const { monthIndex, setMonthIndex, weekIndex, setWeekIndex, setDaySelected, setCalendarMode, calendarMode } = useContext(GlobalContext);
+  const { monthIndex, setMonthIndex, weekIndex, setWeekIndex, setDaySelected, daySelected, setCalendarMode, calendarMode, setDayIndex, dayIndex } = useContext(GlobalContext);
 
   const backPeriod = () => {
     switch (calendarMode) {
+      case 'day':
+        setMonthIndex(moment().dayOfYear(dayIndex - 1).month());
+        setWeekIndex(moment().dayOfYear(dayIndex - 1).week());
+        setDayIndex(dayIndex - 1);
+        break;
       case 'month':
         setMonthIndex(monthIndex - 1);
-        setWeekIndex(weekIndex-4);
+        setWeekIndex(weekIndex - 4);
         break;
       case 'week':
-        setWeekIndex(weekIndex - 1)
         setMonthIndex(moment().week(weekIndex - 1).month());
+        setWeekIndex(weekIndex - 1);
         break;
       default:
         break;
@@ -25,13 +30,18 @@ function CalendarHeader() {
 
   const forwardPeriod = () => {
     switch (calendarMode) {
+      case 'day':
+        setMonthIndex(moment().dayOfYear(dayIndex + 1).month());
+        setWeekIndex(moment().dayOfYear(dayIndex + 1).week());
+        setDayIndex(dayIndex + 1);
+        break;
       case 'month':
         setMonthIndex(monthIndex + 1);
         setWeekIndex(weekIndex + 4);
         break;
       case 'week':
-        setWeekIndex(weekIndex + 1)
         setMonthIndex(moment().week(weekIndex + 1).month());
+        setWeekIndex(weekIndex + 1);
         break;
       default:
         break;
@@ -39,9 +49,10 @@ function CalendarHeader() {
   }
 
   const backToDay = () => {
-      setWeekIndex(moment().week());
-      setMonthIndex(moment().month());
-      setDaySelected(moment());
+    setWeekIndex(moment().week());
+    setMonthIndex(moment().month());
+    setDayIndex(moment().dayOfYear())
+    setDaySelected(moment());
   }
 
   useEffect(() => {
@@ -51,7 +62,7 @@ function CalendarHeader() {
   return (
     <header className='calendar-header'>
       <div className='calendar-header'>
-        <CreateEventButton />
+        {/* <CreateEventButton /> */}
         <h1 style={{ marginRight: 10, fontSize: "1.1rem", lineHeight: "1.75rem", fontWeight: 700, color: "rgb(107, 114, 128, 1)" }}>
           Calendário de Vacinas
         </h1>
@@ -70,9 +81,9 @@ function CalendarHeader() {
       </div>
       <div>
         <>
-          <MdCalendarViewDay size={22} style={{cursor:'pointer'}} onClick={() => setCalendarMode('day')}/>
-          <MdCalendarViewWeek size={22} style={{cursor:'pointer'}} onClick={() => setCalendarMode('week')}/>
-          <MdCalendarMonth size={22} style={{cursor:'pointer'}} onClick={() => setCalendarMode('month')}/>
+          <MdCalendarViewDay size={22} style={{ cursor: 'pointer' }} onClick={() => {setCalendarMode('day'); setDayIndex(moment(daySelected).dayOfYear())}} />
+          <MdCalendarViewWeek size={22} style={{ cursor: 'pointer' }} onClick={() => setCalendarMode('week')} />
+          <MdCalendarMonth size={22} style={{ cursor: 'pointer' }} onClick={() => setCalendarMode('month')} />
         </>
       </div>
     </header>
