@@ -140,46 +140,46 @@ export function Vacinas(props: VacinaProps) {
                 {showForm ?
                     <div>
                         <div className='vacina-form-add'>
-                            <Label size={'small'} htmlFor={'veterinario'} >Veterinario Responsável:</Label>
-                            <Select size={'medium'} id={'veterinario'} name={'veterinario'} value={selectedVeterinario} onChange={selectVacina}>
-                                <Option value={""}>Selecione</Option>
-                                {veterinarios.map((vet, idx) => {
-                                    return (
-                                        <Option key={idx} value={idx}>Dr(a). {vet.nome + " " + vet.sobrenome}</Option>
-                                    )
-                                })}
-                            </Select>
+                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                <Label size={'small'} htmlFor={'veterinario'} >Veterinario Responsável:</Label>
+                                <Select size={'medium'} id={'veterinario'} name={'veterinario'} value={selectedVeterinario} onChange={selectVacina}>
+                                    <Option value={""}>Selecione</Option>
+                                    {veterinarios.map((vet, idx) => {
+                                        return (
+                                            <Option key={idx} value={idx}>Dr(a). {vet.nome + " " + vet.sobrenome}</Option>
+                                        )
+                                    })}
+                                </Select>
+                            </div>
+                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                <Label size={'small'} htmlFor={'vacina'} >Vacina:</Label>
+                                <Select size={'medium'} id={'vacina'} name={'vacina'} value={selectedVacina} onChange={selectVacina}>
+                                    <Option value={""}>Selecione</Option>
+                                    {vacinas.map((vacina, idx) => {
+                                        return (
+                                            <Option key={idx} value={idx}>{vacina.nome}</Option>
+                                        )
+                                    })}
+                                </Select>
+                            </div>
+                            <div style={{ display: "flex", flexDirection: "column" }}>
+                                <Label size={'small'} htmlFor={'dosagem'} >Dose:</Label>
+                                <InputText type={'text'} size={'small'} id='dosagem' name='dosagem' value={aplicacaoVacina.dosagem ? aplicacaoVacina.dosagem : ""} onChange={inputHandle} />
+                            </div>
                         </div>
                         <div className='vacina-form-add'>
-                            <Label size={'small'} htmlFor={'vacina'} >Vacina:</Label>
-                            <Select size={'medium'} id={'vacina'} name={'vacina'} value={selectedVacina} onChange={selectVacina}>
-                                <Option value={""}>Selecione</Option>
-                                {vacinas.map((vacina, idx) => {
-                                    return (
-                                        <Option key={idx} value={idx}>{vacina.nome}</Option>
-                                    )
-                                })}
-                            </Select>
-                            <Label size={'small'} htmlFor={'dosagem'} >Dose:</Label>
-                            <InputText type={'text'} size={'small'} id='dosagem' name='dosagem' value={aplicacaoVacina.dosagem ? aplicacaoVacina.dosagem : ""} onChange={inputHandle} />
-                        </div>
-                        <div className='vacina-form-add'>
-                            <>
+                            <div style={{ display: "flex", flexDirection: "column" }}>
                                 <Label size={'small'} htmlFor={'dtProgramada'} >Aplicar em:</Label>
                                 <InputDate type={'date'} id='dtProgramada' name='dtProgramada' value={aplicacaoVacina.dtProgramada ? moment(aplicacaoVacina.dtProgramada).format('yyyy-MM-DD') : ""} defaultValue={moment(new Date()).format('yyyy-MM-DD')} min={moment(new Date()).format('yyyy-MM-DD')} onChange={inputHandle} />
-                            </>
+                            </div>
+                            <span style={{ margin: '5px 0px 0px 0px' }}><input type={'checkbox'} onChange={inputHandle} /> <b>Registrar Aplicação?</b></span>
                         </div>
                         <div className='vacina-form-add'>
-                            <span style={{ margin: '5px 0px 0px 0px' }}><input type={'checkbox'} onChange={inputHandle} /> <b>Aplicada?</b></span>
-                            {!isAplicada ?
-                                <>
-
-                                </>
-                                :
-                                <>
-                                    <Label size={'small'} htmlFor={'dtAplicada'} >Aplicada em:</Label>
-                                    <InputDate type={'date'} id='dtAplicada' name='dtAplicada' value={aplicacaoVacina.dtAplicada ? moment(aplicacaoVacina.dtAplicada).format('yyyy-MM-DD') : ""} defaultValue={moment(new Date()).format('yyyy-MM-DD')} max={moment(new Date()).format('yyyy-MM-DD')} onChange={inputHandle} />
-                                </>
+                            {isAplicada &&
+                                <div>
+                                    <Label size={'small'} htmlFor={'dtAplicada'} >Data da aplicação:</Label>
+                                    <InputDate type={'date'} id='dtAplicada' name='dtAplicada' value={aplicacaoVacina.dtAplicada ? moment(aplicacaoVacina.dtAplicada).format('yyyy-MM-DD') : moment().format('yyyy-MM-DD')} defaultValue={moment(new Date()).format('yyyy-MM-DD')} max={moment(new Date()).format('yyyy-MM-DD')} onChange={inputHandle} />
+                                </div>
                             }
                         </div>
                         <div className='vacina-form-add-button'>
@@ -232,7 +232,7 @@ export function Vacinas(props: VacinaProps) {
                             noEventsInRange: 'Sem eventos no período.'
                         }}
                         defaultView={Views.WEEK}
-                        views={{week:true, day:true, agenda:true}}
+                        views={{ week: true, day: true, agenda: true }}
                         dayLayoutAlgorithm="no-overlap"
                         localizer={localizer}
                         events={[]}
@@ -244,10 +244,10 @@ export function Vacinas(props: VacinaProps) {
                         },]}
                         startAccessor="start"
                         endAccessor="end"
-                        onSelectSlot={({start, end}) => console.log()}
+                        onSelectSlot={({ start, end }) => console.log()}
                         onSelectEvent={(event) => console.log()}
                         selectable
-                        
+
                     />
                 }
             </div>

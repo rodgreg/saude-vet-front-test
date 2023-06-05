@@ -33,8 +33,9 @@
 
 .vacina-form-add {
     display:flex;
-    gap:20px; 
+    column-gap:40px; 
     padding:10px;
+    align-items: center;
 }
 
 .vacina-form-add-button {
