@@ -177,7 +177,7 @@ export const ApiRegistro = () => ({
     },[]),
 
     getPetById: useCallback(async (petID:Number) => {
-        var result = null;
+        var result:any = "";
         await api.get('/registro/pet/'+petID)
         .then(function (response) {
             result = response;

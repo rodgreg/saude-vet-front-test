@@ -70,6 +70,7 @@
 .consulta-title-pet {
     display: grid;
     grid-template-columns: 0.1fr 1.2fr 7fr;
+    gap: 10px;
     width: 100%;
     padding: 10px;
     align-items: flex-start;

@@ -165,7 +165,7 @@ export const Option = styled('option', {
 export const Label = styled('label', {
     fontFamily:'Quicksand',
     fontWeight:'bold',
-    margin:'5px 0px 0px 0px',
+    margin:'2px 0px 0px 0px',
     variants: {
         size: {
             small: {

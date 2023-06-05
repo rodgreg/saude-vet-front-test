@@ -1,6 +1,6 @@
 :root {
     --bg: #eeeeee;
-    --bg-div1: #ded;
+    --bg-div1: rgb(236, 245, 236);
     --bg-div1-hover:#f3f3f3;
     --bg-header: #a8c990;
     --bg-input: #ffffff;

@@ -123,15 +123,15 @@ export function Prontuario(props:ProntuarioProps) {
                         <Button size={'small'} onClick={() => {setPetR(null);setPetExist(false);setShowContatos(false)}}><MdOutlineChangeCircle size={22}/></Button>
                         <div style={{display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', height:'100%'}}>
                             <img src={petR?.pet.imgPerfil!=null?BASE_URL+'/registro/pet/imgPerfil/'+petR?.pet.petID:"src\\assets\\Logo-exemplo.jpg"}
-                                style={{height:90, width:90, objectFit: 'cover', objectPosition: 'center', borderRadius:5, border:'solid 2px var(--border-color)'}}
+                                style={{height:100, width:100, objectFit: 'cover', objectPosition: 'center', borderRadius:5, border:'solid 2px var(--border-color)'}}
                             />
                         </div>
                         <div>
-                            <Label size={'medium'} ><b>{petR?.pet.nome}</b></Label><br/>
+                            <Label size={'big'} ><b>{petR?.pet.nome}</b></Label><br/>
                             <Label size={'small'}>{petR?.pet.genero}</Label><span> de cor </span><Label size={'small'}>{petR?.pet.cor}</Label>
                             <span> nascido em: </span><Label size={'small'}>{moment(petR?.pet.nascimento).format('DD/MM/yyyy')} ({moment(petR?.pet.nascimento).add(1,'year').fromNow(true)})</Label><br/>
-                            <span>Espécie </span><Label size={'small'}>{petR?.pet.raca?.especie.nome}</Label><span> de raça </span><Label size={'small'}>{petR?.pet.raca?.nome}</Label>
-                            <span>. Encontra-se </span><Label size={'small'}>{petR?.pet.fertil?"Fertil":"Estéril"}</Label><span> e </span><Label size={'small'}>{petR?.pet.pedigree?"Com Pedigree":"Sem Pedigree"}</Label>
+                            <span>Espécie </span><Label size={'small'}>{petR?.pet.raca?.especie.nome}</Label><span> de raça </span><Label size={'small'}>{petR?.pet.raca?.nome}.</Label><br/>
+                            <span>Encontra-se </span><Label size={'small'}>{petR?.pet.fertil?"Fertil":"Estéril"}</Label><span> e </span><Label size={'small'}>{petR?.pet.pedigree?"Com Pedigree":"Sem Pedigree"}</Label>
                         </div>
                     </div>
                     <div className="consulta-title-responsavel">
@@ -189,7 +189,7 @@ export function Prontuario(props:ProntuarioProps) {
                     </div>
                 </div>
                     <div className='tab-content'>
-                        {selectedTab==='consultas'?<Consultas petProps={petR?.pet?petR.pet:null} />:null}
+                        {selectedTab==='consultas'?<Consultas petProps={petR?.pet?petR.pet:null} editing={null} />:null}
                         {selectedTab==='vacinas'?<Vacinas petProps={petR?.pet?petR.pet:null}/>:null}
                         {selectedTab==='internacoes'?<Internacoes />:null}
                         {selectedTab==='cirurgias'?<Cirurgias />:null}
