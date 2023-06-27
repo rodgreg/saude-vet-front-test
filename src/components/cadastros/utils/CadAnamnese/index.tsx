@@ -6,6 +6,8 @@ import { ApiProntuario } from '../../../../services/ApiProntuario';
 import { AnamneseQuestoes } from '../../../utils/AnamneseQuestoes';
 import { Button, InputText, Label, Select, Option } from '../../../utils/HtmlComponents';
 import './cadAnamnese.css';
+import { EditorDeTexto } from '../EditorTexto/editor';
+
 
 export function CadAnamnese() {
 
@@ -126,6 +128,7 @@ export function CadAnamnese() {
     return (
         <div className='container-cadAnamnese'>
             <div className='cadAnamnese-form'>
+                
                 <h5>Cadastro de Templates de Anamnese</h5>
                 {!showForm &&   <>
                                 <Select onChange={selectAnamnese} value={JSON.stringify(newAnamn)}>

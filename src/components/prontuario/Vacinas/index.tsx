@@ -1,8 +1,12 @@
 import React, { useState, useLayoutEffect } from 'react';
 import { Pet } from '../../../interfaces/Pet';
+import { Vacina } from '../../../interfaces/Util';
+import { Veterinario } from '../../../interfaces/Veterinario';
 import { AplicacaoVacina, CartaoVacina } from '../../../interfaces/Prontuario';
 import { Responsavel } from '../../../interfaces/Responsavel';
 import { ApiProntuario } from '../../../services/ApiProntuario';
+import { ApiUtil } from '../../../services/ApiUtil';
+import { ApiRegistro } from '../../../services/ApiRegistro';
 //import { Calendarutil } from '../../calendar/Calendarutil';
 import { Calendar, Views, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -12,15 +16,13 @@ import moment from "moment/min/moment-with-locales";
 import { AxiosResponse } from 'axios';
 import { MdAdd, MdDelete, MdEdit, MdRemove } from 'react-icons/md';
 import { Button, Label, Select, Option, InputText, InputDate } from '../../utils/HtmlComponents';
-import { Vacina } from '../../../interfaces/Util';
-import { ApiUtil } from '../../../services/ApiUtil';
-import { Veterinario } from '../../../interfaces/Veterinario';
-import { ApiRegistro } from '../../../services/ApiRegistro';
+import { listVeterinarioTmpTeste, listVacinasTeste, cartao1 } from '../../../Testes/DadosParaTeste';
 
 interface VacinaProps {
     petProps: Pet | null;
     respProps?: Responsavel;
 }
+
 
 export function Vacinas(props: VacinaProps) {
 
@@ -37,27 +39,44 @@ export function Vacinas(props: VacinaProps) {
     const [showForm, setShowform] = useState<boolean>(false);
     const [isAplicada, setAplicada] = useState<boolean>(false);
 
+    
+
+
+
     const getCartaoVacinaByPet = async (petID: number) => {
 
         var responseCartao: AxiosResponse = await apiVacina.listCartaoVacinaByPet(petID);
+        
         if (responseCartao.status >= 200 && responseCartao.status <= 300) {
             setCartaoVacina(responseCartao.data[0]);
             var aplicacoesTemp: AplicacaoVacina[] = responseCartao.data[0].aplicacaoVacinaDto;
-
+        } else {
+            console.log("Cartao")
+            setCartaoVacina(cartao1)
         }
     }
 
     const listVacinas = async () => {
+        console.log("listVacinas, entrada")
         if (vacinas.length == 0) {
             let response: AxiosResponse = await apiUtil.listVacinas();
             if (response.status >= 200 && response.status <= 300) {
                 setVacinas(response.data);
-            }
+            } else {
+                console.log("Base de Teste: Vacinas");
+                setVacinas(listVacinasTeste);
+        } 
         }
+
+
         if (veterinarios.length == 0) {
             let response: AxiosResponse = await apiRegistro.listVeterinarios();
             if (response.status >= 200 && response.status <= 300) {
-                setVeterinarios(response.data);
+                // setVeterinarios(response.data);
+                
+            } else {
+                console.log("Base de Teste: Veterinários");
+                setVeterinarios(listVeterinarioTmpTeste);
             }
         }
     }
@@ -130,16 +149,22 @@ export function Vacinas(props: VacinaProps) {
 
     }, [props.petProps])
 
+
+
     return (
         <div className='vacina-conteiner'>
             <div className='vacina-table'>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <h2>Vacinas</h2>
                     <Button size={'small'} onClick={() => { setShowform(!showForm); listVacinas(); if (!showForm) { setAplicada(false) } }}>{showForm ? <MdRemove style={{ cursor: "pointer" }} /> : <MdAdd style={{ cursor: "pointer" }} onClick={() => setShowform(!showForm)} />}</Button>
+                    <button onClick={() => {
+                        listVacinas()}}>TESTE</button>
                 </div>
+                
                 {showForm ?
                     <div>
                         <div className='vacina-form-add'>
+                            {/* Veterinário Responsável */}
                             <div style={{ display: "flex", flexDirection: "column" }}>
                                 <Label size={'small'} htmlFor={'veterinario'} >Veterinario Responsável:</Label>
                                 <Select size={'medium'} id={'veterinario'} name={'veterinario'} value={selectedVeterinario} onChange={selectVacina}>
@@ -151,6 +176,8 @@ export function Vacinas(props: VacinaProps) {
                                     })}
                                 </Select>
                             </div>
+
+                            {/* Vacina */}
                             <div style={{ display: "flex", flexDirection: "column" }}>
                                 <Label size={'small'} htmlFor={'vacina'} >Vacina:</Label>
                                 <Select size={'medium'} id={'vacina'} name={'vacina'} value={selectedVacina} onChange={selectVacina}>
@@ -164,12 +191,12 @@ export function Vacinas(props: VacinaProps) {
                             </div>
                             <div style={{ display: "flex", flexDirection: "column" }}>
                                 <Label size={'small'} htmlFor={'dosagem'} >Dose:</Label>
-                                <InputText type={'text'} size={'small'} id='dosagem' name='dosagem' value={aplicacaoVacina.dosagem ? aplicacaoVacina.dosagem : ""} onChange={inputHandle} />
+                                <InputText type={'number'}  size={'small'} id='dosagem' name='dosagem' value={aplicacaoVacina.dosagem ? aplicacaoVacina.dosagem : ""} onChange={inputHandle} />
                             </div>
                         </div>
                         <div className='vacina-form-add'>
                             <div style={{ display: "flex", flexDirection: "column" }}>
-                                <Label size={'small'} htmlFor={'dtProgramada'} >Aplicar em:</Label>
+                                <Label size={'small'} htmlFor={'dtProgramada'} >Reforço em:</Label>
                                 <InputDate type={'date'} id='dtProgramada' name='dtProgramada' value={aplicacaoVacina.dtProgramada ? moment(aplicacaoVacina.dtProgramada).format('yyyy-MM-DD') : ""} defaultValue={moment(new Date()).format('yyyy-MM-DD')} min={moment(new Date()).format('yyyy-MM-DD')} onChange={inputHandle} />
                             </div>
                             <span style={{ margin: '5px 0px 0px 0px' }}><input type={'checkbox'} onChange={inputHandle} /> <b>Registrar Aplicação?</b></span>

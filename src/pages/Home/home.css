@@ -13,6 +13,7 @@
 
 #aside {
     border-right: 1px solid var(--border-color);
+    
 }
 
 #main {
@@ -49,8 +50,8 @@
     border-radius: 5px;
     border-color: var(--border-color);
     align-items: center;
-    justify-content: center;
-    width: 60px;
+    justify-content: left;
+    width: 8vw;
     height: 40px;
     cursor: pointer;
 }
@@ -70,4 +71,9 @@
         height: 60px;
         flex-direction: row;
     }
+}
+
+.Pteste  {
+    font-size: 14px;
+    
 }

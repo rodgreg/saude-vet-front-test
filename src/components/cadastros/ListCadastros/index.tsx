@@ -8,12 +8,13 @@ import { Button, LinkButton, Option, Select } from '../../utils/HtmlComponents';
 // @ts-ignore
 import moment from "moment/min/moment-with-locales";
 import 'moment/locale/pt-br';
-import { Veterinario } from '../../../interfaces/Veterinario';
+import { Crmv, Veterinario } from '../../../interfaces/Veterinario';
 import { FormDetailVeterinario } from '../FormDetailVeterinario';
 import { FormDetailPet } from '../FormDetailPet';
 import { MdAdd, MdRefresh } from 'react-icons/md';
 import { Loading } from '../../utils/Loading';
 import { Pet, Pet_Resp } from '../../../interfaces/Pet';
+import { listVeterinarioTmpTeste } from '../../../Testes/DadosParaTeste';
 
 interface listCadastrosProps {
   editResFormClick:(event: React.MouseEvent<HTMLButtonElement>, responsavel:Responsavel|null) => void;
@@ -76,6 +77,8 @@ export function ListCadastros (props:listCadastrosProps) {
                       return 0;
                   } 
               );
+    
+   
 
         // Monta Lista Responsável.
         setListResponsaveis(listResponsavelTmp);
@@ -141,7 +144,32 @@ export function ListCadastros (props:listCadastrosProps) {
 
   }
 
+  
+    
+  const listVeterinarioTmp = listVeterinarioTmpTeste
+  
   const getListVeterinarios = async () => {
+    setIsLoading(true);
+    
+      if (true){
+          
+          setListVeterinario(listVeterinarioTmp);
+          let pages = 1;
+          
+          if(paginateListVet.perPage < listVeterinarioTmp.length) {
+          pages = Math.ceil(listVeterinarioTmp.length/paginateListVet.perPage);
+          };
+          let listPage = listVeterinarioTmp.slice(0,paginateListVet.perPage);
+          setPaginateListVet({...paginateListVet, pages: pages, list: listPage});
+      } else {
+        setIsLoading(false);
+      }
+    setIsLoading(false);
+  };
+
+
+
+  const getListVeterinariosDesabilitado = async () => {
     setIsLoading(true);
     var list:any = await api.listVeterinarios();
       if (list?.status >= 200 && list?.status <= 300){

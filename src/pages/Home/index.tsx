@@ -114,34 +114,78 @@ export function Home () {
             <Div id="body" data-theme={theme}>
                 <AppHeader clickMenu={(e,page) => {setShowPage(page);setPet_Resp(null)}} />
 
+                
                 <Div id="aside">
+                    <label><strong>Usuários</strong></label>
                     <Div className="button_aside" title="Início"
                             onClick={() => setShowPage("home")}>
-                        <MdHome size={25} />
+                        <MdHome size={20}/>
+                        <p className="Pteste">Início</p>
                     </Div>
                     <Div className="button_aside" title="Ver Agenda"
                             onClick={() => console.log("Agenda")}>
-                        <MdCalendarToday size={25} />
+                        <MdCalendarToday size={20} />
+                        <p className="Pteste">Agenda</p>
                     </Div>
                     <Div className="button_aside" title="Ver Cadastros de Pets/Pessoas"
                             onClick={() => setShowPage("listCadastros")}>
-                        <MdAssignmentInd size={25} />
+                        <MdAssignmentInd size={20} />
+                        <p className="Pteste">Cadastros</p>
                     </Div>
                     <Div className="button_aside" title="Ver Prontuários"
                             onClick={() => setShowPage("consulta")}>
-                        <MdAssignment size={25} />
+                        <MdAssignment size={20} />
+                        <p className="Pteste">Prontuários</p>
                     </Div>
+                    <br/>
+                    <label><strong>Financeiro</strong></label>
+                    <Div className="button_aside" title="Vendas"
+                            onClick={() => setShowPage("home")}>
+                        <MdAssignment size={20} />
+                        <p className="Pteste">Vendas</p>
+                    </Div>
+                    <Div className="button_aside" title="Minhas vendas"
+                            onClick={() => setShowPage("home")}>
+                        <MdAssignment size={20} />
+                        <p className="Pteste">Minhas vendas</p>
+                    </Div>
+                    <Div className="button_aside" title="Histórico de vendas"
+                            onClick={() => setShowPage("home")}>
+                        <MdAssignment size={20} />
+                        <p className="Pteste">Histórico de vendas</p>
+                    </Div>
+                    <Div className="button_aside" title="Fluxo de caixa"
+                            onClick={() => setShowPage("home")}>
+                        <MdAssignment size={20} />
+                        <p className="Pteste">Fluxo de Caixa</p>
+                    </Div>
+                    <Div className="button_aside" title="Recebimentos"
+                            onClick={() => setShowPage("home")}>
+                        <MdAssignment size={20} />
+                        <p className="Pteste">Recebimentos</p>
+                    </Div>
+                    <Div className="button_aside" title="Saldo dos Clientes"
+                            onClick={() => setShowPage("home")}>
+                        <MdAssignment size={20} />
+                        <p className="Pteste">Saldo dos Clientes</p>
+                    </Div>
+
+                    <br/>
+                    <label><strong>Sistema</strong></label>
                     <Div className="button_aside" title="Cadastros Gerais"
                             onClick={() => setShowPage("cadGeral")}>
-                        <MdAssignmentTurnedIn size={25} />
+                        <MdAssignmentTurnedIn size={20} />
+                        <p className="Pteste">Dados base</p>
                     </Div>
                     <Div className="button_aside" title="Relatórios"
                             onClick={() => console.log("Relatórios")}>
-                        <MdEqualizer size={25} />
+                        <MdEqualizer size={20} />
+                        <p className="Pteste">Relatórios</p>
                     </Div>
                     <Div className="button_aside" title="Tema"
                         onClick={changeTheme}>
-                        {theme=='dark'?<MdLightMode size={25} />:<MdDarkMode size={25}/>}
+                        {theme=='dark'?<MdLightMode size={25} />:<MdDarkMode size={20}/>}
+                        <p className="Pteste">Tema</p>
                     </Div>
                 </Div>
 

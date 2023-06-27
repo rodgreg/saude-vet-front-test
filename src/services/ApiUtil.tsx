@@ -2,6 +2,8 @@ import axios from 'axios';
 import { useCallback } from 'react';
 import { BASE_URL } from '../configs/constants';
 import { Especie, Medicamento, Patologia, Raca, Vacina } from '../interfaces/Util';
+import { getTodasVacinas } from './ApiJson.tsx';
+
 
 const baseAdress = BASE_URL;
 
@@ -9,6 +11,8 @@ const api = axios.create({
     baseURL: baseAdress,
     timeout: 1000
 });
+
+
 
 export const ApiUtil = () => ({
     

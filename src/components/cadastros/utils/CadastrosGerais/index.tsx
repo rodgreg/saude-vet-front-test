@@ -56,9 +56,23 @@ export function CadastrosGerais () {
                         onClick={() => setPageCad('cadMedicamento')}><MdMedication size={18} />Medicamentos</button>
                 <button className='button-select-type-cadastro'
                         onClick={() => setPageCad('cadVacina')}><TbVaccine size={18} />Vacinas</button>
-                <button className='button-select-type-cadastro'
-                        onClick={() => setPageCad('cadAnamnese')}><MdAssignment size={18}  />Anamneses</button>
             </div>
+            <br/>
+            <div className="container-select-cadastro">
+                <button className='button-select-type-cadastro'
+                        onClick={() => setPageCad('cadVacina')}><MdAssignment size={18} />Lista de preços</button>
+                
+                <button className='button-select-type-cadastro'
+                        onClick={() => setPageCad('cadVacina')}><MdAssignment size={18}  />Formas de recebimento</button>
+                <button className='button-select-type-cadastro'
+                        onClick={() => setPageCad('cadVacina')}><MdAssignment size={18}  />Contas caixa</button>
+                <button className='button-select-type-cadastro'
+                        onClick={() => setPageCad('cadVacina')}><MdAssignment size={18}  />-</button>
+            </div>
+            <br/>
+            <label><strong>Lista de preços:</strong> permite o cadastro de produtos, serviços e pacotes</label>
+            <label><strong>Formas de recebimento:</strong> permite o cadastro de modalidades de pagamento, a conta caixa vinculada e seus respectivos tipos de parcelamento</label>
+            <label><strong>Contas caixa:</strong> permite o cadastro da contas bancárias da empresa</label>
             <div className='container-cadastro-selected'>
                 <CadastroSelected page={pageCad}/>
     
