@@ -282,11 +282,11 @@ export function Agenda () {
                         height:`${componenteHeight}px`, 
                         width:`${componenteWidth}px`
                     }}
-                    onClick={(event) => HandlerOnResizeEvento(event, agendamento.id)}
+                    
                     ><h1 className='boxAgendamentoH1'>{agendamento.Tipo}</h1>
                     <div className='boxAgendamentoContainer'>
                         <div>
-                            <button> Excluir</button>
+                            <button onClick={() => HandlerOnClickExcluirEvento(agendamento.id)}> Excluir</button>
                             <button> Editar</button>
                         </div>
                         <p className='boxAgendamentoP'>id: {agendamento.id}</p>  
@@ -310,15 +310,7 @@ export function Agenda () {
                     boxesEventos
         )
     }
-    
-  function HandlerOnResizeEvento(event:any,id:number) {
-    var boxHtml:HTMLElement | null = document.getElementById(id.toString());
-    var boxCoordenadas:DOMRect | undefined = boxHtml?.getBoundingClientRect();
-        console.log(boxCoordenadas)
-    //A partir daqui já tenho o tamnho do novo box e o seu Id. Então posso programar para editar o evento a partir do resize. 
-    //Pensar em como facilitar para o usuario acertar o posicionamento dos minutos. 
-    //Mostrar <p> com o horario em tempo real?
-  }
+
 
 
 
@@ -360,15 +352,12 @@ export function Agenda () {
         eventosCadastrados = [...eventosCadastrados,agendamento1] 
         eventosCadastrados = [...eventosCadastrados,agendamento2] 
         eventosCadastrados = [...eventosCadastrados,agendamento3] 
-        var idParaRemover = 2
-        // const listaFiltrada = lista.filter( agendamento => agendamento.id !== idParaRemover )
+        
 
 
     }
-
-
     
-    function HandlerOnClickCadastrarEvento (e) {
+    function HandlerOnClickCadastrarEvento (e:any) {
         e.preventDefault();
         const dadosCadastro = e.target;
         const dadosCadastroForm = new FormData(dadosCadastro);
@@ -390,6 +379,28 @@ export function Agenda () {
 
         eventosCadastrados = [...eventosCadastrados,novoEvento] 
     }
+
+        
+  function HandlerOnResizeEvento(event:any,id:number) {
+    var boxHtml:HTMLElement | null = document.getElementById(id.toString());
+    var boxCoordenadas:DOMRect | undefined = boxHtml?.getBoundingClientRect();
+        console.log(boxCoordenadas)
+    //A partir daqui já tenho o tamnho do novo box e o seu Id. Então posso programar para editar o evento a partir do resize. 
+    //Pensar em como facilitar para o usuario acertar o posicionamento dos minutos. 
+    //Mostrar <p> com o horario em tempo real?
+  }
+
+      
+  function HandlerOnClickExcluirEvento(id:number) {
+        let boxParaExcluir:number = id
+        if (window.confirm('deseja remover?')) {
+            eventosCadastrados = eventosCadastrados.filter((agendamento:any) => agendamento.id !== boxParaExcluir )
+        } else {
+            console.log('O evento foi mantido')
+        }
+        
+
+  }
 
     function CadastroDeEvento () {
         return(
@@ -419,15 +430,6 @@ export function Agenda () {
         )
     }
     
-    const heightOutput = document.querySelector("#height");
-    const widthOutput = document.querySelector("#width");
-    
-    function reportWindowSize() {
-      heightOutput.textContent = window.innerHeight;
-      widthOutput.textContent = window.innerWidth;
-    }
-    
-    window.onresize = reportWindowSize;
 
     return (
         <div>
@@ -455,7 +457,7 @@ export function Agenda () {
 
                 <button className='Agenda-button' onClick={AvancarCalendario}>Avançar calendário</button>
             </div>
-            <CadastroDeEvento></CadastroDeEvento>
+            <CadastroDeEvento/>
             <div className='ComponentePai'>
                 <ComponenteCtrl/>
                 <table className='Agenda' id='Agenda'>
