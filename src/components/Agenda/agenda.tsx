@@ -193,6 +193,7 @@ export function Agenda () {
         
     }
 
+
     const ComponenteCtrl = () => {
         var componenteTop:number = 0;
         var componenteLeft:number = 0;
@@ -272,7 +273,7 @@ export function Agenda () {
             return (
                 <div 
                     className='ComponenteCtrl' 
-                    id='componenteCtrl' 
+                    id={agendamento.id} 
                     style={{ 
                         resize:'both', 
                         opacity:componenteCtrlOpacidade, 
@@ -280,19 +281,19 @@ export function Agenda () {
                         left:`${componenteLeft}px`,
                         height:`${componenteHeight}px`, 
                         width:`${componenteWidth}px`
-                    }}>
-                <h1 className='boxAgendamentoH1'>{agendamento.Tipo}</h1>
-                <div className='boxAgendamentoContainer'>
-                    <div>
-                        <button> Excluir</button>
-                        <button> Editar</button>
+                    }}
+                    onClick={(event) => HandlerOnResizeEvento(event, agendamento.id)}
+                    ><h1 className='boxAgendamentoH1'>{agendamento.Tipo}</h1>
+                    <div className='boxAgendamentoContainer'>
+                        <div>
+                            <button> Excluir</button>
+                            <button> Editar</button>
+                        </div>
+                        <p className='boxAgendamentoP'>id: {agendamento.id}</p>  
+                        <p className='boxAgendamentoP'>Resp.: {agendamento.responsavel}</p>  
+                        <p className='boxAgendamentoP'>De: {moment(agendamento.dataInicio).format("DD/MM/YYYY hh:mm")}</p>  
+                        <p className='boxAgendamentoP'>Até: {moment(agendamento.dataFim).format("DD/MM/YYYY hh:mm")}</p>  
                     </div>
-                    <p className='boxAgendamentoP'>* {agendamento.responsavel}</p>  
-                    <p className='boxAgendamentoP'>* {moment(agendamento.dataInicio).format("DD/MM/YYYY hh:mm")}</p>  
-                    <p className='boxAgendamentoP'>* {moment(agendamento.dataFim).format("DD/MM/YYYY hh:mm")}</p>  
- 
-                </div>
-
                 </div>
             )
         })
@@ -309,6 +310,17 @@ export function Agenda () {
                     boxesEventos
         )
     }
+    
+  function HandlerOnResizeEvento(event:any,id:number) {
+    var boxHtml:HTMLElement | null = document.getElementById(id.toString());
+    var boxCoordenadas:DOMRect | undefined = boxHtml?.getBoundingClientRect();
+        console.log(boxCoordenadas)
+    //A partir daqui já tenho o tamnho do novo box e o seu Id. Então posso programar para editar o evento a partir do resize. 
+    //Pensar em como facilitar para o usuario acertar o posicionamento dos minutos. 
+    //Mostrar <p> com o horario em tempo real?
+  }
+
+
 
     interface agendaAgendamentos  {
         id:number,
@@ -406,6 +418,17 @@ export function Agenda () {
             </div>
         )
     }
+    
+    const heightOutput = document.querySelector("#height");
+    const widthOutput = document.querySelector("#width");
+    
+    function reportWindowSize() {
+      heightOutput.textContent = window.innerHeight;
+      widthOutput.textContent = window.innerWidth;
+    }
+    
+    window.onresize = reportWindowSize;
+
     return (
         <div>
             <div className="control-buttons">
