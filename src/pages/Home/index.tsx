@@ -14,6 +14,9 @@ import { FormCadPet } from "../../components/cadastros/FormCadPet";
 import { Prontuario } from "../../components/prontuario/Prontuario";
 import { CadastrosGerais } from "../../components/cadastros/utils/CadastrosGerais"
 import { useSearchParams } from "react-router-dom";
+import { SectionIcon } from "@radix-ui/react-icons";
+import { Agenda } from "../../components/Agenda/agenda";
+
 
 const Div = styled('div', {
 
@@ -45,7 +48,65 @@ const Principal = (props:principalProps) => {
         case "cadResponsavel":
             return <FormCadResponsavel responsavelForm={props.responsavel}/>
             break;
-        
+
+        case "Agenda":
+            return <Agenda/>
+            break;
+
+        case "Vendas":
+            return (
+                <section className="temporary">
+                <h1>{`A página ${props.page} em construção`}</h1>
+                <img src="https://i.pinimg.com/originals/91/4e/ed/914eed200cde64a6c3cca26d088cb141.gif" alt="Cachorro caminhando"/>
+            </section>   
+            )
+            break;
+
+        case "Minhas vendas":
+            return (
+                <section className="temporary">
+                <h1>{`A página ${props.page} em construção`}</h1>
+                <img src="https://i.pinimg.com/originals/91/4e/ed/914eed200cde64a6c3cca26d088cb141.gif" alt="Cachorro caminhando"/>
+            </section> 
+                )
+            break;
+
+            case "Histórico de vendas":
+                return (
+                    <section className="temporary">
+                    <h1>{`A página ${props.page} em construção`}</h1>
+                    <img src="https://i.pinimg.com/originals/91/4e/ed/914eed200cde64a6c3cca26d088cb141.gif" alt="Cachorro caminhando"/>
+                </section> 
+                )
+                break;
+    
+            case "Fluxo de caixa":
+                return (
+                    <section className="temporary">
+                    <h1>{`A página ${props.page} em construção`}</h1>
+                    <img src="https://i.pinimg.com/originals/91/4e/ed/914eed200cde64a6c3cca26d088cb141.gif" alt="Cachorro caminhando"/>
+                </section> 
+                )
+                break;
+    
+            case "Recebimentos":
+                return (
+                    <section className="temporary">
+                    <h1>{`A página ${props.page} em construção`}</h1>
+                    <img src="https://i.pinimg.com/originals/91/4e/ed/914eed200cde64a6c3cca26d088cb141.gif" alt="Cachorro caminhando"/>
+                </section> 
+                    )
+                break;
+            case "Saldo dos Clientes":
+                return (
+                        <section className="temporary">
+                            <h1>{`A página ${props.page} em construção`}</h1>
+                            <img src="https://i.pinimg.com/originals/91/4e/ed/914eed200cde64a6c3cca26d088cb141.gif" alt="Cachorro caminhando"/>
+                        </section>   
+                    )
+                break;  
+
+
         case "cadVeterinario":
             return <FormCadVeterinario veterinarioForm={props.veterinario}/>
             break;
@@ -123,7 +184,7 @@ export function Home () {
                         <p className="Pteste">Início</p>
                     </Div>
                     <Div className="button_aside" title="Ver Agenda"
-                            onClick={() => console.log("Agenda")}>
+                            onClick={() => setShowPage("Agenda")}>
                         <MdCalendarToday size={20} />
                         <p className="Pteste">Agenda</p>
                     </Div>
@@ -140,32 +201,32 @@ export function Home () {
                     <br/>
                     <label><strong>Financeiro</strong></label>
                     <Div className="button_aside" title="Vendas"
-                            onClick={() => setShowPage("home")}>
+                            onClick={() => setShowPage("Vendas")}>
                         <MdAssignment size={20} />
                         <p className="Pteste">Vendas</p>
                     </Div>
                     <Div className="button_aside" title="Minhas vendas"
-                            onClick={() => setShowPage("home")}>
+                            onClick={() => setShowPage("Minhas vendas")}>
                         <MdAssignment size={20} />
                         <p className="Pteste">Minhas vendas</p>
                     </Div>
                     <Div className="button_aside" title="Histórico de vendas"
-                            onClick={() => setShowPage("home")}>
+                            onClick={() => setShowPage("Histórico de vendas")}>
                         <MdAssignment size={20} />
                         <p className="Pteste">Histórico de vendas</p>
                     </Div>
                     <Div className="button_aside" title="Fluxo de caixa"
-                            onClick={() => setShowPage("home")}>
+                            onClick={() => setShowPage("Fluxo de caixa")}>
                         <MdAssignment size={20} />
                         <p className="Pteste">Fluxo de Caixa</p>
                     </Div>
                     <Div className="button_aside" title="Recebimentos"
-                            onClick={() => setShowPage("home")}>
+                            onClick={() => setShowPage("Recebimentos")}>
                         <MdAssignment size={20} />
                         <p className="Pteste">Recebimentos</p>
                     </Div>
                     <Div className="button_aside" title="Saldo dos Clientes"
-                            onClick={() => setShowPage("home")}>
+                            onClick={() => setShowPage("Saldo dos Clientes")}>
                         <MdAssignment size={20} />
                         <p className="Pteste">Saldo dos Clientes</p>
                     </Div>

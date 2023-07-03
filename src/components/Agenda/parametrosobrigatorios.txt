@@ -1,0 +1,39 @@
+Calendario
+minDate={new Date(now.getFullYear(), now.getMonth()-12)}
+maxDate={new Date(now.getFullYear(), now.getMonth()+12)}
+startDate={this.state.startDate}
+startAtTime={5}
+endAtTime={24}
+cellHeight={this.state.cellHeight}
+locale="pt-br"
+items={this.state.items}
+numberOfDays={this.state.numberOfDays}
+headFormat={this.state.headFormat}
+rowsPerHour={this.state.rowsPerHour}
+itemColors={colors}
+helper={true}
+view="Agenda"
+autoScale={false}
+fixedHeader={true}
+onRangeSelection={this.handleRangeSelection.bind(this)}
+onChangeEvent={this.handleItemChange.bind(this)}
+onChangeDuration={this.handleItemSize.bind(this)}
+onItemEdit={this.handleItemEdit.bind(this)}
+onCellSelect={this.handleCellSelection.bind(this)}
+onItemRemove={this.removeEvent.bind(this)}
+onDateRangeChange={this.handleDateRangeChange.bind(this)} />
+
+
+<Modal
+title="Editar evento"
+clickOutside={this._closeModal}
+/>
+
+
+<Marcadores dos eventos
+items={this.state.items}
+itemColors={colors}
+selectedCells={this.state.selected}
+Addnew={this.addNewEvent}
+edit={this.editEvent}
+/>
