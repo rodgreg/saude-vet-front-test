@@ -1,0 +1,24 @@
+[{
+    "id": 1,
+    "dataInicio": "07/03/2023 05:35",
+    "dataFim": "07/04/2023 06:45",
+    "Tipo": "Banho simples",
+    "responsavel": "funcionário xyz",
+    "cor":"#9bb388"
+},
+{
+    "id": 2,
+    "dataInicio": "07/05/2023 07:15",
+    "dataFim": "07/05/2023 07:30",
+    "Tipo": "Consulta",
+    "responsavel": "med.vet. Rodrigo Gregorio",
+    "cor":"#8abee9"
+},
+{
+    "id": 3,
+    "dataInicio": "07/05/2023 08:00",
+    "dataFim": "07/05/2023 08:45",
+    "Tipo": "Internação",
+    "responsavel": "med.vet. Rodrigo Gregorio",
+    "cor":"#1f5a8a"
+}]

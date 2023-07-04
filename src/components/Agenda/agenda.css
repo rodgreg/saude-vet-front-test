@@ -106,8 +106,20 @@
     font-size: 10px;
     line-height: 9px;
     font-weight: bold;
-    line-height-step: unset;
-    
+
 }
 tr:hover {background-color: #9bb388;}
 
+.teste {
+    border: #000 1px solid;
+    width: 100px;
+    height: 100px;
+}
+
+.testeDrop {
+    border: #ff0000 1px solid;
+}
+
+.widget {
+    border: #00ff4c 1px solid;
+}

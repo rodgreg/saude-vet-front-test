@@ -1,11 +1,9 @@
 
 import './agenda.css'
 import moment from 'moment';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ReactElement } from 'react';
 import 'moment/dist/locale/pt-br';
-
-
-moment.locale('pt-br')
+import { TbBottle } from 'react-icons/tb';
 
 const now = new Date();
 var eventosCadastrados:any = []
@@ -24,10 +22,13 @@ export function Agenda () {
     const [componenteCtrlWidth, setComponenteCtrlWidth] = useState<string>('100px')
     const [celulaStart, setCelulaStart] = useState<any>()
     const [celulaEnd, setCelulaEnd] = useState<any>()
+    const [agendamentosArray,setAgendamentosArray] = useState<string[]>([])
 
 
     useEffect(() => {
-        EncontraPrimeiroDiaDaAgenda();        
+        EncontraPrimeiroDiaDaAgenda();       
+        moment().locale('pt_br');
+        CarregarEventosBoxes();
     }, [diasParaExibicao,atualizarAgenda])
 
     //está passando o state desatualizado do "hoje"
@@ -137,19 +138,25 @@ export function Agenda () {
                                             id={`${data} ${moment(hora).format("hh:mm")}`} 
                                             headers={`${data} ${moment(hora).format("hh:mm")}`} 
                                             className='tdAgenda'
-                                        ></td>
+                                            onDrop={(e) => handleOnDrop(e,`${data} ${moment(hora).format("hh:mm")}`)}
+                                            onDragOver={(e) => handleOnDragOver(e,`${data} ${moment(hora).format("hh:mm")}`)}
+                                        >
+                                            </td>
                                     ) 
                     }})
                 
+                    
+
+
+
+
                     linhas.push(
                         <tr>
                             <th className='thAgendaHoras'>{`${moment(hora).format("hh:mm")}`}</th>         
                             {celulas}
                         </tr>)
            })
-        
-            
-        
+                
            return (
                         <tbody>
                             {linhas.map((linha:any) => {
@@ -163,6 +170,7 @@ export function Agenda () {
     }
 
     function AtualizaAgenda () {
+        console.log("prevenção de loop: AtualizaAgenda")
         atualizarAgenda ? setAtualizarAgenda(false) : setAtualizarAgenda(true)
     }
 
@@ -192,7 +200,6 @@ export function Agenda () {
         AtualizaAgenda();
         
     }
-
 
     const ComponenteCtrl = () => {
         var componenteTop:number = 0;
@@ -263,7 +270,6 @@ export function Agenda () {
                     //Dimensionamento
                     var dataAuxliarInicio = moment(moment(agendamento.dataFim).hour(moment(agendamento.dataInicio).hours()).minutes(moment(agendamento.dataInicio).minutes()));
                     componenteHeight = (moment(agendamento.dataFim).diff(dataAuxliarInicio.format("MM/DD/YYYY hh:mm"),'minutes'))*1.6; // considerando que cada linha tem 30px, a altura pode ser a diferença entre as datas em minutos
-                    console.log(componenteHeight)
                     componenteWidth = Number(celulaEndOfRight) - Number(celulaStartOfLeft);
                     
                 } else {
@@ -282,12 +288,13 @@ export function Agenda () {
                         height:`${componenteHeight}px`, 
                         width:`${componenteWidth}px`
                     }}
-                    
+                    draggable
+                    onDragStart={(e) => handlerOnDrag(e, agendamento)}
                     ><h1 className='boxAgendamentoH1'>{agendamento.Tipo}</h1>
                     <div className='boxAgendamentoContainer'>
                         <div>
                             <button onClick={() => HandlerOnClickExcluirEvento(agendamento.id)}> Excluir</button>
-                            <button> Editar</button>
+                            <button onClick={(event) => HandlerOnClickEditarEvento(event, agendamento.id)}> Editar</button>
                         </div>
                         <p className='boxAgendamentoP'>id: {agendamento.id}</p>  
                         <p className='boxAgendamentoP'>Resp.: {agendamento.responsavel}</p>  
@@ -297,22 +304,10 @@ export function Agenda () {
                 </div>
             )
         })
-        //Encontra a posicao da Celula onde sera posicionado o componenteCtrl
-
-        
-        //Posiciona o componente controle
-
-              
-        
-
         return (
-
                     boxesEventos
         )
     }
-
-
-
 
     interface agendaAgendamentos  {
         id:number,
@@ -324,35 +319,50 @@ export function Agenda () {
     }
 
     function CarregarEventosBoxes () {
-        var agendamento1:agendaAgendamentos = {
-            id: 1,
-            dataInicio: new Date('07/03/2023 05:35'), //mes/dia/ano hora:minuto
-            dataFim: new Date('07/04/2023 06:45'),
-            Tipo: 'Banho simples',
-            responsavel: 'funcionário xyz',
-            cor:"#9bb388"
-        }
-        var agendamento2:agendaAgendamentos = {
-            id:2,
-            dataInicio: new Date('07/05/2023 05:25'),
-            dataFim:new Date('07/05/2023 09:51'),
-            Tipo: 'Consulta',
-            responsavel: 'med.vet. Rodrigo Gregorio',
-            cor:"#8abee9"
-        }
-        var agendamento3:agendaAgendamentos =     {
-            id:3,
-            dataInicio: new Date('07/06/2023 10:12'),
-            dataFim:new Date('07/06/2023 11:27'),
-            Tipo: 'Consulta',
-            responsavel: 'med.vet. Rodrigo Gregorio',
-            cor:"#1f5a8a"
-        }
-
-        eventosCadastrados = [...eventosCadastrados,agendamento1] 
-        eventosCadastrados = [...eventosCadastrados,agendamento2] 
-        eventosCadastrados = [...eventosCadastrados,agendamento3] 
+        console.log("Prevenção de loop: CarregaBoxes")
+        console.log(eventosCadastrados)
         
+        if ( eventosCadastrados.length === 0 ) {
+            var agendamento1:agendaAgendamentos = {
+                id: 1,
+                dataInicio: new Date('07/03/2023 05:35'), //mes/dia/ano hora:minuto
+                dataFim: new Date('07/04/2023 06:45'),
+                Tipo: 'Banho simples',
+                responsavel: 'funcionário xyz',
+                cor:"#9bb388"
+            }
+            var agendamento2:agendaAgendamentos = {
+                id:2,
+                dataInicio: new Date('07/05/2023 05:25'),
+                dataFim:new Date('07/05/2023 09:51'),
+                Tipo: 'Consulta',
+                responsavel: 'med.vet. Rodrigo Gregorio',
+                cor:"#8abee9"
+            }
+            var agendamento3:agendaAgendamentos =     {
+                id:3,
+                dataInicio: new Date('07/06/2023 10:12'),
+                dataFim:new Date('07/06/2023 11:27'),
+                Tipo: 'Consulta',
+                responsavel: 'med.vet. Rodrigo Gregorio',
+                cor:"#1f5a8a"
+            }
+            var agendamento4:agendaAgendamentos = {
+                id: 4,
+                dataInicio: new Date('07/06/2023 06:00'), //mes/dia/ano hora:minuto
+                dataFim: new Date('07/06/2023 07:00'),
+                Tipo: 'Banho simples',
+                responsavel: 'funcionário xyz',
+                cor:"#9bb388"
+            }
+
+            eventosCadastrados = [...eventosCadastrados,agendamento1,agendamento2,agendamento3,agendamento4] 
+        
+            
+
+    } else {
+        console.log("Boxes já foram carregados")
+    }
 
 
     }
@@ -380,27 +390,96 @@ export function Agenda () {
         eventosCadastrados = [...eventosCadastrados,novoEvento] 
     }
 
-        
-  function HandlerOnResizeEvento(event:any,id:number) {
-    var boxHtml:HTMLElement | null = document.getElementById(id.toString());
-    var boxCoordenadas:DOMRect | undefined = boxHtml?.getBoundingClientRect();
-        console.log(boxCoordenadas)
-    //A partir daqui já tenho o tamnho do novo box e o seu Id. Então posso programar para editar o evento a partir do resize. 
-    //Pensar em como facilitar para o usuario acertar o posicionamento dos minutos. 
-    //Mostrar <p> com o horario em tempo real?
-  }
+    function handlerOnDrag(e: React.DragEvent,agendamento:any) {
+    var texto = `{
+                    "id":${agendamento.id},
+                    "dataInicio": "${agendamento.dataInicio}",
+                    "dataFim": "${agendamento.dataFim}",
+                    "Tipo": "${agendamento.Tipo}",
+                    "responsavel": "${agendamento.responsavel}",
+                    "cor": "${agendamento.cor}"
+                }`
+        e.dataTransfer.setData("agendamento",texto)
 
-      
-  function HandlerOnClickExcluirEvento(id:number) {
+        
+    }
+
+    function handleOnDragOver(e: React.DragEvent,id:string){
+        e.preventDefault();
+        let boxHtml:HTMLElement | null = document.getElementById(id);
+        let boxTop:number = Number(boxHtml?.getBoundingClientRect().top);
+        let boxLeft:number = Number(boxHtml?.getBoundingClientRect().left); 
+ 
+        console.log(boxTop)
+
+        //Achar um jeito de mostrar a data e hora de destino e de deixar o usuário corrigir os minutos. 
+        //Após acertar essa parte, tem que refinar os minutos que são salvos na atualização do agendamento
+    }
+
+    function handleOnDrop(e: React.DragEvent,id:string) {
+    const agendamentoMovido = e.dataTransfer.getData('agendamento');
+    let agendamentoMovidoJson = JSON.parse(agendamentoMovido)
+    let boxParaEditarId:number = Number(agendamentoMovidoJson.id)
+    setAgendamentosArray([...agendamentosArray,agendamentoMovidoJson.id])
+    
+    eventosCadastrados.forEach((agendamento:any) => {
+        let index:number = eventosCadastrados.indexOf(agendamento)
+
+        if (boxParaEditarId === agendamento.id) {
+            let dataInicioCadastrada = agendamento.dataInicio;
+            let dataFimCadastrada = agendamento.dataFim;
+            let diferencaEntreDatasCadastradas = moment(dataFimCadastrada).diff(dataInicioCadastrada,'days')
+
+            let novaDataInicio =  new Date(id);
+            let boxHtml:HTMLElement | null = document.getElementById(boxParaEditarId.toString());
+            let boxHeightPx:number = Number(boxHtml?.getBoundingClientRect().height); 
+            let boxHeightMinutos:number = boxHeightPx / (48/30) //Altura da linha / Intervalo de minutos = quantos px equivalem a 1 minuto
+        
+            let novaDataFimId = new Date(id);
+            let novaDataFimDia = moment(novaDataFimId).add(diferencaEntreDatasCadastradas,'days').format('MM/DD/YYYY hh:mm');
+            let novaDataFim = moment(novaDataFimDia).add(boxHeightMinutos,'minutes').format('MM/DD/YYYY hh:mm');
+  
+            let novoAgendamento:agendaAgendamentos = {
+                id:boxParaEditarId,
+                dataInicio: novaDataInicio,
+                dataFim:new Date(novaDataFim),
+                Tipo: agendamento.Tipo,
+                responsavel: agendamento.responsavel,
+                cor:agendamento.cor
+            }
+
+            eventosCadastrados[index] = novoAgendamento 
+        }})
+    
+    
+    }
+
+    function HandlerOnClickExcluirEvento(id:number) {
         let boxParaExcluir:number = id
         if (window.confirm('deseja remover?')) {
             eventosCadastrados = eventosCadastrados.filter((agendamento:any) => agendamento.id !== boxParaExcluir )
         } else {
             console.log('O evento foi mantido')
         }
-        
+    }
 
-  }
+    function HandlerOnClickEditarEvento(event:any, id:number) {
+
+    let eventoIndex:number
+    let boxParaEditarId:number = id
+    let boxParaEditarIndex:any
+    // eventosCadastrados
+
+    eventosCadastrados.forEach((agendamento:any) => {
+        if (agendamento.id === boxParaEditarId) {
+
+        } else {
+            console.log("pulou")
+        } 
+        return (eventosCadastrados.indexOf(boxParaEditarId))})
+
+
+    }
 
     function CadastroDeEvento () {
         return(
@@ -408,7 +487,7 @@ export function Agenda () {
                 <form method="" onSubmit={HandlerOnClickCadastrarEvento} id="NovoCadastroDeEvento">
                     <label>Id:
                     <input type='number' id="idEvento" name='idEvento' /> </label>
-                  
+                    
                     <label>Início:
                     <input type='datetime-local' id="eventoInicio" name='eventoInicioName' /> </label>
                     
@@ -417,7 +496,7 @@ export function Agenda () {
                     
                     <label>Tipo:
                     <input type='text' id="tipoEvento" name='tipoEvento' /> </label>
-                  
+                    
                     <label>responsavel:
                     <input type='text' id="responsavelEvento" name='responsavelEvento' /> </label>
                     
@@ -460,6 +539,7 @@ export function Agenda () {
             <CadastroDeEvento/>
             <div className='ComponentePai'>
                 <ComponenteCtrl/>
+
                 <table className='Agenda' id='Agenda'>
                     <thead>
                         <tr>
